@@ -35,6 +35,15 @@ export default function ProjectsCarousel() {
   const [activeMapPin, setActiveMapPin] = useState<PinType | null>(null);
   const deckRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile to disable auto-play and infinite scroll
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Load the 8 specific showcase projects in order
   const featuredPins = useMemo(() => {
@@ -44,24 +53,26 @@ export default function ProjectsCarousel() {
       .filter((pin): pin is PinType => pin !== undefined);
   }, []);
 
-  // Triple the list to allow infinite scrolling in both directions
+  // Triple the list to allow infinite scrolling in both directions (desktop only)
   const tripledPins = useMemo(() => {
     if (featuredPins.length <= 1) return featuredPins;
     return [...featuredPins, ...featuredPins, ...featuredPins];
   }, [featuredPins]);
 
-  // Initialize scroll position to the start of the middle set (Set 2)
+  // Initialize scroll position to the start of the middle set — desktop only
   useEffect(() => {
+    if (isMobile) return;
     const deck = deckRef.current;
     if (!deck || featuredPins.length <= 1) return;
 
     const cardWidth = 334; // 310px card width + 24px gap (1.5rem)
     const totalSetWidth = featuredPins.length * cardWidth;
     deck.scrollLeft = totalSetWidth;
-  }, [featuredPins.length]);
+  }, [featuredPins.length, isMobile]);
 
-  // Auto-play timer that scrolls forward smoothly
+  // Auto-play timer — desktop only
   useEffect(() => {
+    if (isMobile) return;
     if (!deckRef.current || featuredPins.length <= 1) return;
 
     const interval = setInterval(() => {
@@ -88,10 +99,11 @@ export default function ProjectsCarousel() {
     }, 4500); // Auto-slide every 4.5 seconds
 
     return () => clearInterval(interval);
-  }, [featuredPins.length, isHovered]);
+  }, [featuredPins.length, isHovered, isMobile]);
 
-  // Infinite scroll snap-back handlers for manual user dragging
+  // Infinite scroll snap-back — desktop only
   const handleScroll = () => {
+    if (isMobile) return;
     const deck = deckRef.current;
     if (!deck || featuredPins.length <= 1) return;
 
@@ -107,6 +119,9 @@ export default function ProjectsCarousel() {
       deck.scrollLeft = deck.scrollLeft + totalSetWidth;
     }
   };
+
+  // Choose which pin list to render — no tripling on mobile
+  const displayPins = isMobile ? featuredPins : tripledPins;
 
   if (featuredPins.length === 0) {
     return null;
@@ -128,13 +143,13 @@ export default function ProjectsCarousel() {
         <div 
           className="pins-scroll-deck"
           ref={deckRef}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          onTouchStart={() => setIsHovered(true)}
-          onScroll={handleScroll}
+          onMouseEnter={isMobile ? undefined : () => setIsHovered(true)}
+          onMouseLeave={isMobile ? undefined : () => setIsHovered(false)}
+          onTouchStart={isMobile ? undefined : () => setIsHovered(true)}
+          onScroll={isMobile ? undefined : handleScroll}
           style={{ paddingBottom: "1.5rem" }}
         >
-          {tripledPins.map((pin, idx) => (
+          {displayPins.map((pin, idx) => (
             <div key={`${pin.id}-${idx}`} className="double-bezel-wrapper pin-scroll-card-wrapper">
               <div className="double-bezel-inner pin-scroll-card">
                 
