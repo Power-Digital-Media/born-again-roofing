@@ -134,6 +134,29 @@ const slugToPinMapping: Record<string, string[]> = {
   "soffit-and-fascia-repair": ["Soffit & Fascia"]
 };
 
+const subpageBentoImages: Record<string, { url: string; location: string }[]> = {
+  "roof-repair": [
+    { url: "/images/wp_roofing-f.jpg", location: "Jackson, MS" },
+    { url: "/images/wp_roof-patches-leaks-1.png", location: "Brandon, MS" }
+  ],
+  "roof-installation": [
+    { url: "/images/wp_roofing-c.jpg", location: "Madison, MS" },
+    { url: "/images/wp_roofing-h.jpg", location: "Pearl, MS" }
+  ],
+  "asphalt-shingle-roof-repair-and-replacement": [
+    { url: "/images/wp_GaF.jpg", location: "Flowood, MS" },
+    { url: "/images/wp_certainteed.jpg", location: "Ridgeland, MS" }
+  ],
+  "roof-inspections": [
+    { url: "/images/wp_roof-inspection2-1.png", location: "Canton, MS" },
+    { url: "/images/wp_insurance-claims-1.png", location: "Clinton, MS" }
+  ],
+  "soffit-and-fascia-repair": [
+    { url: "/images/wp_soffts-fascia-home-repair-1.png", location: "Byram, MS" },
+    { url: "/images/wp_Roofing-d.jpg", location: "Jackson, MS" }
+  ]
+};
+
 export default async function ResidentialSubpage({ params }: PageProps) {
   const { slug } = await params;
   const page = subpages[slug];
@@ -143,6 +166,7 @@ export default async function ResidentialSubpage({ params }: PageProps) {
   }
 
   const mappedCategories = slugToPinMapping[slug] || ["Residential Roofing"];
+  const overrideBentoImages = subpageBentoImages[slug];
 
   return (
     <>
@@ -171,7 +195,7 @@ export default async function ResidentialSubpage({ params }: PageProps) {
             </p>
 
             {/* Dynamic Local Case Studies Bento Grid */}
-            <ServiceBentoGrid services={mappedCategories} />
+            <ServiceBentoGrid services={mappedCategories} overrideImages={overrideBentoImages} />
 
             {/* Dynamic Local Case Studies Carousel */}
             <ServicePinsCarousel services={mappedCategories} />

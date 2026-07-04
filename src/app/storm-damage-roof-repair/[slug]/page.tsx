@@ -134,6 +134,29 @@ const slugToPinMapping: Record<string, string[]> = {
   "roof-insurance-claims-help": ["Roof Inspection", "Roof Repair"]
 };
 
+const subpageBentoImages: Record<string, { url: string; location: string }[]> = {
+  "emergency-roof-repair": [
+    { url: "/images/wp_emergency-storm-emergency-roof-repair-1.png", location: "Jackson, MS" },
+    { url: "/images/wp_storm-damage-home-roof-1.png", location: "Brandon, MS" }
+  ],
+  "roof-patches-and-leak-repair": [
+    { url: "/images/wp_roof-patches-leaks-1.png", location: "Pearl, MS" },
+    { url: "/images/wp_skylight-leak-repair-1.png", location: "Madison, MS" }
+  ],
+  "hail-damage-roof-repair": [
+    { url: "/images/wp_hail-damage-roof-1.png", location: "Florence, MS" },
+    { url: "/images/wp_roof-inspection2-1.png", location: "Ridgeland, MS" }
+  ],
+  "wind-damage-roof-repair": [
+    { url: "/images/wp_wind-roof-damage-1.png", location: "Clinton, MS" },
+    { url: "/images/wp_soffts-fascia-home-repair-1.png", location: "Byram, MS" }
+  ],
+  "roof-insurance-claims-help": [
+    { url: "/images/wp_insurance-claims-1.png", location: "Canton, MS" },
+    { url: "/images/wp_roof-inspection2-1.png", location: "Jackson, MS" }
+  ]
+};
+
 export default async function StormDamageSubpage({ params }: PageProps) {
   const { slug } = await params;
   const page = subpages[slug];
@@ -143,6 +166,7 @@ export default async function StormDamageSubpage({ params }: PageProps) {
   }
 
   const mappedCategories = slugToPinMapping[slug] || ["Roof Repair"];
+  const overrideBentoImages = subpageBentoImages[slug];
 
   return (
     <>
@@ -171,7 +195,7 @@ export default async function StormDamageSubpage({ params }: PageProps) {
             </p>
 
             {/* Dynamic Local Case Studies Bento Grid */}
-            <ServiceBentoGrid services={mappedCategories} />
+            <ServiceBentoGrid services={mappedCategories} overrideImages={overrideBentoImages} />
 
             {/* Dynamic Local Case Studies Carousel */}
             <ServicePinsCarousel services={mappedCategories} />

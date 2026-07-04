@@ -58,6 +58,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 import ServiceBentoGrid from "@/components/ServiceBentoGrid";
 import ServicePinsCarousel from "@/components/ServicePinsCarousel";
 
+const subpageBentoImages: Record<string, { url: string; location: string }[]> = {
+  "standing-seam-metal-roof-installation": [
+    { url: "/images/wp_metal-roof-standing-seam-1.png", location: "Jackson, MS" },
+    { url: "/images/wp_Roofing-d.jpg", location: "Brandon, MS" }
+  ]
+};
+
 export default async function MetalSubpage({ params }: PageProps) {
   const { slug } = await params;
   const page = subpages[slug];
@@ -67,6 +74,7 @@ export default async function MetalSubpage({ params }: PageProps) {
   }
 
   const mappedCategories = ["Metal Roofing"];
+  const overrideBentoImages = subpageBentoImages[slug];
 
   return (
     <>
@@ -95,7 +103,7 @@ export default async function MetalSubpage({ params }: PageProps) {
             </p>
 
             {/* Dynamic Local Case Studies Bento Grid */}
-            <ServiceBentoGrid services={mappedCategories} />
+            <ServiceBentoGrid services={mappedCategories} overrideImages={overrideBentoImages} />
 
             {/* Dynamic Local Case Studies Carousel */}
             <ServicePinsCarousel services={mappedCategories} />

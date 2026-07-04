@@ -273,6 +273,50 @@ const serviceBentoImages: Record<string, { url: string; location: string }[]> = 
   "flooring": [
     { url: "/images/wp_kitchen-remodel-g-1024x1024-1.jpg", location: "Jackson, MS" },
     { url: "/images/wp_addition-home-f.jpg", location: "Flowood, MS" }
+  ],
+  "plumbing": [
+    { url: "/images/wp_plumbing-768x1024.jpg", location: "Jackson, MS" },
+    { url: "/images/wp_bathroom-vanity.png", location: "Pearl, MS" }
+  ],
+  "electrical": [
+    { url: "/images/wp_cabinets-c.jpg", location: "Madison, MS" },
+    { url: "/images/wp_addition-home-f.jpg", location: "Florence, MS" }
+  ],
+  "sheetrock": [
+    { url: "/images/wp_interiorpaint-1024x1024.jpg", location: "Canton, MS" },
+    { url: "/images/wp_flooring-b.jpg", location: "Clinton, MS" }
+  ],
+  "insulation": [
+    { url: "/images/wp_addition-home-f.jpg", location: "Brandon, MS" },
+    { url: "/images/wp_kitchen-remodel-g.jpg", location: "Ridgeland, MS" }
+  ],
+  "framing": [
+    { url: "/images/wp_addition-home-f.jpg", location: "Jackson, MS" },
+    { url: "/images/wp_soffts-fascia-home-repair-1.png", location: "Byram, MS" }
+  ],
+  "trim": [
+    { url: "/images/wp_cabinets-d.jpg", location: "Jackson, MS" },
+    { url: "/images/wp_soffts-fascia-home-repair-1.png", location: "Madison, MS" }
+  ],
+  "skylight-repair-and-replacement": [
+    { url: "/images/wp_skylight-leak-repair-1.png", location: "Flowood, MS" },
+    { url: "/images/wp_roofing-c.jpg", location: "Pearl, MS" }
+  ],
+  "synthetic-shingles": [
+    { url: "/images/wp_synthetic-shingles-1.png", location: "Brandon, MS" },
+    { url: "/images/wp_gaf.jpg", location: "Jackson, MS" }
+  ],
+  "synthetic-slate-roof-installation": [
+    { url: "/images/wp_synthetic-slate-roofing-1.png", location: "Madison, MS" },
+    { url: "/images/wp_certainteed.jpg", location: "Florence, MS" }
+  ],
+  "synthetic-tile-roofing": [
+    { url: "/images/wp_synthetic-tile-roofing-home-1.png", location: "Pearl, MS" },
+    { url: "/images/wp_roofing-f.jpg", location: "Canton, MS" }
+  ],
+  "synthetic-wood-roofing": [
+    { url: "/images/wp_synthetic-wood-roofing-1.png", location: "Ridgeland, MS" },
+    { url: "/images/wp_owens.jpg", location: "Clinton, MS" }
   ]
 };
 
