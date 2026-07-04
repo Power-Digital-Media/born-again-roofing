@@ -2504,19 +2504,19 @@ a {
    ========================================================================== */
 
 @media (max-width: 768px) {
-  /* Concentric Padding Reductions for small viewports with micro-bezel preservation */
+  /* Golden glow cards */
   .double-bezel-wrapper {
-    background: rgba(var(--primary-rgb), 0.02);
-    border: 1px solid rgba(var(--primary-rgb), 0.04);
+    background: rgba(226, 176, 71, 0.02);
+    border: 1px solid rgba(226, 176, 71, 0.1);
     border-radius: 20px;
     padding: 4px;
-    box-shadow: var(--shadow);
+    box-shadow: 0 0 20px -6px rgba(226, 176, 71, 0.08);
   }
   
   @media (prefers-color-scheme: dark) {
     .double-bezel-wrapper {
-      background: rgba(255, 255, 255, 0.01);
-      border-color: rgba(255, 255, 255, 0.03);
+      background: rgba(226, 176, 71, 0.02);
+      border-color: rgba(226, 176, 71, 0.08);
     }
   }
   
