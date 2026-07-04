@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 
 interface ReviewItem {
@@ -36,6 +36,20 @@ const featuredReviews: ReviewItem[] = [
 ];
 
 export default function ReviewsCarousel() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // Double reviews on mobile for seamless CSS marquee loop
+  const displayReviews = useMemo(() => {
+    return isMobile ? [...featuredReviews, ...featuredReviews] : featuredReviews;
+  }, [isMobile]);
+
   return (
     <section className="reviews-section">
       <div className="container">
@@ -53,7 +67,7 @@ export default function ReviewsCarousel() {
 
         {/* Testimonials Grid */}
         <div className="reviews-grid">
-          {featuredReviews.map((rev, idx) => (
+          {displayReviews.map((rev, idx) => (
             <div key={idx} className="double-bezel-wrapper">
               <div className="double-bezel-inner review-card">
                 

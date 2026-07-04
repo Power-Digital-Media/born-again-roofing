@@ -2772,17 +2772,23 @@ a {
 
   .reviews-section {
     padding: 3.5rem 0;
+    overflow: hidden !important;
   }
 
   .reviews-grid {
     display: flex !important;
     grid-template-columns: unset !important;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 12px;
+    width: max-content !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+    gap: 16px;
     padding-bottom: 1rem;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    padding-left: 1.25rem;
+    animation: mobileMarquee 30s linear infinite;
+  }
+
+  .reviews-grid:active {
+    animation-play-state: paused;
   }
 
   .reviews-grid::-webkit-scrollbar {
@@ -2909,10 +2915,18 @@ a {
     margin-bottom: 2rem !important;
   }
 
-  /* Project scroll deck — swipe affordance */
+  /* Project scroll deck — continuous marquee */
   .pins-scroll-deck {
+    width: max-content !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
     padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    padding-right: 0;
+    animation: mobileMarquee 50s linear infinite;
+  }
+
+  .pins-scroll-deck:active {
+    animation-play-state: paused;
   }
 
   .pin-scroll-card-wrapper {
@@ -2926,6 +2940,7 @@ a {
 
   .marquee-section {
     padding: 3.5rem 0 !important;
+    overflow: hidden !important;
   }
 
   /* ==========================================================================
@@ -3254,6 +3269,11 @@ a {
 @keyframes scrollBounce {
   0%, 100% { transform: translateY(0); opacity: 0.5; }
   50% { transform: translateY(6px); opacity: 1; }
+}
+
+@keyframes mobileMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* ==========================================================================

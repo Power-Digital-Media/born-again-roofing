@@ -120,8 +120,13 @@ export default function ProjectsCarousel() {
     }
   };
 
-  // Choose which pin list to render — no tripling on mobile
-  const displayPins = isMobile ? featuredPins : tripledPins;
+  // Double the list for seamless CSS marquee loop on mobile
+  const doubledPins = useMemo(() => {
+    return [...featuredPins, ...featuredPins];
+  }, [featuredPins]);
+
+  // Choose which pin list to render
+  const displayPins = isMobile ? doubledPins : tripledPins;
 
   if (featuredPins.length === 0) {
     return null;
