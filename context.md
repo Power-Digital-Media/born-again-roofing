@@ -8,7 +8,7 @@ This document serves as the handoff and context file for the next AI agent sessi
 * **Framework**: Next.js 16 (App Router)
 * **Language**: TypeScript
 * **Styling**: Vanilla CSS (`src/app/globals.css`) for fine-grained control and high-end design aesthetics.
-* **Hosting**: Configured for deployment to Netlify via GitHub.
+* **Hosting**: Configured for deployment to Netlify via GitHub. Added `.node-version` (forcing Node 20) and `netlify.toml` config files in the project root to guarantee clean builds.
 * **GitHub Repository**: [https://github.com/Power-Digital-Media/born-again-roofing](https://github.com/Power-Digital-Media/born-again-roofing)
 
 ---
