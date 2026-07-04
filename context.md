@@ -37,6 +37,11 @@ This document serves as the handoff and context file for the next AI agent sessi
 * **Bathroom**: Replaced a mismatched driveway SUV image with a real tile walk-in shower photo (`wp_bathroom-h.jpg`).
 * **Corrupt Assets**: Fixed a 0-byte corrupt addition image reference.
 * **Bento Grid Image Mappings**: Solved the issue of different service and storm damage pages displaying identical fallback images in their case studies grids. Formulated a comprehensive dictionary (`serviceBentoImages` and `subpageBentoImages`) that maps each of the 17 services, storm damage subpages, and metal roofing subpages to unique, high-quality, local job site photos corresponding to their specific category.
+* **Mobile Responsive Fixes**: Addressed layout overflows, overlapping text, and vertical scoreboard line bugs on mobile devices:
+  - *Grid Min-Width Shrinking*: Resized all dynamic grid layout columns from a rigid `minmax(320px/300px, 1fr)` to a flexible `minmax(280px, 1fr)`, ensuring elements adjust naturally on iPhone SE and smaller viewports without overflowing.
+  - *Concentric Padding Reduction*: Configured responsive media queries to automatically decrease `.double-bezel-inner` padding from `3rem 2.5rem` to `1.75rem 1.25rem` on mobile, freeing up `40px` of horizontal reading space.
+  - *Mobile Scoreboard Border Reset*: Styled the reviews scoreboard panel border responsively, removing the awkward right vertical line on mobile screens and replacing it with a clean bottom border.
+  - *Typography Rescaling*: Rescaled large header font sizes (`h1`, `h2`, `h3`, and hero elements) on devices under `768px` and `480px` to prevent aggressive word wrapping and clipping.
 
 ---
 
