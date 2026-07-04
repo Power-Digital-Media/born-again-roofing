@@ -6,12 +6,12 @@
   --secondary-rgb: 209, 164, 83;   /* Bronze Gold #D1A453 */
   --accent-rgb: 58, 206, 216;       /* Vibrant Cyan #3ACED8 */
   
-  /* Light Mode Palette: Alabaster & Warm Slate */
-  --bg-rgb: 252, 250, 247;          /* Premium Warm Alabaster White */
-  --card-bg-rgb: 255, 255, 255;
-  --text-rgb: 22, 25, 46;           /* Deep Indigo Charcoal */
-  --text-muted-rgb: 74, 78, 92;     /* Medium Warm Charcoal */
-  --border-rgb: 46, 49, 145;        /* Tinted primary border */
+  /* Forced Dark Mode — Deep Midnight Navy & Gold */
+  --bg-rgb: 11, 12, 16;
+  --card-bg-rgb: 18, 20, 28;
+  --text-rgb: 241, 243, 245;
+  --text-muted-rgb: 158, 164, 176;
+  --border-rgb: 255, 255, 255;
   
   --primary: rgb(var(--primary-rgb));
   --secondary: rgb(var(--secondary-rgb));
@@ -20,35 +20,21 @@
   --card-bg: rgb(var(--card-bg-rgb));
   --text: rgb(var(--text-rgb));
   --text-muted: rgb(var(--text-muted-rgb));
-  --border: rgba(var(--border-rgb), 0.08);
+  --border: rgba(var(--border-rgb), 0.06);
   
   --primary-light: rgb(75, 79, 185);
   
-  /* Soft Tinted Ambient Shadows */
-  --shadow: 0 10px 30px -10px rgba(46, 49, 145, 0.04), 0 1px 3px rgba(46, 49, 145, 0.02);
-  --shadow-lg: 0 20px 40px -15px rgba(46, 49, 145, 0.08), 0 1px 3px rgba(46, 49, 145, 0.04);
-  --shadow-xl: 0 30px 60px -20px rgba(46, 49, 145, 0.12), 0 1px 5px rgba(46, 49, 145, 0.06);
+  /* Deep Ambient Shadows */
+  --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
   
   /* Spring-like transitions */
   --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   --radius: 16px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Dark Mode Palette: Midnight Navy & Deep Slate */
-    --bg-rgb: 11, 12, 16;            /* Deep Midnight Navy */
-    --card-bg-rgb: 18, 20, 28;       /* Deep Slate Card */
-    --text-rgb: 241, 243, 245;       /* Premium Alabaster Off-White */
-    --text-muted-rgb: 158, 164, 176; /* Soft Muted Slate */
-    --border-rgb: 255, 255, 255;
-    
-    --border: rgba(var(--border-rgb), 0.06);
-    --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
-    --shadow-xl: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
-  }
+  
+  color-scheme: dark;
 }
 
 /* Base resets & layouts */
@@ -2511,13 +2497,6 @@ a {
     border-radius: 20px;
     padding: 4px;
     box-shadow: 0 0 20px -6px rgba(226, 176, 71, 0.08);
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    .double-bezel-wrapper {
-      background: rgba(226, 176, 71, 0.02);
-      border-color: rgba(226, 176, 71, 0.08);
-    }
   }
   
   .double-bezel-inner {
