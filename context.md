@@ -44,7 +44,7 @@ This document serves as the handoff and context file for the next AI agent sessi
   - *Mobile Split Card Fixes*: Corrected an invalid `@media (max-content-width: 991px)` query in `ServiceBentoGrid.tsx` to `@media (max-width: 991px)`, forcing the split cards' text and image columns to stack vertically at 100% width on tablet/mobile screens, rather than squeezing content into unreadable narrow columns.
   - *Mobile Scoreboard Border Reset*: Styled the reviews scoreboard panel border responsively, removing the awkward right vertical line on mobile screens and replacing it with a clean bottom border.
   - *Typography Rescaling*: Rescaled large header font sizes (`h1`, `h2`, `h3`, and hero elements) on devices under `768px` and `480px` to prevent aggressive word wrapping and clipping.
-  - *Hero Section Overlay Lightening*: Reduced the dark linear-gradient backgrounds and overlays on the home page hero (`.hero-section`) and dynamic/service page heroes (`.service-hero::before`, `.about-hero::before`) on mobile viewports down to a lighter ~25%-35% opacity range so that background photos are more visible while maintaining contrast.
+  - *Hero Section Overlay Calibration*: Balanced the tinted background overlays on mobile heroes. Reduced the dark gradient overlays to `0.45 - 0.55` (approx 50%) for dynamic service pages (where images are clean and sky-focused) and set a solid dark protective overlay of `0.72 - 0.82` (approx 75%) for the homepage hero, ensuring the light-gray body text and form inputs remain completely readable against the high-contrast wooden shingle backdrop.
 
 ---
 
