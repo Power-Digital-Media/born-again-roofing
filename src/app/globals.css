@@ -2426,9 +2426,29 @@ a {
     margin-bottom: 1rem;
   }
 
-  /* Lighten Hero Tinted Overlays on Mobile */
+  /* Lighten Hero Tinted Overlays and Limit Height on Mobile to Prevent Form Stretch */
   .hero-section {
-    background: linear-gradient(rgba(10, 12, 16, 0.72), rgba(10, 12, 16, 0.82)), url('/images/job_207002.jpg') no-repeat center center / cover !important;
+    position: relative;
+    background: var(--bg) !important;
+    padding: 4rem 0 !important;
+  }
+
+  .hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 520px;
+    background: linear-gradient(to bottom, rgba(10, 12, 16, 0.72) 0%, rgba(10, 12, 16, 0.82) 80%, var(--bg) 100%), 
+                url('/images/job_207002.jpg') no-repeat center center / cover;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .hero-grid {
+    position: relative;
+    z-index: 2;
   }
 
   .service-hero::before, .about-hero::before {
