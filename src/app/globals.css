@@ -2428,13 +2428,13 @@ a {
 
   /* Lighten Hero Tinted Overlays on Mobile */
   .hero-section {
-    background: linear-gradient(rgba(10, 12, 16, 0.25), rgba(10, 12, 16, 0.35)), url('/images/job_207002.jpg') no-repeat center center / cover !important;
+    background: linear-gradient(rgba(10, 12, 16, 0.72), rgba(10, 12, 16, 0.82)), url('/images/job_207002.jpg') no-repeat center center / cover !important;
   }
 
   .service-hero::before, .about-hero::before {
     background-image: radial-gradient(rgba(226, 176, 71, 0.05) 1.5px, transparent 1.5px), 
                       linear-gradient(180deg, transparent 50%, var(--bg) 100%),
-                      linear-gradient(135deg, rgba(10, 12, 16, 0.25) 40%, rgba(15, 23, 42, 0.3) 70%, rgba(226, 176, 71, 0.08) 100%) !important;
+                      linear-gradient(135deg, rgba(10, 12, 16, 0.45) 40%, rgba(15, 23, 42, 0.55) 70%, rgba(226, 176, 71, 0.08) 100%) !important;
   }
 }
 
