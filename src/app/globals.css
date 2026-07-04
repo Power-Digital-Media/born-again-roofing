@@ -2490,19 +2490,20 @@ a {
    ========================================================================== */
 
 @media (max-width: 768px) {
-  /* Soft ambient golden glow — no hard borders, just light radiating out */
+  /* Soft ambient golden glow — zero hard lines, only diffused light */
   .double-bezel-wrapper {
     background: transparent;
     border: none;
     border-radius: 20px;
     padding: 0;
-    box-shadow: 0 4px 30px rgba(191, 155, 78, 0.12), 0 8px 60px rgba(191, 155, 78, 0.06);
+    box-shadow: none;
   }
   
   .double-bezel-inner {
     padding: 1.5rem 1.15rem;
     border-radius: 20px;
-    border: 1px solid rgba(191, 155, 78, 0.13);
+    border: none !important;
+    box-shadow: 0 2px 15px rgba(191, 155, 78, 0.1), 0 6px 35px rgba(191, 155, 78, 0.07), 0 12px 60px rgba(191, 155, 78, 0.04) !important;
   }
 
   /* Section Spacing Adjustments */
