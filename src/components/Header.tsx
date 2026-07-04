@@ -95,6 +95,11 @@ export default function Header() {
               </svg>
             </span>
           </Link>
+          <div className="mobile-nav-phone mobile-nav-link">
+            <a href="tel:6015736178" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>
+              Call: (601) 573-6178
+            </a>
+          </div>
         </div>
       </div>
     </header>

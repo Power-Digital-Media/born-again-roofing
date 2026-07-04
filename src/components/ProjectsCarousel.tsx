@@ -119,7 +119,7 @@ export default function ProjectsCarousel() {
         <span className="eyebrow" style={{ color: "var(--secondary)" }}>Our Work In Action</span>
         <h2>Recent Projects Showcase</h2>
         <p className="marquee-subheader" style={{ color: "var(--text-muted)", margin: "4px 0 0" }}>
-          Hover over any project to pause the loop and view the satellite snapshot.
+          Browse our latest completed roofing and remodeling projects across Central Mississippi.
         </p>
       </div>
 
