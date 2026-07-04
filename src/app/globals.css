@@ -2456,6 +2456,26 @@ a {
                       linear-gradient(180deg, transparent 50%, var(--bg) 100%),
                       linear-gradient(135deg, rgba(10, 12, 16, 0.45) 40%, rgba(15, 23, 42, 0.55) 70%, rgba(226, 176, 71, 0.08) 100%) !important;
   }
+
+  /* Compact & Clean Mobile Header (Hides redundant text, resizes capsule) */
+  .logo-text-wrapper {
+    display: none !important;
+  }
+  
+  .header-container {
+    top: 0.75rem !important;
+    margin: 0.75rem auto !important;
+    width: calc(100% - 1.5rem) !important;
+  }
+  
+  .header-inner {
+    height: 60px !important;
+    padding: 0 1.25rem !important;
+  }
+  
+  .logo-img {
+    height: 38px !important;
+  }
 }
 
 @media (max-width: 580px) {
