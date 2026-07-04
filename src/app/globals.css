@@ -193,40 +193,48 @@ a {
 }
 
 .btn-primary {
-  background: var(--accent);
-  color: var(--primary);
-  border: 1px solid rgba(var(--accent-rgb), 0.2);
+  background: linear-gradient(135deg, #f3c973 0%, #d1a453 50%, #b88630 100%) !important;
+  color: #0c0f16 !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 15px rgba(209, 164, 83, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  text-shadow: none !important;
 }
 
 .btn-primary:hover {
-  background: rgb(40, 180, 190);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, #f7d387 0%, #dbad5d 50%, #c5933a 100%) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 8px 25px rgba(209, 164, 83, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
 }
 
 .btn-secondary {
-  background: var(--secondary);
-  color: #ffffff;
-  border: 1px solid rgba(var(--secondary-rgb), 0.2);
+  background: linear-gradient(135deg, #f3c973 0%, #d1a453 50%, #b88630 100%) !important;
+  color: #0c0f16 !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 15px rgba(209, 164, 83, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  text-shadow: none !important;
 }
 
 .btn-secondary:hover {
-  background: rgb(189, 144, 63);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, #f7d387 0%, #dbad5d 50%, #c5933a 100%) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 8px 25px rgba(209, 164, 83, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
 }
 
 .btn-outline {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
-  box-shadow: none;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  backdrop-filter: blur(8px) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
 }
 
 .btn-outline:hover {
-  background: rgba(var(--primary-rgb), 0.04);
-  border-color: var(--primary);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25) !important;
 }
 
 /* Nested Doppelrand / Double Bezel Radii System */
@@ -294,16 +302,16 @@ a {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  color: inherit;
+  background: rgba(12, 15, 22, 0.1) !important;
+  color: #0c0f16 !important;
   transition: var(--transition);
   flex-shrink: 0;
 }
 
 .btn-island:hover .btn-icon-wrapper {
-  background: var(--primary);
-  color: #ffffff;
-  transform: rotate(45deg) scale(1.05);
+  background: #0c0f16 !important;
+  color: var(--secondary) !important;
+  transform: rotate(45deg) scale(1.05) !important;
 }
 
 @media (prefers-color-scheme: dark) {
