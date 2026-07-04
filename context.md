@@ -46,6 +46,12 @@ This document serves as the handoff and context file for the next AI agent sessi
   - *Typography Rescaling*: Rescaled large header font sizes (`h1`, `h2`, `h3`, and hero elements) on devices under `768px` and `480px` to prevent aggressive word wrapping and clipping.
   - *Hero Section Overlay Calibration & Height Limits*: Balanced the tinted background overlays and limited image height on mobile. Reduced the dark gradient overlays to `0.45 - 0.55` (approx 50%) for dynamic service pages (where images are clean and sky-focused). On the homepage hero, we moved the background image and dark gradient overlay (`0.72 - 0.82` opacity) to a absolute pseudo-element (`::before`) capped at `520px` tall with a bottom fade directly to the page background (`var(--bg)`). This ensures the background photo only covers the hero text content, and cleanly transitions into a solid dark backdrop behind the estimate form, preventing the background wood shingle image from stretching down into a massive, cluttered vertical wall.
   - *Sleek Mobile Capsule Navbar*: Addressed layout crowding in the sticky header. We hide the redundant `.logo-text-wrapper` text brand next to the logo on mobile viewports since the company name is already clearly embedded inside the hexagon badge image. Concurrently, we reduced the capsule container padding (`0 1.25rem`) and height (`60px`) to float as a compact, balanced utility bar at the top of mobile screens.
+  - *Premium Scripture Callouts & Micro-Motions*: Designed a gorgeous faith-first presentation for the Bible verses and added physical micro-motions to mobile views:
+    - *Serif & Gold Accents*: Upgraded scripture blocks with a custom serif typeface (`Georgia`), a translucent floating gold cross watermark (`†`), a thick gold-gradient left accent border, and a radial background glow.
+    - *Gentle Floating*: Applied a slow, continuous vertical floating keyframe animation (`gentleFloat` and `microFloat`) to scripture cards, specialty icon badges, and eyebrows so the site feels animated and active without cursor hovers.
+    - *Liquid Glass Sheen*: Configured an elegant reflection sweep (`sheenSweep`) that runs across the card faces periodically.
+    - *Tactile Active Spring*: Added a springy tap state (`:active { scale(0.975) }`) that depresses cards on tap and gives them a slight gold border glow.
+    - *Estimate Button Glow*: Applied an organic pulsing glow animation (`glowPulse`) to all primary CTA buttons on mobile.
 
 ---
 
