@@ -153,7 +153,7 @@ export default function ProjectsCarousel() {
                 <div className="pin-card-details">
                   <span className="pin-card-tech">Completed by {pin.author}</span>
                   <p className="pin-card-desc">
-                    {"\""}{pin.description.length > 95 ? pin.description.substring(0, 95) + "..." : pin.description}{"\""}
+                    {"\""}{pin.description.length > 95 ? pin.description.substring(0, 95) + "…" : pin.description}{"\""}
                   </p>
                   <Link href={`/pin-page/?id=${pin.id}`} className="btn btn-outline pin-card-btn">
                     View Case Study

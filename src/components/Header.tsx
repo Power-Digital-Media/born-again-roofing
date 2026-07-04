@@ -74,12 +74,16 @@ export default function Header() {
       <div className={`mobile-nav-drawer ${mobileMenuOpen ? "open" : ""}`}>
         <div className="mobile-nav-links">
           <Link href="/about-us" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>About Us</Link>
-          <Link href="/residential-roofing" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Residential Roofing</Link>
-          <Link href="/metal-roofing-repair-and-installation" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Metal Roofing</Link>
-          <Link href="/storm-damage-roof-repair" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Storm Damage Repair</Link>
-          <Link href="/bathroom-remodeling" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Bathroom Remodeling</Link>
-          <Link href="/kitchen-remodeling" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Kitchen Remodeling</Link>
-          <Link href="/whole-house-remodeling" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Whole House Remodeling</Link>
+          
+          {/* Services group */}
+          <span className="mobile-nav-group-label mobile-nav-link">Services</span>
+          <Link href="/residential-roofing" className="mobile-nav-link mobile-nav-sublink" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Residential Roofing</Link>
+          <Link href="/metal-roofing-repair-and-installation" className="mobile-nav-link mobile-nav-sublink" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Metal Roofing</Link>
+          <Link href="/storm-damage-roof-repair" className="mobile-nav-link mobile-nav-sublink" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Storm Damage Repair</Link>
+          <Link href="/bathroom-remodeling" className="mobile-nav-link mobile-nav-sublink" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Bathroom Remodeling</Link>
+          <Link href="/kitchen-remodeling" className="mobile-nav-link mobile-nav-sublink" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Kitchen Remodeling</Link>
+          <Link href="/whole-house-remodeling" className="mobile-nav-link mobile-nav-sublink" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Whole House Remodeling</Link>
+          
           <Link href="/areas-we-service" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Areas Served</Link>
           <Link href="/pins" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Project Pins</Link>
           <Link href="/reviews" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Reviews</Link>

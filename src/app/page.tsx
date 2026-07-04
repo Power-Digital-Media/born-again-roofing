@@ -4,6 +4,8 @@ import ContactForm from "@/components/ContactForm";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import ProjectsCarousel from "@/components/ProjectsCarousel";
 import ReviewsCarousel from "@/components/ReviewsCarousel";
+import FAQSection from "@/components/FAQSection";
+import HeroCTAs from "@/components/HeroCTAs";
 
 export default function Home() {
   return (
@@ -21,25 +23,29 @@ export default function Home() {
               <span className="italic-descender">Roofing Solutions</span> <br />
               in Jackson, MS
             </h1>
-            <p className="hero-subtext">
+            <p className="hero-subtext hero-subtext-full">
               As a local, Christian-owned roofing company, Born Again Home Remodeling and Roofing is built on honesty, integrity, and service. We deliver premium roofing and home remodeling solutions across Jackson, Mississippi and the surrounding communities.
             </p>
-            <div className="hero-ctas">
-              <Link href="/contact-us" className="btn btn-secondary btn-island">
-                Get A Free Estimate
-                <span className="btn-icon-wrapper">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </span>
-              </Link>
-              <a href="tel:6015736178" className="btn btn-outline">
-                Call: (601) 573-6178
-              </a>
+            <p className="hero-subtext hero-subtext-short">
+              Premium roofing and remodeling built on faith, integrity, and expert craftsmanship — serving Jackson, MS and surrounding communities.
+            </p>
+            <HeroCTAs />
+
+            {/* Mobile-only: compact trust line below CTA */}
+            <div className="hero-trust-line">
+              <span className="hero-trust-stars">★★★★★</span>
+              <span className="hero-trust-text">5.0 Rating · 130+ Google Reviews</span>
+            </div>
+
+            {/* Mobile-only: scroll indicator */}
+            <div className="hero-scroll-indicator" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
             </div>
           </div>
           
-          <div className="hero-form-wrapper scroll-reveal">
+          <div id="estimate-form" className="hero-form-wrapper scroll-reveal">
             <ContactForm />
           </div>
 
@@ -319,57 +325,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="faq-list" style={{ display: "grid", gap: "2rem", gridTemplateColumns: "1fr", marginTop: "3rem" }}>
-            
-            <div className="double-bezel-wrapper">
-              <div className="double-bezel-inner" style={{ padding: "2.5rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <h3 style={{ color: "#ffffff", fontSize: "1.25rem", fontWeight: "800", display: "flex", alignItems: "flex-start", gap: "12px", margin: 0 }}>
-                  <span style={{ color: "var(--secondary)", background: "rgba(226, 176, 71, 0.1)", padding: "2px 8px", borderRadius: "6px", fontSize: "0.85rem", fontWeight: "900", letterSpacing: "0.05em", flexShrink: 0 }}>Q</span>
-                  How do I know if my roof needs a minor repair or a full replacement?
-                </h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.98rem", lineHeight: "1.75", paddingLeft: "38px", margin: 0 }}>
-                  Generally, if roof damage is localized (e.g., a few missing shingles, a small leak near a chimney flange, or minor wind damage), a <strong>roof repair</strong> is sufficient. However, if the roof is over 15–20 years old, has widespread shingle decay (bald spots, curling, cracking), or has suffered significant storm structural damage, a <strong>full roof replacement</strong> is the safest, most cost-effective long-term solution.
-                </p>
-              </div>
-            </div>
-
-            <div className="double-bezel-wrapper">
-              <div className="double-bezel-inner" style={{ padding: "2.5rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <h3 style={{ color: "#ffffff", fontSize: "1.25rem", fontWeight: "800", display: "flex", alignItems: "flex-start", gap: "12px", margin: 0 }}>
-                  <span style={{ color: "var(--secondary)", background: "rgba(226, 176, 71, 0.1)", padding: "2px 8px", borderRadius: "6px", fontSize: "0.85rem", fontWeight: "900", letterSpacing: "0.05em", flexShrink: 0 }}>Q</span>
-                  How do I handle an insurance claim for wind or hail roof damage?
-                </h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.98rem", lineHeight: "1.75", paddingLeft: "38px", margin: 0 }}>
-                  To file an insurance claim, first schedule a professional <strong>roof inspection</strong> with a licensed contractor like Born Again Roofing. We will document the storm damage with clear photo evidence. Next, contact your insurance provider to file the claim, sharing our inspection report. We work directly with your adjuster to ensure all wind or hail damage is accurately assessed and covered.
-                </p>
-              </div>
-            </div>
-
-            <div className="double-bezel-wrapper">
-              <div className="double-bezel-inner" style={{ padding: "2.5rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <h3 style={{ color: "#ffffff", fontSize: "1.25rem", fontWeight: "800", display: "flex", alignItems: "flex-start", gap: "12px", margin: 0 }}>
-                  <span style={{ color: "var(--secondary)", background: "rgba(226, 176, 71, 0.1)", padding: "2px 8px", borderRadius: "6px", fontSize: "0.85rem", fontWeight: "900", letterSpacing: "0.05em", flexShrink: 0 }}>Q</span>
-                  What are the benefits of choosing a standing seam metal roof?
-                </h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.98rem", lineHeight: "1.75", paddingLeft: "38px", margin: 0 }}>
-                  {"Standing seam metal roofing offers exceptional durability, lasting 50 years or more with minimal maintenance. It provides superior wind, fire, and hail resistance compared to asphalt shingles. Additionally, metal roofing reflects solar heat, lowering cooling costs during hot Mississippi summers, and stands out as a premium investment that increases your home's resale value."}
-                </p>
-              </div>
-            </div>
-
-            <div className="double-bezel-wrapper">
-              <div className="double-bezel-inner" style={{ padding: "2.5rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <h3 style={{ color: "#ffffff", fontSize: "1.25rem", fontWeight: "800", display: "flex", alignItems: "flex-start", gap: "12px", margin: 0 }}>
-                  <span style={{ color: "var(--secondary)", background: "rgba(226, 176, 71, 0.1)", padding: "2px 8px", borderRadius: "6px", fontSize: "0.85rem", fontWeight: "900", letterSpacing: "0.05em", flexShrink: 0 }}>Q</span>
-                  Do you offer warranties on your residential roofing installations?
-                </h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.98rem", lineHeight: "1.75", paddingLeft: "38px", margin: 0 }}>
-                  Yes, at Born Again Home Remodeling and Roofing, we offer comprehensive warranties. As installers of GAF roofing materials, we provide GAF system warranties covering up to 50 years on shingles. We also stand behind our craftsmanship with a dedicated workmanship warranty on all installations and repairs, giving homeowners complete peace of mind.
-                </p>
-              </div>
-            </div>
-
-          </div>
+          <FAQSection />
         </div>
       </section>
 

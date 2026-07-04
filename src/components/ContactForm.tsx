@@ -185,17 +185,12 @@ export default function ContactForm() {
                 rows={4}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Tell us about your roofing or remodeling needs..."
+                placeholder="Tell us about your roofing or remodeling needs (e.g., shingle replacement, window leak repair)…"
               />
             </div>
 
-            <button type="submit" className="btn btn-secondary btn-island submit-btn">
-              Submit Free Estimate Request
-              <span className="btn-icon-wrapper">
-                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </span>
+            <button type="submit" className="btn btn-secondary submit-btn">
+              Submit Request
             </button>
 
           </form>
