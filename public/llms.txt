@@ -1,0 +1,63 @@
+# Born Again Home Remodeling and Roofing
+
+Mississippi's premier roofing, storm restoration, and home remodeling contractor. Built on faith, integrity, and expert craftsmanship.
+
+## Contact Information
+- **Phone:** (601) 573-6178
+- **Address:** Jackson Metro Area, Mississippi
+- **Website:** https://www.bornagainroofing.com
+
+## Official Hours of Operation
+- **Tuesday - Thursday:** 11:00 AM - 8:00 PM
+- **Friday - Saturday:** 11:00 AM - 9:00 PM
+- **Sunday - Monday:** Closed (Closed all day)
+
+## Core Services
+1. **Residential Roofing:** Complete shingle installations, GAF architectural shingles, roof repairs, wood rafter inspections, soffit and fascia repairs.
+2. **Storm Damage Restoration:** Emergency storm tarping, leak patches, hail damage inspections, wind damage restoration, insurance claims adjuster assistance.
+3. **Metal Roofing:** Standing seam panel installations, leak troubleshooting, reflective energy-efficient roof systems.
+4. **Home Remodeling:** Custom bathroom upgrades, subfloor water rot repairs, custom tile showers, kitchen remodeling, custom cabinetry, interior/exterior painting, drywall/sheetrock hanging, flooring (LVP/hardwood), framing, and attic insulation.
+
+## Service Coverage Areas
+Serving the following cities in Central Mississippi:
+- Jackson, Brandon, Byram, Canton, Clinton, Crystal Springs, Florence, Flowood, Gluckstadt, Hazlehurst, Madison, Pearl, Raymond, Richland, Ridgeland, Terry, Utica, Vicksburg, Yazoo City.
+
+## Website Directory Structure
+- `/` - Home Page (Core business summary & Free estimate request form)
+- `/about-us/` - About Us (Company philosophy and team overview)
+- `/contact-us/` - Contact Us (Estimate request picker with Sunday/Monday block validation)
+- `/reviews/` - Customer Reviews (Verified local feedback & star ratings)
+- `/pins/` - Project Pins Feed (Interactive gallery of recent local jobs filtered by service and city)
+- `/residential-roofing/` - Residential Roofing index and details
+  - `/residential-roofing/roof-repair/` - Minor leak repairs & shingle patching
+  - `/residential-roofing/roof-installation/` - Premium shingle replacements
+  - `/residential-roofing/asphalt-shingle-roof-repair-and-replacement/` - Standard GAF shingle systems
+  - `/residential-roofing/roof-inspections/` - Multi-point storm reports
+  - `/residential-roofing/soffit-and-fascia-repair/` - Eave trim and wood rot repairs
+- `/storm-damage-roof-repair/` - Storm Damage index and details
+  - `/storm-damage-roof-repair/emergency-roof-repair/` - 24/7 emergency leak seals and tarping
+  - `/storm-damage-roof-repair/roof-patches-and-leak-repair/` - Targeted leak sealing
+  - `/storm-damage-roof-repair/hail-damage-roof-repair/` - Class 4 impact shingle restoration
+  - `/storm-damage-roof-repair/wind-damage-roof-repair/` - Shingle blow-off replacement
+  - `/storm-damage-roof-repair/roof-insurance-claims-help/` - Adjuster reports & claim filing support
+- `/metal-roofing-repair-and-installation/` - Metal Roofing index and details
+  - `/metal-roofing-repair-and-installation/standing-seam-metal-roof-installation/` - Hidden fastener panels
+- `/bathroom-remodeling/` - Custom shower renovations & subfloor repair
+- `/kitchen-remodeling/` - Cabinet installations & paint styling
+- `/whole-house-remodeling/` - Structural remodels & layout transformations
+- `/painting/` - Interior and exterior residential painting
+- `/plumbing/` - Fixture fittings & line checks
+- `/electrical/` - Ceiling fan mounts & safety wiring
+- `/flooring/` - Hardwood, laminate, and LVP installations
+- `/tile-service/` - Backsplashes & bathroom tiling
+- `/sheetrock/` - Mudding, taping, and drywall patches
+- `/insulation/` - Attic fiberglass and blow-in R-value setups
+- `/framing/` - Structural rafters and wood stud carpentry
+- `/trim/` - Fascia trim, crown moldings, and finish millwork
+- `/skylight-repair-and-replacement/` - Flashing seals and dome replacements
+- `/synthetic-shingles/` - Premium composite shake and tile roofing alternatives
+- `/synthetic-slate-roof-installation/` - Lightweight estate slate polymer shingles
+- `/synthetic-tile-roofing/` - Class 4 impact Spanish polymer tiles
+- `/synthetic-wood-roofing/` - Rot-resistant cedar shake composite roofing
+- `/areas-we-service/` - Locations directory index page
+- `/sitemap/` - Complete HTML sitemap directory

@@ -1,0 +1,175 @@
+"use client";
+
+import React, { useState, useMemo, useRef, useEffect } from "react";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import pinsData from "@/data/pins.json";
+
+const IndividualProjectMap = dynamic(() => import("@/components/IndividualProjectMap"), {
+  ssr: false,
+  loading: () => (
+    <div style={{ width: "100%", height: "100%", background: "#0f172a", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255, 255, 255, 0.2)", fontSize: "0.75rem" }}>
+      Loading Satellite...
+    </div>
+  )
+});
+
+const MapModal = dynamic(() => import("@/components/MapModal"), {
+  ssr: false
+});
+
+interface PinType {
+  id: string;
+  location: string;
+  service: string;
+  author: string;
+  date: string;
+  description: string;
+  detailedExplanation: string;
+  images: string[];
+  title: string;
+  aeoAnswers: { question: string; answer: string; }[];
+}
+
+export default function ProjectsCarousel() {
+  const [activeMapPin, setActiveMapPin] = useState<PinType | null>(null);
+  const deckRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Load the 8 specific showcase projects in order
+  const featuredPins = useMemo(() => {
+    const ids = ["10", "9", "1", "4", "5", "6", "7", "8"];
+    return ids
+      .map((id) => pinsData.find((pin) => pin.id === id))
+      .filter((pin): pin is PinType => pin !== undefined);
+  }, []);
+
+  // Triple the list to allow infinite scrolling in both directions
+  const tripledPins = useMemo(() => {
+    if (featuredPins.length <= 1) return featuredPins;
+    return [...featuredPins, ...featuredPins, ...featuredPins];
+  }, [featuredPins]);
+
+  // Initialize scroll position to the start of the middle set (Set 2)
+  useEffect(() => {
+    const deck = deckRef.current;
+    if (!deck || featuredPins.length <= 1) return;
+
+    const cardWidth = 334; // 310px card width + 24px gap (1.5rem)
+    const totalSetWidth = featuredPins.length * cardWidth;
+    deck.scrollLeft = totalSetWidth;
+  }, [featuredPins.length]);
+
+  // Auto-play timer that scrolls forward smoothly
+  useEffect(() => {
+    if (!deckRef.current || featuredPins.length <= 1) return;
+
+    const interval = setInterval(() => {
+      if (isHovered) return;
+
+      const deck = deckRef.current;
+      if (!deck) return;
+
+      const cardWidth = 334; // 310px card width + 24px gap (1.5rem)
+      const totalSetWidth = featuredPins.length * cardWidth;
+      const currentScroll = deck.scrollLeft;
+      
+      let nextScroll = currentScroll + cardWidth;
+      // If next slide would cross beyond Set 2, snap back to Set 1 equivalent first
+      if (nextScroll >= totalSetWidth * 2) {
+        deck.scrollLeft = currentScroll - totalSetWidth;
+        nextScroll = currentScroll - totalSetWidth + cardWidth;
+      }
+
+      deck.scrollTo({
+        left: nextScroll,
+        behavior: "smooth"
+      });
+    }, 4500); // Auto-slide every 4.5 seconds
+
+    return () => clearInterval(interval);
+  }, [featuredPins.length, isHovered]);
+
+  // Infinite scroll snap-back handlers for manual user dragging
+  const handleScroll = () => {
+    const deck = deckRef.current;
+    if (!deck || featuredPins.length <= 1) return;
+
+    const cardWidth = 334;
+    const totalSetWidth = featuredPins.length * cardWidth;
+
+    // If they drag too far right, subtract one full set width
+    if (deck.scrollLeft >= totalSetWidth * 2.2) {
+      deck.scrollLeft = deck.scrollLeft - totalSetWidth;
+    }
+    // If they drag too far left, add one full set width
+    else if (deck.scrollLeft <= totalSetWidth * 0.8) {
+      deck.scrollLeft = deck.scrollLeft + totalSetWidth;
+    }
+  };
+
+  if (featuredPins.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="marquee-section" style={{ padding: "5rem 0" }}>
+      {/* Title Block */}
+      <div className="container marquee-header" style={{ marginBottom: "2.5rem" }}>
+        <span className="eyebrow" style={{ color: "var(--secondary)" }}>Our Work In Action</span>
+        <h2>Recent Projects Showcase</h2>
+        <p className="marquee-subheader" style={{ color: "var(--text-muted)", margin: "4px 0 0" }}>
+          Hover over any project to pause the loop and view the satellite snapshot.
+        </p>
+      </div>
+
+      {/* Horizontal Scroll Deck */}
+      <div className="container">
+        <div 
+          className="pins-scroll-deck"
+          ref={deckRef}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onTouchStart={() => setIsHovered(true)}
+          onScroll={handleScroll}
+          style={{ paddingBottom: "1.5rem" }}
+        >
+          {tripledPins.map((pin, idx) => (
+            <div key={`${pin.id}-${idx}`} className="double-bezel-wrapper pin-scroll-card-wrapper">
+              <div className="double-bezel-inner pin-scroll-card">
+                
+                {/* Badge Row */}
+                <div className="pin-card-badge-row">
+                  <span className="pin-card-city">{pin.location}</span>
+                  <span className="pin-card-date">{pin.date}</span>
+                </div>
+
+                {/* Satellite Project Map */}
+                <div className="pin-card-img-container" style={{ position: "relative" }}>
+                  <IndividualProjectMap pin={pin} onEnlarge={() => setActiveMapPin(pin)} />
+                </div>
+
+                {/* Description */}
+                <div className="pin-card-details">
+                  <span className="pin-card-tech">Completed by {pin.author}</span>
+                  <p className="pin-card-desc">
+                    {"\""}{pin.description.length > 95 ? pin.description.substring(0, 95) + "..." : pin.description}{"\""}
+                  </p>
+                  <Link href={`/pin-page/?id=${pin.id}`} className="btn btn-outline pin-card-btn">
+                    View Case Study
+                  </Link>
+                </div>
+
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Fullscreen Interactive Map Modal for dynamic showcase card enlargement */}
+      {activeMapPin && (
+        <MapModal pin={activeMapPin} onClose={() => setActiveMapPin(null)} />
+      )}
+    </section>
+  );
+}
