@@ -42,7 +42,7 @@ export default function ResidentialRoofingPage() {
       {/* Main Content & Form Grid */}
       <section className="section">
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "4rem", alignItems: "start" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "4rem", alignItems: "start" }}>
             
             <div className="services-intro-col">
               <span className="eyebrow" style={{ color: "var(--secondary)" }}>GAF Certified Quality</span>

@@ -28,7 +28,7 @@ export default function ContactUsPage() {
 
       {/* Form & Info Grid */}
       <section className="section">
-        <div className="container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "3rem" }}>
+        <div className="container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "3rem" }}>
           <div>
             <h2 style={{ color: "var(--primary)", marginBottom: "1rem" }}>Reach Out Today</h2>
             <p style={{ marginBottom: "1.5rem" }}>

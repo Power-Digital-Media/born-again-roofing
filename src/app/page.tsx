@@ -256,7 +256,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid-layout three-col-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "2.5rem" }}>
+          <div className="grid-layout three-col-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2.5rem" }}>
             
             <div className="double-bezel-wrapper">
               <div className="double-bezel-inner value-card" style={{ padding: "3rem 2.5rem" }}>

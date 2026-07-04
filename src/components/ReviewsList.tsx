@@ -137,7 +137,7 @@ export default function ReviewsList() {
               <div className="double-bezel-inner" style={{ padding: "2.5rem", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2.5rem", alignItems: "center" }}>
                 
                 {/* Rating Block */}
-                <div style={{ textAlign: "center", borderRight: "1px solid var(--border)", paddingRight: "2.5rem" }}>
+                <div className="reviews-scoreboard-rating">
                   <div style={{ fontSize: "4.5rem", fontWeight: "900", color: "#ffffff", lineHeight: "1" }}>5.0</div>
                   <div style={{ display: "flex", justifyContent: "center", gap: "4px", margin: "1rem 0 0.5rem", color: "var(--secondary)" }}>
                     {[...Array(5)].map((_, i) => (

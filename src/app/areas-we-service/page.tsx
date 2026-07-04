@@ -53,7 +53,7 @@ export default function AreasWeServicePage() {
 
       {/* Locations Directory List */}
       <section className="section">
-        <div className="container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "3rem" }}>
+        <div className="container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "3rem" }}>
           <div>
             <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1.5rem" }}>
               Our Central Mississippi Service Coverage
