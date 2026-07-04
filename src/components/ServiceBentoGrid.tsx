@@ -178,18 +178,23 @@ export default function ServiceBentoGrid({ services, fallbackImages = ["/images/
           padding: 1.75rem !important;
         }
 
-        @media (max-content-width: 991px) {
+        @media (max-width: 991px) {
+          .bento-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+          }
           .bento-col-8, .bento-col-4 {
-            grid-column: span 12;
+            grid-column: auto !important;
           }
           .bento-split-card {
             flex-direction: column !important;
           }
           .bento-split-content, .bento-split-image {
-            width: 100%;
+            width: 100% !important;
           }
           .bento-split-image {
-            min-height: 200px;
+            min-height: 240px;
           }
         }
       `}</style>

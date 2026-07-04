@@ -437,18 +437,22 @@ a {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .bento-grid {
-    grid-template-columns: 1fr;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
   }
   .bento-col-12, .bento-col-8, .bento-col-6, .bento-col-4 {
-    grid-column: span 12 !important;
+    grid-column: auto !important;
+    width: 100% !important;
   }
   .bento-split-card {
     flex-direction: column !important;
   }
   .bento-split-content {
-    padding: 2.5rem !important;
+    width: 100% !important;
+    padding: 2.25rem 1.5rem !important;
   }
   .bento-split-image {
     width: 100% !important;
