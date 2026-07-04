@@ -36,6 +36,7 @@ This document serves as the handoff and context file for the next AI agent sessi
 * **Fencing**: Replaced a mismatched brick chimney image with a premium wood privacy fence image (`wp_premium-privacy-fence.png`).
 * **Bathroom**: Replaced a mismatched driveway SUV image with a real tile walk-in shower photo (`wp_bathroom-h.jpg`).
 * **Corrupt Assets**: Fixed a 0-byte corrupt addition image reference.
+* **Bento Grid Image Mappings**: Solved the issue of different service and storm damage pages displaying identical fallback images in their case studies grids. Formulated a comprehensive dictionary (`serviceBentoImages` and `subpageBentoImages`) that maps each of the 17 services, storm damage subpages, and metal roofing subpages to unique, high-quality, local job site photos corresponding to their specific category.
 
 ---
 
