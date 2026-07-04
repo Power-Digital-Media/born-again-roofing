@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import ContactForm from "@/components/ContactForm";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import ProjectsCarousel from "@/components/ProjectsCarousel";
@@ -14,6 +15,16 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="hero-section">
+        <Image
+          src="/images/wp_486049337_1404947030740628_1371524052289147842_n.jpg"
+          alt="Born Again Roofing hero — Jackson MS roofing professionals"
+          fill
+          priority
+          sizes="100vw"
+          style={{ objectFit: 'cover', zIndex: 0 }}
+          quality={75}
+        />
+        <div className="hero-overlay" />
         <div className="container hero-grid">
           
           <div className="hero-content scroll-reveal">
