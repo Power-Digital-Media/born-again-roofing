@@ -2478,10 +2478,8 @@ a {
   
   .header-container {
     top: 0.75rem !important;
-    left: 0.75rem !important;
-    right: 0.75rem !important;
     margin: 0.75rem auto !important;
-    width: auto !important;
+    width: calc(100% - 1.5rem) !important;
   }
   
   .header-inner {
