@@ -32,12 +32,13 @@ export default function ServiceArticle({ service }: ServiceArticleProps) {
 
         {/* Scripture Callout Block */}
         {article.scriptureRef && (
-          <div className="double-bezel-wrapper" style={{ marginBottom: "3.5rem" }}>
-            <div className="double-bezel-inner" style={{ padding: "2rem", background: "rgba(226, 176, 71, 0.02)", borderLeft: "4px solid var(--secondary)" }}>
-              <p style={{ fontStyle: "italic", fontSize: "1.05rem", lineHeight: "1.65", color: "var(--primary)", margin: "0 0 1rem 0" }}>
+          <div className="scripture-card-wrapper scroll-reveal">
+            <div className="scripture-card-inner">
+              <span className="scripture-cross-icon">†</span>
+              <p className="scripture-text">
                 &ldquo;{article.scriptureText}&rdquo;
               </p>
-              <p style={{ fontSize: "0.88rem", fontWeight: "700", color: "var(--secondary)", margin: 0, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              <p className="scripture-reference">
                 &mdash; {article.scriptureRef}
               </p>
             </div>
