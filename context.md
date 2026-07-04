@@ -56,7 +56,7 @@ This document serves as the handoff and context file for the next AI agent sessi
     - *Liquid Glass Sheen*: Configured an elegant reflection sweep (`sheenSweep`) that runs across the card faces periodically.
     - *Tactile Active Spring*: Added a springy tap state (`:active { scale(0.975) }`) that depresses cards on tap and gives them a slight gold border glow.
     - *Estimate Button Glow*: Applied an organic pulsing glow animation (`glowPulse`) to all primary CTA buttons on mobile.
-  - *Mobile Horizontal Overflow Fixes*: Eliminated the layout shift and horizontal scroll (the empty dark space on the right of mobile viewports) by adding strict layout boundaries (`overflow-x: hidden`, `max-width: 100vw`) to `html` and `body`. Concurrently, we added `position: relative` and `overflow: hidden` to the main `.hero-section` container to wrap and clip absolute background pseudo-elements, and locked the sticky header capsule coordinates on mobile using explicit left/right offsets (`left: 0.75rem`, `right: 0.75rem`, `width: auto`) to prevent positioning drift.
+  - *Mobile Horizontal Overflow Fixes*: Eliminated the layout shift and horizontal scroll (the empty dark space on the right of mobile viewports) by adding strict layout boundaries (`overflow-x: hidden`, `max-width: 100vw`) to `html` and `body`. Concurrently, we added `position: relative` and `overflow: hidden` to the main `.hero-section` container to wrap and clip absolute background pseudo-elements, and set the sticky header capsule width to `calc(100% - 1.5rem)` with `margin: 0.75rem auto` to float as a centered bar.
 
 ---
 
