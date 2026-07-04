@@ -22,9 +22,12 @@ This document serves as the handoff and context file for the next AI agent sessi
 * **Scripture Choice**:
   * **Whole House Remodeling**: Features **Ezra 5:11** (*"We are the servants of the God of heaven and earth, and we are rebuilding the house..."*).
 
-### 2. Homepage & About Us Visual Modernization
-* **Homepage**: Replaced raw emojis in the services bento grid with custom gold vector SVGs that invert color on hover. Upgraded FAQs to use double-bezel cards and gold Q badges.
-* **About Us**: Styled difference cards, added expertise checklist layout dividers, and formatted David Dilmore's signature block with script-cursive typography.
+* **Homepage & About Us Visual Modernization**
+  - *Homepage*: Replaced raw emojis in the services bento grid with custom gold vector SVGs that invert color on hover. Upgraded FAQs to use double-bezel cards and gold Q badges.
+  - *Luxe Button Redesign*: Upgraded the generic flat gold and outline buttons to a premium $10k+ design:
+    - *Metallic Gold Gradients (`.btn-primary`, `.btn-secondary`)*: Replaced flat gold background color with a rich, metallic gold-to-bronze linear gradient (`#f3c973` to `#b88630`), added a top 1px inner highlighted edge (`inset 0 1px 0 rgba(255,255,255,0.4)`), and changed the text to a crisp, bold charcoal color (`#0c0f16`) for maximum legibility and luxury contrast.
+    - *Glassmorphic Outlines (`.btn-outline`)*: Redesigned outline buttons to feature a subtle translucent background backdrop (`rgba(255,255,255,0.03)`), a thin white-glass border (`rgba(255,255,255,0.15)`), and a backing backdrop filter blur (`8px`) next to the gold CTAs.
+  - *About Us*: Styled difference cards, added expertise checklist layout dividers, and formatted David Dilmore's signature block with script-cursive typography.
 
 ### 3. Reviews Page Redesign (`src/app/reviews/page.tsx` & `src/components/ReviewsList.tsx`)
 * **Asymmetrical Bento Grid**: Reviews are dynamically rendered in a responsive Bento Grid layout (`span 8`, `span 6`, `span 4`, `span 12`) using an intelligent space-filling script (`getBentoClass`) to eliminate gaps.
