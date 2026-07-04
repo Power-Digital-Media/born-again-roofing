@@ -2490,20 +2490,19 @@ a {
    ========================================================================== */
 
 @media (max-width: 768px) {
-  /* Golden glow cards */
+  /* Soft ambient golden glow — no hard borders, just light radiating out */
   .double-bezel-wrapper {
-    background: rgba(226, 176, 71, 0.04);
-    border: 1px solid rgba(209, 164, 83, 0.25);
+    background: transparent;
+    border: none;
     border-radius: 20px;
-    padding: 4px;
-    box-shadow: 0 0 20px rgba(209, 164, 83, 0.15), 0 0 40px rgba(209, 164, 83, 0.08);
+    padding: 0;
+    box-shadow: 0 4px 30px rgba(191, 155, 78, 0.12), 0 8px 60px rgba(191, 155, 78, 0.06);
   }
   
   .double-bezel-inner {
     padding: 1.5rem 1.15rem;
-    border-radius: 15px;
-    border-color: rgba(209, 164, 83, 0.15);
-    box-shadow: 0 0 15px rgba(209, 164, 83, 0.06);
+    border-radius: 20px;
+    border: 1px solid rgba(191, 155, 78, 0.13);
   }
 
   /* Section Spacing Adjustments */
