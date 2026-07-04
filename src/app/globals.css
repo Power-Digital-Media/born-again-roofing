@@ -2377,17 +2377,19 @@ a {
 
 @media (max-width: 768px) {
   /* Concentric Padding Reductions for small viewports */
-  .double-bezel-inner {
-    padding: 1.75rem 1.25rem !important;
-  }
-  
   .double-bezel-wrapper {
-    padding: 6px !important;
-    border-radius: 28px !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
   }
   
   .double-bezel-inner {
-    border-radius: 22px !important;
+    padding: 1.5rem 1.15rem !important;
+    border-radius: 16px !important;
+    border: 1px solid var(--border) !important;
+    background: var(--card-bg) !important;
   }
 
   /* Section Spacing Adjustments */
@@ -2433,6 +2435,11 @@ a {
 }
 
 @media (max-width: 480px) {
+  .double-bezel-inner {
+    padding: 1.25rem 0.85rem !important;
+    border-radius: 12px !important;
+  }
+
   h1 {
     font-size: 1.8rem !important;
     line-height: 1.25 !important;
