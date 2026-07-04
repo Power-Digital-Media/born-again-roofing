@@ -2492,16 +2492,18 @@ a {
 @media (max-width: 768px) {
   /* Golden glow cards */
   .double-bezel-wrapper {
-    background: rgba(226, 176, 71, 0.02);
-    border: 1px solid rgba(226, 176, 71, 0.1);
+    background: rgba(226, 176, 71, 0.04);
+    border: 1px solid rgba(209, 164, 83, 0.25);
     border-radius: 20px;
     padding: 4px;
-    box-shadow: 0 0 20px -6px rgba(226, 176, 71, 0.08);
+    box-shadow: 0 0 20px rgba(209, 164, 83, 0.15), 0 0 40px rgba(209, 164, 83, 0.08);
   }
   
   .double-bezel-inner {
     padding: 1.5rem 1.15rem;
     border-radius: 15px;
+    border-color: rgba(209, 164, 83, 0.15);
+    box-shadow: 0 0 15px rgba(209, 164, 83, 0.06);
   }
 
   /* Section Spacing Adjustments */
@@ -3120,35 +3122,7 @@ a {
     box-shadow: 0 0 20px rgba(226, 176, 71, 0.15), inset 0 0 10px rgba(226, 176, 71, 0.05) !important;
   }
 
-  /* Liquid Glass sheen sweep animation on mobile cards */
-  .double-bezel-inner::after,
-  .scripture-card-inner::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -150%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(255, 255, 255, 0.015) 30%,
-      rgba(255, 255, 255, 0.075) 50%,
-      rgba(255, 255, 255, 0.015) 70%,
-      transparent 100%
-    );
-    transform: skewX(-25deg);
-    pointer-events: none;
-    z-index: 5;
-    animation: sheenSweep 9s infinite ease-in-out;
-  }
-  
-  /* Staggered card animation delay offsets to distribute reflection movements */
-  .double-bezel-wrapper:nth-child(2) .double-bezel-inner::after { animation-delay: 1.5s; }
-  .double-bezel-wrapper:nth-child(3) .double-bezel-inner::after { animation-delay: 3s; }
-  .double-bezel-wrapper:nth-child(4) .double-bezel-inner::after { animation-delay: 4.5s; }
-  .double-bezel-wrapper:nth-child(5) .double-bezel-inner::after { animation-delay: 6s; }
-  .double-bezel-wrapper:nth-child(6) .double-bezel-inner::after { animation-delay: 7.5s; }
+  /* Sheen sweep removed per user request */
 }
 
 /* Shared sheen keyframe sweep animation */
