@@ -333,23 +333,23 @@ export default async function ServiceSubpage({ params }: PageProps) {
   const overrideBentoImages = serviceBentoImages[service];
 
   const serviceVerses: Record<string, { ref: string; text: string }> = {
-    "bathroom-remodeling": { ref: "Colossians 3:23", text: "Whatever you do, work heartily, as for the Lord and not for men." },
-    "kitchen-remodeling": { ref: "Proverbs 24:3-4", text: "By wisdom a house is built, and through understanding it is established; through knowledge its rooms are filled with rare and beautiful treasures." },
-    "whole-house-remodeling": { ref: "Isaiah 61:4", text: "They will rebuild the ancient ruins and restore the places long devastated; they will renew the ruined cities." },
-    "painting": { ref: "Ecclesiastes 3:11", text: "He has made everything beautiful in its time." },
-    "plumbing": { ref: "John 7:38", text: "Whoever believes in me, as Scripture has said, rivers of living water will flow from within them." },
-    "electrical": { ref: "Matthew 5:16", text: "Let your light shine before others, that they may see your good deeds and glorify your Father in heaven." },
-    "flooring": { ref: "Psalm 40:2", text: "He set my feet on a rock and gave me a firm place to stand." },
-    "tile-service": { ref: "1 Corinthians 3:11", text: "For no one can lay any foundation other than the one already laid, which is Jesus Christ." },
-    "sheetrock": { ref: "Nehemiah 4:6", text: "So we rebuilt the wall till all of it reached half its height, for the people worked with all their heart." },
-    "insulation": { ref: "Psalm 91:1", text: "Whoever dwells in the shelter of the Most High will rest in the shadow of the Almighty." },
-    "framing": { ref: "Proverbs 24:27", text: "Put your outdoor work in order and get your fields ready; after that, build your house." },
-    "trim": { ref: "Exodus 31:4-5", text: "To make artistic designs for work in gold, silver and bronze, to cut and set stones, to work in wood, and to engage in all kinds of crafts." },
-    "skylight-repair-and-replacement": { ref: "Genesis 1:3", text: "And God said, Let there be light, and there was light." },
-    "synthetic-shingles": { ref: "Proverbs 10:25", text: "When the storm has swept by, the wicked are gone, but the righteous stand firm forever." },
-    "synthetic-slate-roof-installation": { ref: "Matthew 7:24", text: "Everyone who hears these words of mine and puts them into practice is like a wise man who built his house on the rock." },
-    "synthetic-tile-roofing": { ref: "Psalm 127:1", text: "Unless the Lord builds the house, the builders labor in vain." },
-    "synthetic-wood-roofing": { ref: "Isaiah 44:14", text: "He cut down cedars... He took cypress and oak. He let them grow among the trees of the forest." }
+    "bathroom-remodeling": { ref: "Colossians 3:23", text: "Whatever you do, <em>work heartily</em>, as for the Lord and not for men." },
+    "kitchen-remodeling": { ref: "Proverbs 24:3-4", text: "By <em>wisdom</em> a house is built, and through <em>understanding</em> it is established; through knowledge its rooms are filled with <em>rare and beautiful treasures</em>." },
+    "whole-house-remodeling": { ref: "Isaiah 61:4", text: "They will <em>rebuild the ancient ruins</em> and restore the places long devastated; they will <em>renew</em> the ruined cities." },
+    "painting": { ref: "Ecclesiastes 3:11", text: "He has made <em>everything beautiful</em> in its time." },
+    "plumbing": { ref: "John 7:38", text: "Whoever believes in me, as Scripture has said, <em>rivers of living water</em> will flow from within them." },
+    "electrical": { ref: "Matthew 5:16", text: "Let your <em>light shine</em> before others, that they may see your good deeds and <em>glorify your Father</em> in heaven." },
+    "flooring": { ref: "Psalm 40:2", text: "He set my feet on <em>a rock</em> and gave me <em>a firm place to stand</em>." },
+    "tile-service": { ref: "1 Corinthians 3:11", text: "For no one can lay any <em>foundation</em> other than the one already laid, which is <em>Jesus Christ</em>." },
+    "sheetrock": { ref: "Nehemiah 4:6", text: "So we <em>rebuilt the wall</em> till all of it reached half its height, for the people worked with <em>all their heart</em>." },
+    "insulation": { ref: "Psalm 91:1", text: "Whoever dwells in the <em>shelter of the Most High</em> will rest in the <em>shadow of the Almighty</em>." },
+    "framing": { ref: "Proverbs 24:27", text: "Put your outdoor work in order and get your fields ready; after that, <em>build your house</em>." },
+    "trim": { ref: "Exodus 31:4-5", text: "To make <em>artistic designs</em> for work in gold, silver and bronze, to cut and set stones, to <em>work in wood</em>, and to engage in all kinds of crafts." },
+    "skylight-repair-and-replacement": { ref: "Genesis 1:3", text: "And God said, <em>Let there be light</em>, and there was light." },
+    "synthetic-shingles": { ref: "Proverbs 10:25", text: "When the storm has swept by, the wicked are gone, but the <em>righteous stand firm</em> forever." },
+    "synthetic-slate-roof-installation": { ref: "Matthew 7:24", text: "Everyone who hears these words of mine and puts them into practice is like <em>a wise man</em> who <em>built his house on the rock</em>." },
+    "synthetic-tile-roofing": { ref: "Psalm 127:1", text: "Unless <em>the Lord builds the house</em>, the builders labor in vain." },
+    "synthetic-wood-roofing": { ref: "Isaiah 44:14", text: "He cut down <em>cedars</em>... He took <em>cypress and oak</em>. He let them grow among the trees of the forest." }
   };
 
   const verse = serviceVerses[service];
@@ -368,11 +368,14 @@ export default async function ServiceSubpage({ params }: PageProps) {
           <p className="hero-subtext">{page.subheading}</p>
 
           {verse && (
-            <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(226, 176, 71, 0.06)", border: "1px solid rgba(226, 176, 71, 0.15)", padding: "10px 18px", borderRadius: "9999px", fontSize: "0.82rem", color: "var(--secondary)", fontWeight: "600", marginTop: "2rem", maxWidth: "600px", textAlign: "center", lineHeight: "1.5" }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                <path d="M12 2v20M17 8H7" />
-              </svg>
-              <span>{verse.ref} — &ldquo;{verse.text}&rdquo;</span>
+            <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+              <p
+                style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
+                dangerouslySetInnerHTML={{ __html: `&ldquo;${verse.text}&rdquo;` }}
+              />
+              <span style={{ fontSize: "0.72rem", fontWeight: "700", color: "var(--secondary)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                — {verse.ref}
+              </span>
             </div>
           )}
         </div>
