@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import ContactForm from "@/components/ContactForm";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
+import FAQSchema from "@/components/FAQSchema";
 
 interface LocationDetail {
   title: string;
@@ -194,6 +195,17 @@ export default async function LocationSubpage({ params }: PageProps) {
           </div>
         </div>
       </section>
+
+      <FAQSchema faqs={[
+        {
+          question: `Do you offer free roofing and remodeling estimates in ${page.cityName}?`,
+          answer: `Yes, Born Again Roofing provides completely free, no-obligation written estimates for all roofing, siding, and remodeling projects in ${page.cityName}. Our inspector will visit your property, assess the required work, and provide a clear, itemized quote.`
+        },
+        {
+          question: `How does local weather affect roofing materials in ${page.cityName}?`,
+          answer: `Central Mississippi weather can bring intense UV sun heat, severe wind storms, and seasonal hail. We recommend GAF architectural shingles or standing seam metal panels, which are highly reflective and rated to withstand winds up to 130 mph, protecting your property in ${page.cityName} from storm leaks and heat decay.`
+        }
+      ]} />
     </>
   );
 }

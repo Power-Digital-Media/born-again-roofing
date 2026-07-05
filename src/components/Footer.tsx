@@ -16,7 +16,7 @@ export default function Footer() {
               <img src="/images/wp_logo.png" alt="Born Again Logo" className="footer-logo-img" />
               <div className="logo-text-wrapper">
                 <span className="logo-title">Born Again</span>
-                <span className="logo-subtitle">Roofing & Remodeling</span>
+                <span className="logo-subtitle">Home Remodeling &amp; Roofing</span>
               </div>
             </Link>
             <p className="footer-description">

@@ -1,0 +1,27 @@
+# Born Again Home Remodeling and Roofing
+# https://www.bornagainroofing.com
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_next/
+Disallow: /pin-page/
+
+# Sitemaps
+Sitemap: https://www.bornagainroofing.com/sitemap.xml
+
+# AI / LLM Crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /

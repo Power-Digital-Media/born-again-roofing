@@ -1,0 +1,21 @@
+# WordPress Legacy Redirects
+/wp-admin/*          /          301
+/wp-login.php        /          301
+/wp-content/*        /          301
+/wp-includes/*       /          301
+/wp-json/*           /          301
+/xmlrpc.php          /          301
+/feed/*              /          301
+/comments/feed/*     /          301
+/category/*          /blog/     301
+/tag/*               /blog/     301
+/author/*            /about-us/ 301
+
+# Common WordPress query parameters
+/?p=*                /          301
+/?page_id=*          /          301
+/?attachment_id=*    /          301
+
+# WordPress cron and trackback
+/wp-cron.php         /          301
+/wp-trackback.php    /          301

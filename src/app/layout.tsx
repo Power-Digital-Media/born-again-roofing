@@ -29,13 +29,38 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/"
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1
+    }
+  },
   openGraph: {
     title: "Remodeling and Roofing Solutions in Jackson, MS",
     description: "At Born Again Home Remodeling and Roofing, we combine faith, integrity, and craftsmanship to deliver premium roofing and remodeling solutions in Jackson, MS.",
     url: "https://www.bornagainroofing.com/",
     siteName: "Born Again Home Remodeling and Roofing",
     locale: "en_US",
-    type: "website"
+    type: "website",
+    images: [
+      {
+        url: "/images/logo.png",
+        width: 800,
+        height: 600,
+        alt: "Born Again Home Remodeling and Roofing"
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Born Again Home Remodeling and Roofing",
+    description: "Premium roofing and remodeling solutions in Jackson, MS. Built on faith, integrity, and expert craftsmanship.",
+    images: ["/images/logo.png"]
   }
 };
 

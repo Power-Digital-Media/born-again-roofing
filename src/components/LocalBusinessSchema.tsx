@@ -15,7 +15,7 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
     "@type": "RoofingContractor",
     "name": "Born Again Home Remodeling and Roofing",
     "alternateName": "Born Again Roofing",
-    "image": "https://www.bornagainroofing.com/logo.png",
+    "image": "https://www.bornagainroofing.com/images/logo.png",
     "@id": "https://www.bornagainroofing.com/#roofingcontractor",
     "url": "https://www.bornagainroofing.com/",
     "telephone": "(601) 573-6178",
@@ -52,7 +52,14 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
       "Madison, MS", "Pearl, MS", "Raymond, MS", "Richland, MS", 
       "Ridgeland, MS", "Terry, MS", "Utica, MS", "Vicksburg, MS", 
       "Yazoo City, MS"
-    ]
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "130",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
   };
 
   // If this is a subpage, wrap the standard business schema in a list or append the service details

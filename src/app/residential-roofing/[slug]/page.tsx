@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import TrustedBrands from "@/components/TrustedBrands";
 import ServiceCTA from "@/components/ServiceCTA";
+import FAQSchema from "@/components/FAQSchema";
 
 interface SubpageDetail {
   title: string;
@@ -228,6 +229,8 @@ export default async function ResidentialSubpage({ params }: PageProps) {
         </div>
       </section>
       <ServiceCTA />
+
+      <FAQSchema faqs={page.faqs.map((faq) => ({ question: faq.q, answer: faq.a }))} />
     </>
   );
 }

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import ServiceCTA from "@/components/ServiceCTA";
+import FAQSchema from "@/components/FAQSchema";
 
 interface ServiceDetail {
   title: string;
@@ -71,7 +72,7 @@ const services: Record<string, ServiceDetail> = {
   },
   "electrical": {
     title: "Electrical Installation and Repair in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Call Born Again Home Remodeling and Roofing at 601-573-6173 for electrical installation and repair in Jackson, MS. Schedule your estimate.",
+    description: "Call Born Again Home Remodeling and Roofing at 601-573-6178 for electrical installation and repair in Jackson, MS. Schedule your estimate.",
     heading: "Electrical Services",
     subheading: "Safe Wiring, Fixture Mounts, and Ceiling Fan Installations",
     bodyText: "Safe, up-to-code electrical work is crucial for any home. We handle electrical wiring relocations during remodeling, outlet additions, panel checks, light fixtures, and ceiling fan mounts (including LED controls). All work is performed by qualified technicians to ensure safety.",
@@ -458,6 +459,8 @@ export default async function ServiceSubpage({ params }: PageProps) {
 
       {/* Bottom CTA */}
       <ServiceCTA />
+
+      <FAQSchema faqs={page.faqs.map((faq) => ({ question: faq.q, answer: faq.a }))} />
     </>
   );
 }
