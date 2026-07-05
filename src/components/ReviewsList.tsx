@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import ContactForm from "@/components/ContactForm";
+import TrustedBrands from "@/components/TrustedBrands";
 
 interface Review {
   name: string;
@@ -109,23 +110,28 @@ export default function ReviewsList() {
   return (
     <>
       {/* Hero Section */}
-      <section className="section" style={{ background: "linear-gradient(rgba(10, 12, 16, 0.9), rgba(10, 12, 16, 0.95)), url('/images/wp_roofing-c.jpg')", backgroundSize: "cover", backgroundPosition: "center", color: "#ffffff", padding: "6.5rem 0 5.5rem", borderBottom: "1px solid var(--border)" }}>
-        <div className="container" style={{ textAlign: "center", position: "relative", zIndex: 2 }}>
-          <span className="eyebrow" style={{ color: "var(--secondary)" }}>Verified Testimonials</span>
-          <h1 style={{ color: "#ffffff", fontSize: "3rem", fontWeight: "900", marginBottom: "1rem", letterSpacing: "-0.02em" }}>
-            Customer Reviews
-          </h1>
-          <p style={{ color: "var(--text-muted)", fontSize: "1.1rem", maxWidth: "600px", margin: "0 auto 1.5rem" }}>
-            {"See what families and businesses in the Jackson Metro Area say about our faith-first roofing and remodeling craftsmanship."}
+      <section className="service-hero">
+        <div className="container service-hero-inner scroll-reveal">
+          <span className="eyebrow">Verified Testimonials</span>
+          <h1>Customer Reviews</h1>
+          <p className="hero-subtext">
+            See what families and businesses in the Jackson Metro Area say about our faith-first roofing and remodeling craftsmanship.
           </p>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(226, 176, 71, 0.08)", border: "1px solid rgba(226, 176, 71, 0.2)", padding: "8px 16px", borderRadius: "9999px", fontSize: "0.9rem", color: "var(--secondary)", fontWeight: "600" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-              <path d="M12 2v20M17 8H7" />
-            </svg>
-            <span>Ezra 5:11 — &ldquo;We are the servants of the God of heaven and earth...&rdquo;</span>
+
+          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+            <p
+              style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
+              dangerouslySetInnerHTML={{ __html: `&ldquo;We are the <em>servants</em> of the God of <em>heaven and earth</em>, and we are rebuilding the temple.&rdquo;` }}
+            />
+            <span style={{ fontSize: "0.72rem", fontWeight: "700", color: "var(--secondary)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              — Ezra 5:11
+            </span>
           </div>
         </div>
       </section>
+
+      {/* Trusted Material Partners */}
+      <TrustedBrands />
 
       {/* Main Reviews Section */}
       <section className="section">
