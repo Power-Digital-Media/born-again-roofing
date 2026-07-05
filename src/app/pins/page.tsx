@@ -564,13 +564,28 @@ export default function PinsPage() {
             min-width: 100%;
           }
 
+          .pins-grid-section {
+            overflow-x: hidden;
+          }
+
+          .pins-grid-section .container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+          }
+
           .pins-grid-2col {
             gap: 1.5rem;
+          }
+
+          .pins-grid-2col .double-bezel-wrapper {
+            max-width: 100%;
+            overflow: hidden;
           }
 
           .pin-feed-card {
             padding: 1.25rem !important;
             overflow: hidden;
+            max-width: 100%;
           }
 
           .pin-feed-header {
