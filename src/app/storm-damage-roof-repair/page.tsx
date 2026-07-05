@@ -7,6 +7,7 @@ import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import ServicePinsCarousel from "@/components/ServicePinsCarousel";
 import ServiceBentoGrid from "@/components/ServiceBentoGrid";
 import ServiceArticle from "@/components/ServiceArticle";
+import TrustedBrands from "@/components/TrustedBrands";
 
 export const metadata: Metadata = {
   title: "Storm Damage Roof Repair in Jackson, MS | Born Again Home Remodeling and Roofing",
@@ -31,6 +32,9 @@ export default function StormDamagePage() {
           </p>
         </div>
       </section>
+
+      {/* Trusted Material Partners */}
+      <TrustedBrands />
 
       {/* Dynamic Local Case Studies Carousel */}
       <section className="section" style={{ padding: "4rem 0 0" }}>
