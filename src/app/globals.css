@@ -613,22 +613,23 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
+  gap: 1.25rem;
   flex-wrap: wrap;
 }
 
 .trusted-brand-logo {
-  height: 24px;
+  height: 20px;
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: 0.3;
-  transition: opacity 0.3s ease, filter 0.3s ease;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
 }
 
 .trusted-brand-logo:hover {
-  opacity: 0.6;
-  filter: brightness(0) invert(1);
+  opacity: 0.8;
 }
 
 .credentials-section {
