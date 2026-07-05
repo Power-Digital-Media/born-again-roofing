@@ -260,7 +260,7 @@ const serviceBentoImages: Record<string, { url: string; location: string }[]> = 
     { url: "/images/wp_kitchen-remodel-f-1024x1024-1.jpg", location: "Brandon, MS" }
   ],
   "whole-house-remodeling": [
-    { url: "/images/wp_interiorpaint-1024x1024.jpg", location: "Jackson, MS" },
+    { url: "/images/wp_485382474_1402210311014300_5390508438186907525_n.jpg", location: "Jackson, MS" },
     { url: "/images/wp_kitchen-remodel-g-1024x1024-1.jpg", location: "Madison, MS" }
   ],
   "painting": [
