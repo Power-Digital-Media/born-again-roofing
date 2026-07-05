@@ -1,13 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
-import ContactForm from "@/components/ContactForm";
+
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 
 import ServicePinsCarousel from "@/components/ServicePinsCarousel";
 import ServiceBentoGrid from "@/components/ServiceBentoGrid";
 import ServiceArticle from "@/components/ServiceArticle";
 import TrustedBrands from "@/components/TrustedBrands";
+import ServiceCTA from "@/components/ServiceCTA";
 
 export const metadata: Metadata = {
   title: "Metal Roofing Repair and Installation in Jackson, MS | Born Again Home Remodeling and Roofing",
@@ -45,9 +46,7 @@ export default function MetalRoofingPage() {
 
       {/* Content Grid */}
       <section className="section">
-        <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2.5rem" }}>
-            <div>
+        <div className="container" style={{ maxWidth: "800px" }}>
               <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1rem" }}>
                 Lifetime Protection & Architectural Beauty
               </h2>
@@ -71,11 +70,6 @@ export default function MetalRoofingPage() {
                   Call our estimators at <a href="tel:6015736178" style={{ fontWeight: 700, color: "var(--secondary)" }}>(601) 573-6178</a> for direct project quotes.
                 </p>
               </div>
-            </div>
-            <div>
-              <ContactForm />
-            </div>
-          </div>
         </div>
       </section>
 
@@ -157,6 +151,8 @@ export default function MetalRoofingPage() {
           </div>
         </div>
       </section>
+
+      <ServiceCTA />
     </>
   );
 }

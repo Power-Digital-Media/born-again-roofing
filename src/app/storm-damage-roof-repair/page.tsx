@@ -1,13 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
-import ContactForm from "@/components/ContactForm";
+
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 
 import ServicePinsCarousel from "@/components/ServicePinsCarousel";
 import ServiceBentoGrid from "@/components/ServiceBentoGrid";
 import ServiceArticle from "@/components/ServiceArticle";
 import TrustedBrands from "@/components/TrustedBrands";
+import ServiceCTA from "@/components/ServiceCTA";
 
 export const metadata: Metadata = {
   title: "Storm Damage Roof Repair in Jackson, MS | Born Again Home Remodeling and Roofing",
@@ -45,9 +46,7 @@ export default function StormDamagePage() {
 
       {/* Storm Damage Links Grid */}
       <section className="section">
-        <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2.5rem" }}>
-            <div>
+        <div className="container" style={{ maxWidth: "800px" }}>
               <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1rem" }}>
                 Restoring Safety and Integrity After a Storm
               </h2>
@@ -74,11 +73,6 @@ export default function StormDamagePage() {
                   Call our emergency storm dispatch at <a href="tel:6015736178" style={{ fontWeight: 700, color: "var(--secondary)" }}>(601) 573-6178</a> immediately.
                 </p>
               </div>
-            </div>
-            <div>
-              <ContactForm />
-            </div>
-          </div>
         </div>
       </section>
 
@@ -247,6 +241,8 @@ export default function StormDamagePage() {
           </div>
         </div>
       </section>
+
+      <ServiceCTA />
     </>
   );
 }
