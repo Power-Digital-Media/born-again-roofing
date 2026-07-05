@@ -140,9 +140,9 @@ export default function InteractiveMap({ pins }: InteractiveMapProps) {
   }, [pins]);
 
   return (
-    <div className="double-bezel-wrapper" style={{ width: "100%", marginBottom: "3rem", padding: "0 !important" }}>
+    <div className="double-bezel-wrapper interactive-map-wrapper" style={{ width: "100%", marginBottom: "3rem", padding: "0 !important" }}>
       <div className="double-bezel-inner" style={{ padding: "0 !important", overflow: "hidden", borderRadius: "16px" }}>
-        <div ref={mapContainerRef} style={{ height: "420px", width: "100%", zIndex: 1 }} />
+        <div ref={mapContainerRef} className="interactive-map-container" style={{ height: "420px", width: "100%", zIndex: 1 }} />
       </div>
 
       <style jsx global>{`
@@ -216,6 +216,15 @@ export default function InteractiveMap({ pins }: InteractiveMapProps) {
 
         .leaflet-container a.leaflet-popup-close-button:hover {
           color: #f1f5f9 !important;
+        }
+
+        @media (max-width: 768px) {
+          .interactive-map-wrapper {
+            margin-bottom: 1.5rem !important;
+          }
+          .interactive-map-container {
+            height: 280px !important;
+          }
         }
       `}</style>
     </div>

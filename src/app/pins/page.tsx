@@ -529,6 +529,93 @@ export default function PinsPage() {
           0% { transform: scale(0.5); opacity: 1; }
           100% { transform: scale(2.2); opacity: 0; }
         }
+
+        @media (max-width: 768px) {
+          .pins-hero {
+            padding: 6rem 0 2.5rem;
+          }
+
+          .pins-hero h1 {
+            font-size: 1.8rem;
+          }
+
+          .hero-subtext {
+            font-size: 1rem;
+          }
+
+          .filter-section {
+            padding: 1.5rem 0;
+          }
+
+          .filter-container {
+            gap: 1rem;
+          }
+
+          .filter-inputs {
+            flex-direction: column;
+            gap: 0.75rem;
+          }
+
+          .filter-group-item {
+            min-width: 100%;
+          }
+
+          .search-wrapper {
+            min-width: 100%;
+          }
+
+          .pins-grid-2col {
+            gap: 1.5rem;
+          }
+
+          .pin-feed-card {
+            padding: 1.25rem !important;
+          }
+
+          .pin-feed-header {
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            gap: 0.75rem;
+          }
+
+          .pin-feed-author h4 {
+            font-size: 1rem;
+          }
+
+          .pin-service-tag {
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
+          }
+
+          .pin-feed-desc {
+            font-size: 0.9rem;
+            margin: 0 0 1.25rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+          }
+
+          .pin-feed-media-row {
+            grid-template-columns: 1fr;
+            height: auto;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+          }
+
+          .local-job-map {
+            min-height: 160px;
+            border-radius: 8px;
+          }
+
+          .pin-feed-main-img {
+            height: 180px;
+          }
+
+          .pin-feed-footer-btn {
+            margin-top: 0.5rem;
+          }
+        }
       `}</style>
     </>
   );
