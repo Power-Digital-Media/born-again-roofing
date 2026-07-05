@@ -22,7 +22,7 @@ export default function Home() {
           priority
           sizes="100vw"
           style={{ objectFit: 'cover', zIndex: 0 }}
-          quality={75}
+          quality={50}
         />
         <div className="hero-overlay" />
         <div className="container hero-grid">
@@ -140,9 +140,8 @@ export default function Home() {
                     Learn More <span className="arrow">↗</span>
                   </Link>
                 </div>
-                <div className="bento-split-image">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/wp_roofing-c.jpg" alt="GAF Asphalt Shingle Roofing Job" className="bento-img" />
+                <div className="bento-split-image" style={{ position: "relative" }}>
+                  <Image src="/images/wp_roofing-c.jpg" alt="GAF Asphalt Shingle Roofing Job" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover' }} quality={60} loading="lazy" />
                 </div>
               </div>
             </div>
@@ -207,9 +206,8 @@ export default function Home() {
                     Learn More <span className="arrow">↗</span>
                   </Link>
                 </div>
-                <div className="bento-split-image">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/wp_kitchen-remodel-a-1024x1024-1.jpg" alt="Kitchen Remodeling Job" className="bento-img" />
+                <div className="bento-split-image" style={{ position: "relative" }}>
+                  <Image src="/images/wp_kitchen-remodel-a-1024x1024-1.jpg" alt="Kitchen Remodeling Job" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover' }} quality={60} loading="lazy" />
                 </div>
               </div>
             </div>
