@@ -58,11 +58,35 @@ export default function InteractiveMap({ pins }: InteractiveMapProps) {
         scrollWheelZoom: false // Prevent accidental scrolling
       });
 
-      // Voyager Light Theme Tiles (Warm, natural colors that make gold pins pop!)
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+      // Define base layer options
+      const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+        attribution: '&copy; <a href="https://www.esri.com/">Esri</a>',
+        maxZoom: 19
+      });
+
+      const roadMap = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: "abcd",
         maxZoom: 20
+      });
+
+      const darkMode = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: "abcd",
+        maxZoom: 20
+      });
+
+      // Add satellite as default
+      satellite.addTo(map);
+
+      // Add layer control (top-right like Google Maps)
+      L.control.layers({
+        "Satellite": satellite,
+        "Road Map": roadMap,
+        "Dark": darkMode
+      }, {}, {
+        position: "topright",
+        collapsed: true
       }).addTo(map);
 
       mapInstanceRef.current = map;
@@ -216,6 +240,63 @@ export default function InteractiveMap({ pins }: InteractiveMapProps) {
 
         .leaflet-container a.leaflet-popup-close-button:hover {
           color: #f1f5f9 !important;
+        }
+
+        /* Layer Control Styling — Dark premium theme */
+        .leaflet-control-layers {
+          background: rgba(15, 23, 42, 0.92) !important;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(226, 176, 71, 0.2) !important;
+          border-radius: 12px !important;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+          color: #f1f5f9 !important;
+          padding: 0 !important;
+          overflow: hidden;
+        }
+
+        .leaflet-control-layers-toggle {
+          width: 36px !important;
+          height: 36px !important;
+          background-size: 20px 20px !important;
+          background-position: center !important;
+          border-radius: 10px !important;
+          filter: invert(1) brightness(2);
+        }
+
+        .leaflet-control-layers-expanded {
+          padding: 10px 14px 10px 10px !important;
+        }
+
+        .leaflet-control-layers-list {
+          font-family: system-ui, -apple-system, sans-serif !important;
+          font-size: 0.82rem !important;
+          font-weight: 600 !important;
+        }
+
+        .leaflet-control-layers-base label {
+          display: flex !important;
+          align-items: center !important;
+          gap: 8px !important;
+          padding: 5px 4px !important;
+          margin: 0 !important;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: background 0.15s ease;
+          color: #cbd5e1 !important;
+        }
+
+        .leaflet-control-layers-base label:hover {
+          background: rgba(226, 176, 71, 0.08);
+          color: #ffffff !important;
+        }
+
+        .leaflet-control-layers-base label span {
+          color: inherit !important;
+        }
+
+        .leaflet-control-layers-separator {
+          border-color: rgba(255, 255, 255, 0.08) !important;
         }
 
         @media (max-width: 768px) {
