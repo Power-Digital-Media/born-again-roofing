@@ -1,8 +1,9 @@
 import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
-import ContactForm from "@/components/ContactForm";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
+import TrustedBrands from "@/components/TrustedBrands";
+import ServiceCTA from "@/components/ServiceCTA";
 
 export const metadata: Metadata = {
   title: "Areas We Service | Born Again Home Remodeling and Roofing",
@@ -40,46 +41,57 @@ export default function AreasWeServicePage() {
       <LocalBusinessSchema pageTitle="Areas We Service" pageDescription="Explore all areas serviced by Born Again Home Remodeling and Roofing." path="/areas-we-service/" />
 
       {/* Hero */}
-      <section className="section" style={{ background: "linear-gradient(rgba(15, 34, 64, 0.95), rgba(15, 34, 64, 0.95))", color: "#ffffff", padding: "5rem 0 4rem" }}>
-        <div className="container" style={{ textAlign: "center" }}>
-          <h1 style={{ color: "#ffffff", fontSize: "2.5rem", marginBottom: "1rem" }}>
-            Areas We Service
-          </h1>
-          <p style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "1.1rem", maxWidth: "600px", margin: "0 auto" }}>
+      <section className="service-hero">
+        <div className="container service-hero-inner scroll-reveal">
+          <span className="eyebrow">
+            Born Again Service Area
+          </span>
+          <h1>Areas We Service</h1>
+          <p className="hero-subtext">
             Providing high-end roofing and remodeling services across the Central Mississippi and Jackson Metro Area.
           </p>
+
+          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+            <p
+              style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
+              dangerouslySetInnerHTML={{ __html: `&ldquo;The earth is the Lord&rsquo;s, and <em>everything in it</em>, the world, and <em>all who live in it</em>.&rdquo;` }}
+            />
+            <span style={{ fontSize: "0.72rem", fontWeight: "700", color: "var(--secondary)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              — Psalm 24:1
+            </span>
+          </div>
         </div>
       </section>
+
+      {/* Trusted Material Partners */}
+      <TrustedBrands />
 
       {/* Locations Directory List */}
       <section className="section">
-        <div className="container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "3rem" }}>
-          <div>
-            <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1.5rem" }}>
-              Our Central Mississippi Service Coverage
-            </h2>
-            <p style={{ marginBottom: "2rem" }}>
-              We are proud to serve communities throughout Hinds, Madison, Rankin, Copiah, and Warren counties. Click on a specific city below to explore localized roofing, siding, and remodeling projects near you.
-            </p>
+        <div className="container" style={{ maxWidth: "800px" }}>
+          <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1.5rem" }}>
+            Our Central Mississippi Service Coverage
+          </h2>
+          <p style={{ marginBottom: "2rem" }}>
+            We are proud to serve communities throughout Hinds, Madison, Rankin, Copiah, and Warren counties. Click on a specific city below to explore localized roofing, siding, and remodeling projects near you.
+          </p>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 24px" }}>
-              {locations.map((loc) => (
-                <Link
-                  key={loc.slug}
-                  href={`/areas-we-service/${loc.slug}`}
-                  style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--text)", fontWeight: 600, fontSize: "0.95rem" }}
-                  className="loc-link"
-                >
-                  <span style={{ color: "var(--secondary)" }}>📍</span> {loc.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div>
-            <ContactForm />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 24px" }}>
+            {locations.map((loc) => (
+              <Link
+                key={loc.slug}
+                href={`/areas-we-service/${loc.slug}`}
+                style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--text)", fontWeight: 600, fontSize: "0.95rem" }}
+                className="loc-link"
+              >
+                <span style={{ color: "var(--secondary)" }}>📍</span> {loc.name}
+              </Link>
+            ))}
           </div>
         </div>
       </section>
+
+      <ServiceCTA />
     </>
   );
 }
