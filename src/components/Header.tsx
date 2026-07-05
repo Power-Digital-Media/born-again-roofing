@@ -5,6 +5,15 @@ import Link from "next/link";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+
+  const closeMenu = () => {
+    setMobileMenuOpen(false);
+    setServicesOpen(false);
+    if (typeof document !== "undefined") {
+      document.body.style.overflow = "unset";
+    }
+  };
 
   return (
     <header className="glass header-container">
@@ -16,7 +25,7 @@ export default function Header() {
           <img src="/images/wp_logo.png" alt="Born Again Roofing Logo" className="logo-img" />
           <div className="logo-text-wrapper">
             <span className="logo-title">Born Again</span>
-            <span className="logo-subtitle">Roofing & Remodeling</span>
+            <span className="logo-subtitle">Roofing &amp; Remodeling</span>
           </div>
         </Link>
 
@@ -57,6 +66,9 @@ export default function Header() {
         <button 
           onClick={() => {
             setMobileMenuOpen(!mobileMenuOpen);
+            if (!mobileMenuOpen) {
+              setServicesOpen(false);
+            }
             if (typeof document !== "undefined") {
               document.body.style.overflow = !mobileMenuOpen ? "hidden" : "unset";
             }
@@ -70,24 +82,35 @@ export default function Header() {
 
       </div>
 
-      {/* Mobile nav drawer (Staggered Mask Reveal) */}
+      {/* Mobile nav drawer */}
       <div className={`mobile-nav-drawer ${mobileMenuOpen ? "open" : ""}`}>
         <div className="mobile-nav-links">
-          <Link href="/about-us" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>About Us</Link>
+          <Link href="/about-us" className="mobile-nav-link" onClick={closeMenu}>About Us</Link>
           
-          {/* Services group */}
-          <span className="mobile-nav-group-label mobile-nav-link">Services</span>
-          <Link href="/residential-roofing" className="mobile-nav-link mobile-nav-sublink" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Residential Roofing</Link>
-          <Link href="/metal-roofing-repair-and-installation" className="mobile-nav-link mobile-nav-sublink" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Metal Roofing</Link>
-          <Link href="/storm-damage-roof-repair" className="mobile-nav-link mobile-nav-sublink" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Storm Damage Repair</Link>
-          <Link href="/bathroom-remodeling" className="mobile-nav-link mobile-nav-sublink" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Bathroom Remodeling</Link>
-          <Link href="/kitchen-remodeling" className="mobile-nav-link mobile-nav-sublink" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Kitchen Remodeling</Link>
-          <Link href="/whole-house-remodeling" className="mobile-nav-link mobile-nav-sublink" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Whole House Remodeling</Link>
-          
-          <Link href="/areas-we-service" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Areas Served</Link>
-          <Link href="/pins" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Project Pins</Link>
-          <Link href="/reviews" className="mobile-nav-link" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>Reviews</Link>
-          <Link href="/contact-us" className="btn btn-primary btn-island mobile-nav-link mobile-cta" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>
+          {/* Services accordion */}
+          <button
+            className={`mobile-nav-link mobile-nav-accordion-toggle ${servicesOpen ? "expanded" : ""}`}
+            onClick={() => setServicesOpen(!servicesOpen)}
+            aria-expanded={servicesOpen}
+          >
+            Services
+            <svg className="accordion-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div className={`mobile-nav-accordion-panel ${servicesOpen ? "expanded" : ""}`}>
+            <Link href="/residential-roofing" className="mobile-nav-sublink" onClick={closeMenu}>Residential Roofing</Link>
+            <Link href="/metal-roofing-repair-and-installation" className="mobile-nav-sublink" onClick={closeMenu}>Metal Roofing</Link>
+            <Link href="/storm-damage-roof-repair" className="mobile-nav-sublink" onClick={closeMenu}>Storm Damage Repair</Link>
+            <Link href="/bathroom-remodeling" className="mobile-nav-sublink" onClick={closeMenu}>Bathroom Remodeling</Link>
+            <Link href="/kitchen-remodeling" className="mobile-nav-sublink" onClick={closeMenu}>Kitchen Remodeling</Link>
+            <Link href="/whole-house-remodeling" className="mobile-nav-sublink" onClick={closeMenu}>Whole House Remodeling</Link>
+          </div>
+
+          <Link href="/areas-we-service" className="mobile-nav-link" onClick={closeMenu}>Areas Served</Link>
+          <Link href="/pins" className="mobile-nav-link" onClick={closeMenu}>Project Pins</Link>
+          <Link href="/reviews" className="mobile-nav-link" onClick={closeMenu}>Reviews</Link>
+          <Link href="/contact-us" className="btn btn-primary btn-island mobile-nav-link mobile-cta" onClick={closeMenu}>
             Free Estimate
             <span className="btn-icon-wrapper">
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +119,7 @@ export default function Header() {
             </span>
           </Link>
           <div className="mobile-nav-phone mobile-nav-link">
-            <a href="tel:6015736178" onClick={() => { setMobileMenuOpen(false); document.body.style.overflow = "unset"; }}>
+            <a href="tel:6015736178" onClick={closeMenu}>
               Call: (601) 573-6178
             </a>
           </div>
