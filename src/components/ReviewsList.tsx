@@ -194,58 +194,32 @@ export default function ReviewsList() {
             </div>
 
             {/* Filter Tabs */}
-            <div style={{ display: "flex", gap: "10px", borderBottom: "1px solid var(--border)", paddingBottom: "1.25rem", justifyContent: "center" }}>
-              <button
-                onClick={() => setActiveTab("all")}
-                style={{
-                  padding: "10px 22px",
-                  borderRadius: "9999px",
-                  border: "1px solid",
-                  borderColor: activeTab === "all" ? "var(--secondary)" : "rgba(255,255,255,0.05)",
-                  background: activeTab === "all" ? "rgba(226, 176, 71, 0.08)" : "transparent",
-                  color: activeTab === "all" ? "var(--secondary)" : "var(--text-muted)",
-                  fontSize: "0.9rem",
-                  fontWeight: "700",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease"
-                }}
-              >
-                All Reviews ({allReviews.length})
-              </button>
-              <button
-                onClick={() => setActiveTab("roofing")}
-                style={{
-                  padding: "10px 22px",
-                  borderRadius: "9999px",
-                  border: "1px solid",
-                  borderColor: activeTab === "roofing" ? "var(--secondary)" : "rgba(255,255,255,0.05)",
-                  background: activeTab === "roofing" ? "rgba(226, 176, 71, 0.08)" : "transparent",
-                  color: activeTab === "roofing" ? "var(--secondary)" : "var(--text-muted)",
-                  fontSize: "0.9rem",
-                  fontWeight: "700",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease"
-                }}
-              >
-                Roofing & Repairs ({allReviews.filter(r => r.category === "roofing").length})
-              </button>
-              <button
-                onClick={() => setActiveTab("remodeling")}
-                style={{
-                  padding: "10px 22px",
-                  borderRadius: "9999px",
-                  border: "1px solid",
-                  borderColor: activeTab === "remodeling" ? "var(--secondary)" : "rgba(255,255,255,0.05)",
-                  background: activeTab === "remodeling" ? "rgba(226, 176, 71, 0.08)" : "transparent",
-                  color: activeTab === "remodeling" ? "var(--secondary)" : "var(--text-muted)",
-                  fontSize: "0.9rem",
-                  fontWeight: "700",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease"
-                }}
-              >
-                Home Remodeling ({allReviews.filter(r => r.category === "remodeling").length})
-              </button>
+            <div style={{ display: "flex", gap: "0", borderBottom: "1px solid var(--border)", justifyContent: "center" }}>
+              {([
+                { key: "all" as const, label: "All", count: allReviews.length },
+                { key: "roofing" as const, label: "Roofing", count: allReviews.filter(r => r.category === "roofing").length },
+                { key: "remodeling" as const, label: "Remodeling", count: allReviews.filter(r => r.category === "remodeling").length }
+              ]).map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  style={{
+                    padding: "12px 20px",
+                    border: "none",
+                    borderBottom: activeTab === tab.key ? "2px solid var(--secondary)" : "2px solid transparent",
+                    background: "transparent",
+                    color: activeTab === tab.key ? "var(--secondary)" : "var(--text-muted)",
+                    fontSize: "0.88rem",
+                    fontWeight: activeTab === tab.key ? "800" : "600",
+                    cursor: "pointer",
+                    transition: "all 0.25s ease",
+                    letterSpacing: "0.02em",
+                    marginBottom: "-1px"
+                  }}
+                >
+                  {tab.label} <span style={{ opacity: 0.6 }}>({tab.count})</span>
+                </button>
+              ))}
             </div>
 
             {/* Reviews Grid */}
