@@ -2726,8 +2726,11 @@ a {
   }
   
   .header-container {
+    position: fixed;
     top: 0.75rem;
-    margin: 0.75rem auto;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
     width: calc(100% - 1.5rem);
   }
   
