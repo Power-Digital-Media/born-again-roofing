@@ -121,10 +121,10 @@ export default function ReviewsList() {
           <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
             <p
               style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
-              dangerouslySetInnerHTML={{ __html: `&ldquo;We are the <em>servants</em> of the God of <em>heaven and earth</em>, and we are rebuilding the temple.&rdquo;` }}
+              dangerouslySetInnerHTML={{ __html: `&ldquo;A <em>good name</em> is more desirable than great riches; to be held in <em>high esteem</em> is better than silver or gold.&rdquo;` }}
             />
             <span style={{ fontSize: "0.72rem", fontWeight: "700", color: "var(--secondary)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              — Ezra 5:11
+              — Proverbs 22:1
             </span>
           </div>
         </div>
