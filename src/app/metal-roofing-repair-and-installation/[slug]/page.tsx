@@ -1,8 +1,9 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import ContactForm from "@/components/ContactForm";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
+import TrustedBrands from "@/components/TrustedBrands";
+import ServiceCTA from "@/components/ServiceCTA";
 
 interface SubpageDetail {
   title: string;
@@ -88,13 +89,24 @@ export default async function MetalSubpage({ params }: PageProps) {
           </span>
           <h1>{page.heading}</h1>
           <p className="hero-subtext">{page.subheading}</p>
+          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+            <p
+              style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
+              dangerouslySetInnerHTML={{ __html: `&ldquo;<em>Enlarge</em> the place of your tent, stretch your tent curtains wide, do not hold back; <em>strengthen your stakes</em>.&rdquo;` }}
+            />
+            <span style={{ fontSize: "0.72rem", fontWeight: "700", color: "var(--secondary)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              — Isaiah 54:2
+            </span>
+          </div>
         </div>
       </section>
 
+      {/* Trusted Material Partners */}
+      <TrustedBrands />
+
       {/* Page Content */}
       <section className="section">
-        <div className="container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "3rem" }}>
-          <div>
+        <div className="container" style={{ maxWidth: "800px" }}>
             <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1rem" }}>Lifetime Security & Design</h2>
             <p style={{ marginBottom: "1.5rem", fontSize: "1.05rem", lineHeight: "1.6" }}>{page.bodyText}</p>
             
@@ -120,12 +132,9 @@ export default async function MetalSubpage({ params }: PageProps) {
                 </div>
               ))}
             </div>
-          </div>
-          <div>
-            <ContactForm />
-          </div>
         </div>
       </section>
+      <ServiceCTA />
     </>
   );
 }
