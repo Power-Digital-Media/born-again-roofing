@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
+import TrustedBrands from "@/components/TrustedBrands";
 
 export const metadata: Metadata = {
   title: "About Us | Born Again Home Remodeling and Roofing",
@@ -24,8 +25,21 @@ export default function AboutUsPage() {
           <p className="hero-subtext">
             {"At Born Again Home Remodeling and Roofing, we are proud to be a Christian-owned company serving Jackson, MS, and surrounding communities."}
           </p>
+
+          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+            <p
+              style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
+              dangerouslySetInnerHTML={{ __html: `&ldquo;Whatever you do, whether in <em>word or deed</em>, do it all in the <em>name of the Lord</em> Jesus, giving thanks to God.&rdquo;` }}
+            />
+            <span style={{ fontSize: "0.72rem", fontWeight: "700", color: "var(--secondary)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              — Colossians 3:17
+            </span>
+          </div>
         </div>
       </section>
+
+      {/* Trusted Material Partners */}
+      <TrustedBrands />
 
       {/* Who We Are & Services Section */}
       <section className="section content-section">
