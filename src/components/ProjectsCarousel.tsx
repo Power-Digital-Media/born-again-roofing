@@ -133,7 +133,7 @@ export default function ProjectsCarousel() {
   }
 
   return (
-    <section className="marquee-section" style={{ padding: "5rem 0" }}>
+    <section className="marquee-section" style={{ padding: "3rem 0" }}>
       {/* Title Block */}
       <div className="container marquee-header" style={{ marginBottom: "2.5rem" }}>
         <span className="eyebrow" style={{ color: "var(--secondary)" }}>Our Work In Action</span>
