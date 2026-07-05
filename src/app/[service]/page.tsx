@@ -228,6 +228,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 import ServiceBentoGrid from "@/components/ServiceBentoGrid";
 import ServicePinsCarousel from "@/components/ServicePinsCarousel";
 import ServiceArticle from "@/components/ServiceArticle";
+import TrustedBrands from "@/components/TrustedBrands";
 
 const serviceToPinMapping: Record<string, string[]> = {
   "bathroom-remodeling": ["Bathroom Remodeling"],
@@ -345,6 +346,9 @@ export default async function ServiceSubpage({ params }: PageProps) {
           <p className="hero-subtext">{page.subheading}</p>
         </div>
       </section>
+
+      {/* Trusted Material Partners */}
+      <TrustedBrands />
 
       {/* Dynamic Local Case Studies Carousel (Full Width directly below Hero) */}
       <section className="section" style={{ padding: "4rem 0 0" }}>
