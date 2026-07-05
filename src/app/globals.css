@@ -474,6 +474,25 @@ a {
   }
 }
 
+/* Scroll-triggered float-up reveal */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children for grouped reveals */
+.reveal-on-scroll:nth-child(2) { transition-delay: 0.08s; }
+.reveal-on-scroll:nth-child(3) { transition-delay: 0.16s; }
+.reveal-on-scroll:nth-child(4) { transition-delay: 0.24s; }
+.reveal-on-scroll:nth-child(5) { transition-delay: 0.32s; }
+.reveal-on-scroll:nth-child(6) { transition-delay: 0.40s; }
+
 /* Skeleton Loading State styling */
 .skeleton {
   background: linear-gradient(90deg, var(--border) 25%, rgba(var(--primary-rgb), 0.05) 50%, var(--border) 75%);

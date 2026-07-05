@@ -66,7 +66,7 @@ export default function Home() {
       {/* Credentials Banner (Logo / Trust Wall directly below Hero) */}
       <section className="credentials-section">
         <div className="container credentials-inner" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "2rem" }}>
-          <div className="credential-item" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div className="credential-item reveal-on-scroll" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <div className="specialty-icon-wrapper" style={{ margin: 0, width: "40px", height: "40px", borderRadius: "10px", flexShrink: 0 }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2v20M17 8H7" />
@@ -78,7 +78,7 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="credential-item" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div className="credential-item reveal-on-scroll" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <div className="specialty-icon-wrapper" style={{ margin: 0, width: "40px", height: "40px", borderRadius: "10px", flexShrink: 0 }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -90,7 +90,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="credential-item" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div className="credential-item reveal-on-scroll" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <div className="specialty-icon-wrapper" style={{ margin: 0, width: "40px", height: "40px", borderRadius: "10px", flexShrink: 0 }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -112,7 +112,7 @@ export default function Home() {
       <section className="section services-section">
         <div className="container">
           
-          <div className="services-header">
+          <div className="services-header reveal-on-scroll">
             <span className="eyebrow">Expert Capabilities</span>
             <h2>Our Core Services</h2>
             <p>
@@ -123,7 +123,7 @@ export default function Home() {
           <div className="bento-grid">
             
             {/* Service 1 - Wide split bento card (GAF Roofing Image) */}
-            <div className="double-bezel-wrapper bento-col-8">
+            <div className="double-bezel-wrapper bento-col-8 reveal-on-scroll">
               <div className="double-bezel-inner bento-split-card">
                 <div className="bento-split-content">
                   <div className="specialty-icon-wrapper">
@@ -148,7 +148,7 @@ export default function Home() {
             </div>
 
             {/* Service 2 - Standard 1/3 card (Storm Damage) */}
-            <div className="double-bezel-wrapper bento-col-4">
+            <div className="double-bezel-wrapper bento-col-4 reveal-on-scroll">
               <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/wp_storm-damage-home-roof-1.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -167,7 +167,7 @@ export default function Home() {
             </div>
 
             {/* Service 3 - Standard 1/3 card (Metal Roofing) */}
-            <div className="double-bezel-wrapper bento-col-4">
+            <div className="double-bezel-wrapper bento-col-4 reveal-on-scroll">
               <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/wp_metal-roof-standing-seam-1.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -188,7 +188,7 @@ export default function Home() {
             </div>
 
             {/* Service 4 - Wide split bento card (Kitchen Remodel Image) */}
-            <div className="double-bezel-wrapper bento-col-8">
+            <div className="double-bezel-wrapper bento-col-8 reveal-on-scroll">
               <div className="double-bezel-inner bento-split-card">
                 <div className="bento-split-content">
                   <div className="specialty-icon-wrapper">
@@ -215,7 +215,7 @@ export default function Home() {
             </div>
 
             {/* Service 5 - Standard 1/2 card (Painting) */}
-            <div className="double-bezel-wrapper bento-col-6">
+            <div className="double-bezel-wrapper bento-col-6 reveal-on-scroll">
               <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/wp_interiorpaint-1024x1024.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -235,7 +235,7 @@ export default function Home() {
             </div>
 
             {/* Service 6 - Standard 1/2 card (Whole House) */}
-            <div className="double-bezel-wrapper bento-col-6">
+            <div className="double-bezel-wrapper bento-col-6 reveal-on-scroll">
               <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/wp_synthetic-tile-roofing-home-1.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -265,7 +265,7 @@ export default function Home() {
       {/* Why Choose Us Section */}
       <section className="section section-alt" style={{ borderBottom: "1px solid var(--border)" }}>
         <div className="container">
-          <div className="services-header">
+          <div className="services-header reveal-on-scroll">
             <span className="eyebrow">Our Difference</span>
             <h2>Why Choose Born Again?</h2>
             <p>
@@ -275,7 +275,7 @@ export default function Home() {
 
           <div className="grid-layout three-col-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2.5rem" }}>
             
-            <div className="double-bezel-wrapper">
+            <div className="double-bezel-wrapper reveal-on-scroll">
               <div className="double-bezel-inner value-card" style={{ padding: "3rem 2.5rem" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -290,7 +290,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="double-bezel-wrapper">
+            <div className="double-bezel-wrapper reveal-on-scroll">
               <div className="double-bezel-inner value-card" style={{ padding: "3rem 2.5rem" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -305,7 +305,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="double-bezel-wrapper">
+            <div className="double-bezel-wrapper reveal-on-scroll">
               <div className="double-bezel-inner value-card" style={{ padding: "3rem 2.5rem" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -328,7 +328,7 @@ export default function Home() {
       <section className="section">
         <div className="container">
           
-          <div className="faq-header">
+          <div className="faq-header reveal-on-scroll">
             <span className="eyebrow">Expert Answers</span>
             <h2>Frequently Asked Questions</h2>
             <p>
