@@ -618,7 +618,7 @@ a {
 }
 
 .trusted-brand-logo {
-  height: 22px;
+  height: 32px;
   width: auto;
   object-fit: contain;
   filter: brightness(0) invert(1);
