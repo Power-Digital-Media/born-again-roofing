@@ -1,13 +1,13 @@
 import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
-import ContactForm from "@/components/ContactForm";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 
 import ServicePinsCarousel from "@/components/ServicePinsCarousel";
 import ServiceBentoGrid from "@/components/ServiceBentoGrid";
 import ServiceArticle from "@/components/ServiceArticle";
 import TrustedBrands from "@/components/TrustedBrands";
+import ServiceCTA from "@/components/ServiceCTA";
 
 export const metadata: Metadata = {
   title: "Residential Roofing in Jackson, MS | Born Again Home Remodeling and Roofing",
@@ -43,10 +43,9 @@ export default function ResidentialRoofingPage() {
         </div>
       </section>
 
-      {/* Main Content & Form Grid */}
+      {/* Main Content */}
       <section className="section">
-        <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "4rem", alignItems: "start" }}>
+        <div className="container" style={{ maxWidth: "800px" }}>
             
             <div className="services-intro-col">
               <span className="eyebrow" style={{ color: "var(--secondary)" }}>GAF Certified Quality</span>
@@ -80,7 +79,7 @@ export default function ResidentialRoofingPage() {
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" style={{ width: "18px", height: "18px", color: "var(--secondary)", flexShrink: 0, marginTop: "3px" }}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
-                  <span><strong>Soffit & Fascia:</strong> Repairing structural wood rot and maintaining attic ventilation edges.</span>
+                  <span><strong>Soffit &amp; Fascia:</strong> Repairing structural wood rot and maintaining attic ventilation edges.</span>
                 </li>
               </ul>
               
@@ -94,13 +93,6 @@ export default function ResidentialRoofingPage() {
               </div>
             </div>
 
-            <div className="double-bezel-wrapper">
-              <div className="double-bezel-inner" style={{ padding: "1.5rem" }}>
-                <ContactForm />
-              </div>
-            </div>
-
-          </div>
         </div>
       </section>
 
@@ -291,6 +283,9 @@ export default function ResidentialRoofingPage() {
           </div>
         </div>
       </section>
+
+      {/* Bottom CTA */}
+      <ServiceCTA />
     </>
   );
 }
