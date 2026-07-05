@@ -199,12 +199,13 @@ export default async function StormDamageSubpage({ params }: PageProps) {
       {/* Page Content */}
       <section className="section">
         <div className="container">
-            <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1rem" }}>Restoration & Care</h2>
-            <p style={{ marginBottom: "1.5rem", fontSize: "1.05rem", lineHeight: "1.6" }}>{page.bodyText}</p>
-            
-            <p style={{ marginBottom: "2rem" }}>
-              Our team operates with high integrity. We provide clear, accurate inspection assessments so you can make informed decisions. We use top GAF materials to ensure your repaired or replaced roof resists future Mississippi storms.
-            </p>
+            <div style={{ maxWidth: "800px", margin: "0 auto 3rem", textAlign: "center" }}>
+              <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1rem" }}>Restoration & Care</h2>
+              <p style={{ marginBottom: "1.5rem", fontSize: "1.05rem", lineHeight: "1.7", color: "var(--text-muted)" }}>{page.bodyText}</p>
+              <p style={{ marginBottom: "0", fontSize: "1.05rem", lineHeight: "1.7", color: "var(--text-muted)" }}>
+                Our team operates with high integrity. We provide clear, accurate inspection assessments so you can make informed decisions. We use top GAF materials to ensure your repaired or replaced roof resists future Mississippi storms.
+              </p>
+            </div>
 
             {/* Dynamic Local Case Studies Bento Grid */}
             <ServiceBentoGrid services={mappedCategories} overrideImages={overrideBentoImages} />

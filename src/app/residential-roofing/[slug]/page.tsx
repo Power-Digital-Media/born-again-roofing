@@ -199,12 +199,13 @@ export default async function ResidentialSubpage({ params }: PageProps) {
       {/* Page Content */}
       <section className="section">
         <div className="container">
-            <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1rem" }}>Our Process & Commitment</h2>
-            <p style={{ marginBottom: "1.5rem", fontSize: "1.05rem", lineHeight: "1.6" }}>{page.bodyText}</p>
-            
-            <p style={{ marginBottom: "2rem" }}>
-              {"We believe in doing things right. We don't cut corners, we use the highest grade materials from trusted manufacturers, and we back all our work with warranties you can rely on."}
-            </p>
+            <div style={{ maxWidth: "800px", margin: "0 auto 3rem", textAlign: "center" }}>
+              <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1rem" }}>Our Process & Commitment</h2>
+              <p style={{ marginBottom: "1.5rem", fontSize: "1.05rem", lineHeight: "1.7", color: "var(--text-muted)" }}>{page.bodyText}</p>
+              <p style={{ marginBottom: "0", fontSize: "1.05rem", lineHeight: "1.7", color: "var(--text-muted)" }}>
+                {"We believe in doing things right. We don't cut corners, we use the highest grade materials from trusted manufacturers, and we back all our work with warranties you can rely on."}
+              </p>
+            </div>
 
             {/* Dynamic Local Case Studies Bento Grid */}
             <ServiceBentoGrid services={mappedCategories} overrideImages={overrideBentoImages} />
