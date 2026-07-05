@@ -66,7 +66,7 @@ export default function Home() {
       {/* Credentials Banner (Logo / Trust Wall directly below Hero) */}
       <section className="credentials-section">
         <div className="container credentials-inner" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "2rem" }}>
-          <div className="credential-item reveal-on-scroll" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div className="credential-item" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <div className="specialty-icon-wrapper" style={{ margin: 0, width: "40px", height: "40px", borderRadius: "10px", flexShrink: 0 }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2v20M17 8H7" />
@@ -78,7 +78,7 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="credential-item reveal-on-scroll" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div className="credential-item" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <div className="specialty-icon-wrapper" style={{ margin: 0, width: "40px", height: "40px", borderRadius: "10px", flexShrink: 0 }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -90,7 +90,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="credential-item reveal-on-scroll" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div className="credential-item" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <div className="specialty-icon-wrapper" style={{ margin: 0, width: "40px", height: "40px", borderRadius: "10px", flexShrink: 0 }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />

@@ -2883,6 +2883,13 @@ a {
     min-width: 0;
   }
 
+  /* Disable scroll-reveal animations inside horizontal scroll containers */
+  .bento-grid .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
   /* Override column spans on mobile */
   .bento-col-4,
   .bento-col-6,
