@@ -596,38 +596,39 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 1.5rem 1.25rem 1rem;
+  gap: 1.25rem;
+  padding: 2.5rem 2rem 2rem;
 }
 
 .trusted-brands-label {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: var(--text-muted);
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .trusted-brands-logos {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.25rem;
+  gap: 2.5rem;
   flex-wrap: wrap;
 }
 
 .trusted-brand-logo {
-  height: 32px;
+  height: 52px;
   width: auto;
   object-fit: contain;
   filter: brightness(0) invert(1);
-  opacity: 0.35;
-  transition: opacity 0.3s ease;
+  opacity: 0.5;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .trusted-brand-logo:hover {
-  opacity: 0.6;
+  opacity: 0.85;
+  transform: scale(1.05);
 }
 
 /* Service Page Bottom CTA */
@@ -2904,6 +2905,15 @@ a {
 
   .trusted-brands {
     padding: 1rem 1.25rem 0.5rem;
+  }
+
+  .trusted-brands-logos {
+    gap: 1.25rem;
+  }
+
+  .trusted-brand-logo {
+    height: 32px;
+    opacity: 0.35;
   }
 
   .trusted-brands + .section {

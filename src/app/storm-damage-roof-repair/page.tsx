@@ -31,6 +31,16 @@ export default function StormDamagePage() {
           <p className="hero-subtext">
             Fast, professional emergency response for wind, hail, and storm damage. We secure your home and handle your insurance adjusters directly.
           </p>
+
+          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+            <p
+              style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
+              dangerouslySetInnerHTML={{ __html: `&ldquo;The Lord is good, a <em>refuge</em> in times of <em>trouble</em>. He cares for those who <em>trust in Him</em>.&rdquo;` }}
+            />
+            <span style={{ fontSize: "0.72rem", fontWeight: "700", color: "var(--secondary)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              — Nahum 1:7
+            </span>
+          </div>
         </div>
       </section>
 

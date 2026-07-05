@@ -31,6 +31,16 @@ export default function MetalRoofingPage() {
           <p className="hero-subtext">
             Invest in lifetime durability and modern aesthetics. Premium standing seam and metal shingle installations in Central Mississippi.
           </p>
+
+          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+            <p
+              style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
+              dangerouslySetInnerHTML={{ __html: `&ldquo;<em>Enlarge</em> the place of your tent, stretch your tent curtains wide, do not hold back; <em>strengthen your stakes</em>.&rdquo;` }}
+            />
+            <span style={{ fontSize: "0.72rem", fontWeight: "700", color: "var(--secondary)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              — Isaiah 54:2
+            </span>
+          </div>
         </div>
       </section>
 
