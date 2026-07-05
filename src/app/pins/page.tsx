@@ -10,7 +10,7 @@ const InteractiveMap = dynamic(() => import("@/components/InteractiveMap"), {
   ssr: false,
   loading: () => (
     <div className="double-bezel-wrapper" style={{ width: "100%", marginBottom: "3rem" }}>
-      <div className="double-bezel-inner" style={{ height: "420px", display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.01)", borderRadius: "16px" }}>
+      <div className="double-bezel-inner" style={{ height: "280px", display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.01)", borderRadius: "16px" }}>
         <h4 style={{ color: "var(--text-muted)" }}>Loading Interactive Map...</h4>
       </div>
     </div>
@@ -174,7 +174,7 @@ export default function PinsPage() {
                         <span className="pin-feed-date">{pin.date}</span>
                       </div>
                       <span className="pin-service-tag">
-                        {pin.service}
+                        {pin.service.length > 15 ? pin.service.substring(0, 15) : pin.service}
                       </span>
                     </div>
 
@@ -570,16 +570,26 @@ export default function PinsPage() {
 
           .pin-feed-card {
             padding: 1.25rem !important;
+            overflow: hidden;
           }
 
           .pin-feed-header {
             margin-bottom: 1rem;
             padding-bottom: 0.75rem;
-            gap: 0.75rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+          }
+
+          .pin-feed-author {
+            min-width: 0;
+            flex: 1;
           }
 
           .pin-feed-author h4 {
             font-size: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
           .pin-service-tag {
@@ -587,6 +597,9 @@ export default function PinsPage() {
             padding: 3px 8px;
             white-space: nowrap;
             flex-shrink: 0;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
           .pin-feed-desc {
@@ -594,6 +607,7 @@ export default function PinsPage() {
             margin: 0 0 1.25rem;
             word-wrap: break-word;
             overflow-wrap: break-word;
+            overflow: hidden;
           }
 
           .pin-feed-media-row {
