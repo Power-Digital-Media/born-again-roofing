@@ -11,7 +11,7 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
   const baseDescription = "At Born Again Home Remodeling and Roofing, we combine faith, integrity, and craftsmanship to deliver premium roofing and remodeling solutions in Jackson, MS, and surrounding Metro areas.";
 
   const businessSchema = {
-    "@type": "RoofingContractor",
+    "@type": ["RoofingContractor", "HomeAndConstructionBusiness", "GeneralContractor"],
     "@id": "https://www.bornagainroofing.com/#roofingcontractor",
     "name": "Born Again Home Remodeling and Roofing",
     "alternateName": ["Born Again Roofing", "Born Again Home Remodeling"],
