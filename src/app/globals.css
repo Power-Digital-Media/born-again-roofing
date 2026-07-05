@@ -2754,13 +2754,11 @@ a {
 
   .credentials-inner {
     display: flex !important;
+    flex-direction: column;
     grid-template-columns: unset !important;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 12px !important;
+    overflow: visible !important;
+    gap: 10px !important;
     padding: 1.5rem 1.25rem !important;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
   }
 
   .credentials-inner::-webkit-scrollbar {
@@ -2768,10 +2766,10 @@ a {
   }
 
   .credential-item {
-    flex: 0 0 auto;
-    min-width: 200px;
-    scroll-snap-align: start;
-    padding: 12px 16px;
+    flex: none;
+    width: 100%;
+    scroll-snap-align: unset;
+    padding: 14px 18px;
     border-left: 3px solid var(--secondary);
     background: rgba(226, 176, 71, 0.04);
     border-radius: 0 12px 12px 0;
