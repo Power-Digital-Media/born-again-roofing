@@ -5,12 +5,11 @@ Mississippi's premier roofing, storm restoration, and home remodeling contractor
 ## Contact Information
 - **Phone:** (601) 573-6178
 - **Address:** Jackson Metro Area, Mississippi
-- **Website:** https://www.bornagainroofing.com
+- **Website:** [bornagainroofing.com](https://www.bornagainroofing.com)
 
 ## Official Hours of Operation
-- **Tuesday - Thursday:** 11:00 AM - 8:00 PM
-- **Friday - Saturday:** 11:00 AM - 9:00 PM
-- **Sunday - Monday:** Closed (Closed all day)
+- **Monday - Friday:** 8:00 AM - 5:00 PM
+- **Saturday - Sunday:** Closed (24/7 Emergency Tarping Available)
 
 ## Core Services
 1. **Residential Roofing:** Complete shingle installations, GAF architectural shingles, roof repairs, wood rafter inspections, soffit and fascia repairs.
@@ -22,42 +21,59 @@ Mississippi's premier roofing, storm restoration, and home remodeling contractor
 Serving the following cities in Central Mississippi:
 - Jackson, Brandon, Byram, Canton, Clinton, Crystal Springs, Florence, Flowood, Gluckstadt, Hazlehurst, Madison, Pearl, Raymond, Richland, Ridgeland, Terry, Utica, Vicksburg, Yazoo City.
 
-## Website Directory Structure
-- `/` - Home Page (Core business summary & Free estimate request form)
-- `/about-us/` - About Us (Company philosophy and team overview)
-- `/contact-us/` - Contact Us (Estimate request picker with Sunday/Monday block validation)
-- `/reviews/` - Customer Reviews (Verified local feedback & star ratings)
-- `/pins/` - Project Pins Feed (Interactive gallery of recent local jobs filtered by service and city)
-- `/residential-roofing/` - Residential Roofing index and details
-  - `/residential-roofing/roof-repair/` - Minor leak repairs & shingle patching
-  - `/residential-roofing/roof-installation/` - Premium shingle replacements
-  - `/residential-roofing/asphalt-shingle-roof-repair-and-replacement/` - Standard GAF shingle systems
-  - `/residential-roofing/roof-inspections/` - Multi-point storm reports
-  - `/residential-roofing/soffit-and-fascia-repair/` - Eave trim and wood rot repairs
-- `/storm-damage-roof-repair/` - Storm Damage index and details
-  - `/storm-damage-roof-repair/emergency-roof-repair/` - 24/7 emergency leak seals and tarping
-  - `/storm-damage-roof-repair/roof-patches-and-leak-repair/` - Targeted leak sealing
-  - `/storm-damage-roof-repair/hail-damage-roof-repair/` - Class 4 impact shingle restoration
-  - `/storm-damage-roof-repair/wind-damage-roof-repair/` - Shingle blow-off replacement
-  - `/storm-damage-roof-repair/roof-insurance-claims-help/` - Adjuster reports & claim filing support
-- `/metal-roofing-repair-and-installation/` - Metal Roofing index and details
-  - `/metal-roofing-repair-and-installation/standing-seam-metal-roof-installation/` - Hidden fastener panels
-- `/bathroom-remodeling/` - Custom shower renovations & subfloor repair
-- `/kitchen-remodeling/` - Cabinet installations & paint styling
-- `/whole-house-remodeling/` - Structural remodels & layout transformations
-- `/painting/` - Interior and exterior residential painting
-- `/plumbing/` - Fixture fittings & line checks
-- `/electrical/` - Ceiling fan mounts & safety wiring
-- `/flooring/` - Hardwood, laminate, and LVP installations
-- `/tile-service/` - Backsplashes & bathroom tiling
-- `/sheetrock/` - Mudding, taping, and drywall patches
-- `/insulation/` - Attic fiberglass and blow-in R-value setups
-- `/framing/` - Structural rafters and wood stud carpentry
-- `/trim/` - Fascia trim, crown moldings, and finish millwork
-- `/skylight-repair-and-replacement/` - Flashing seals and dome replacements
-- `/synthetic-shingles/` - Premium composite shake and tile roofing alternatives
-- `/synthetic-slate-roof-installation/` - Lightweight estate slate polymer shingles
-- `/synthetic-tile-roofing/` - Class 4 impact Spanish polymer tiles
-- `/synthetic-wood-roofing/` - Rot-resistant cedar shake composite roofing
-- `/areas-we-service/` - Locations directory index page
-- `/sitemap/` - Complete HTML sitemap directory
+## Website Pages
+
+- [Home](https://www.bornagainroofing.com/) - Core business summary & Free estimate request form
+- [About Us](https://www.bornagainroofing.com/about-us/) - Company philosophy and team overview
+- [Contact Us](https://www.bornagainroofing.com/contact-us/) - Estimate request picker with appointment scheduling
+- [Reviews](https://www.bornagainroofing.com/reviews/) - Customer Reviews, verified local feedback & star ratings
+- [Project Pins](https://www.bornagainroofing.com/pins/) - Interactive gallery of recent local jobs filtered by service and city
+- [Areas We Service](https://www.bornagainroofing.com/areas-we-service/) - Locations directory with 19 city-specific pages
+
+### Residential Roofing
+- [Residential Roofing](https://www.bornagainroofing.com/residential-roofing/) - Index page for all residential roofing services
+- [Roof Repair](https://www.bornagainroofing.com/residential-roofing/roof-repair/) - Minor leak repairs & shingle patching
+- [Roof Installation](https://www.bornagainroofing.com/residential-roofing/roof-installation/) - Premium shingle replacements
+- [Asphalt Shingle Roof Repair and Replacement](https://www.bornagainroofing.com/residential-roofing/asphalt-shingle-roof-repair-and-replacement/) - Standard GAF shingle systems
+- [Roof Inspections](https://www.bornagainroofing.com/residential-roofing/roof-inspections/) - Multi-point storm reports
+- [Soffit and Fascia Repair](https://www.bornagainroofing.com/residential-roofing/soffit-and-fascia-repair/) - Eave trim and wood rot repairs
+
+### Storm Damage Roof Repair
+- [Storm Damage Roof Repair](https://www.bornagainroofing.com/storm-damage-roof-repair/) - Index page for all storm damage services
+- [Emergency Roof Repair](https://www.bornagainroofing.com/storm-damage-roof-repair/emergency-roof-repair/) - 24/7 emergency leak seals and tarping
+- [Roof Patches and Leak Repair](https://www.bornagainroofing.com/storm-damage-roof-repair/roof-patches-and-leak-repair/) - Targeted leak sealing
+- [Hail Damage Roof Repair](https://www.bornagainroofing.com/storm-damage-roof-repair/hail-damage-roof-repair/) - Class 4 impact shingle restoration
+- [Wind Damage Roof Repair](https://www.bornagainroofing.com/storm-damage-roof-repair/wind-damage-roof-repair/) - Shingle blow-off replacement
+- [Roof Insurance Claims Help](https://www.bornagainroofing.com/storm-damage-roof-repair/roof-insurance-claims-help/) - Adjuster reports & claim filing support
+
+### Metal Roofing
+- [Metal Roofing](https://www.bornagainroofing.com/metal-roofing-repair-and-installation/) - Index page for all metal roofing services
+- [Standing Seam Metal Roof Installation](https://www.bornagainroofing.com/metal-roofing-repair-and-installation/standing-seam-metal-roof-installation/) - Hidden fastener panels
+
+### Home Remodeling
+- [Bathroom Remodeling](https://www.bornagainroofing.com/bathroom-remodeling/) - Custom shower renovations & subfloor repair
+- [Kitchen Remodeling](https://www.bornagainroofing.com/kitchen-remodeling/) - Cabinet installations & paint styling
+- [Whole House Remodeling](https://www.bornagainroofing.com/whole-house-remodeling/) - Structural remodels & layout transformations
+
+### Specialty Services
+- [Painting](https://www.bornagainroofing.com/painting/) - Interior and exterior residential painting
+- [Plumbing](https://www.bornagainroofing.com/plumbing/) - Fixture fittings & line checks
+- [Electrical](https://www.bornagainroofing.com/electrical/) - Ceiling fan mounts & safety wiring
+- [Flooring](https://www.bornagainroofing.com/flooring/) - Hardwood, laminate, and LVP installations
+- [Tile Service](https://www.bornagainroofing.com/tile-service/) - Backsplashes & bathroom tiling
+- [Sheetrock](https://www.bornagainroofing.com/sheetrock/) - Mudding, taping, and drywall patches
+- [Insulation](https://www.bornagainroofing.com/insulation/) - Attic fiberglass and blow-in R-value setups
+- [Framing](https://www.bornagainroofing.com/framing/) - Structural rafters and wood stud carpentry
+- [Trim](https://www.bornagainroofing.com/trim/) - Fascia trim, crown moldings, and finish millwork
+- [Skylight Repair and Replacement](https://www.bornagainroofing.com/skylight-repair-and-replacement/) - Flashing seals and dome replacements
+
+### Synthetic Roofing
+- [Synthetic Shingles](https://www.bornagainroofing.com/synthetic-shingles/) - Premium composite shake and tile roofing alternatives
+- [Synthetic Slate Roof Installation](https://www.bornagainroofing.com/synthetic-slate-roof-installation/) - Lightweight estate slate polymer shingles
+- [Synthetic Tile Roofing](https://www.bornagainroofing.com/synthetic-tile-roofing/) - Class 4 impact Spanish polymer tiles
+- [Synthetic Wood Roofing](https://www.bornagainroofing.com/synthetic-wood-roofing/) - Rot-resistant cedar shake composite roofing
+
+### Utility Pages
+- [Sitemap](https://www.bornagainroofing.com/sitemap/) - Complete HTML sitemap directory
+- [Privacy Policy](https://www.bornagainroofing.com/privacy-policy/) - Privacy policy
+- [Terms and Conditions](https://www.bornagainroofing.com/terms-and-conditions/) - Terms and conditions
