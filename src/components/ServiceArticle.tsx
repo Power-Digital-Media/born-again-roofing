@@ -32,7 +32,7 @@ export default function ServiceArticle({ service }: ServiceArticleProps) {
 
         {/* Scripture Callout Block */}
         {article.scriptureRef && (
-          <div className="scripture-card-wrapper scroll-reveal">
+          <div className="scripture-card-wrapper">
             <div className="scripture-card-inner">
               <span className="scripture-cross-icon">†</span>
               <p className="scripture-text">

@@ -1,8 +1,8 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import ContactForm from "@/components/ContactForm";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
+import ServiceCTA from "@/components/ServiceCTA";
 
 interface ServiceDetail {
   title: string;
@@ -353,11 +353,11 @@ export default async function ServiceSubpage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* Page Content Grid (Text on left, Form on right) */}
+      {/* Page Content */}
       <section className="section service-content">
-        <div className="container service-grid">
+        <div className="container" style={{ maxWidth: "800px" }}>
           
-          <div className="service-left-column">
+          <div>
             <span className="eyebrow" style={{ color: "var(--secondary)" }}>Our Commitment</span>
             <h2 style={{ fontSize: "2rem", marginBottom: "1.25rem", color: "var(--primary)", marginTop: "0.5rem" }}>
               Quality Workmanship Guarantee
@@ -369,14 +369,6 @@ export default async function ServiceSubpage({ params }: PageProps) {
             <p className="service-body" style={{ fontSize: "0.98rem", lineHeight: "1.6", color: "var(--text-muted)" }}>
               Our team operates with high integrity. We provide clear, accurate inspection assessments so you can make informed decisions. We use top GAF materials to ensure your repaired or replaced roof resists future Mississippi storms.
             </p>
-          </div>
-          
-          <div className="service-right-column">
-            <div className="double-bezel-wrapper">
-              <div className="double-bezel-inner" style={{ padding: "1.5rem" }}>
-                <ContactForm />
-              </div>
-            </div>
           </div>
 
         </div>
@@ -425,6 +417,9 @@ export default async function ServiceSubpage({ params }: PageProps) {
           </div>
         </div>
       </section>
+
+      {/* Bottom CTA */}
+      <ServiceCTA />
     </>
   );
 }
