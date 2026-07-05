@@ -2503,8 +2503,7 @@ a {
   padding: 1.5rem !important;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 380px;
+  height: 420px;
 }
 
 .pin-card-badge-row {
@@ -2561,6 +2560,10 @@ a {
   font-style: italic;
   margin: 0;
   flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .pin-card-btn {
