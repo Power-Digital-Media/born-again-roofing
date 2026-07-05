@@ -52,45 +52,49 @@ export default function InteractiveMap({ pins }: InteractiveMapProps) {
 
     // 1. Initialize Map Instance (Only once)
     if (!mapInstanceRef.current) {
-      const map = L.map(mapContainerRef.current, {
-        center: [32.2988, -90.1848], // Jackson, MS center
-        zoom: 10,
-        scrollWheelZoom: false // Prevent accidental scrolling
-      });
+      try {
+        const map = L.map(mapContainerRef.current, {
+          center: [32.2988, -90.1848], // Jackson, MS center
+          zoom: 10,
+          scrollWheelZoom: false // Prevent accidental scrolling
+        });
 
-      // Define base layer options
-      const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-        attribution: '&copy; <a href="https://www.esri.com/">Esri</a>',
-        maxZoom: 19
-      });
+        // Define base layer options
+        const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+          attribution: '© Esri',
+          maxZoom: 19
+        });
 
-      const roadMap = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: "abcd",
-        maxZoom: 20
-      });
+        const roadMap = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+          attribution: '© OpenStreetMap © CARTO',
+          subdomains: "abcd",
+          maxZoom: 20
+        });
 
-      const darkMode = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: "abcd",
-        maxZoom: 20
-      });
+        const darkMode = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+          attribution: '© OpenStreetMap © CARTO',
+          subdomains: "abcd",
+          maxZoom: 20
+        });
 
-      // Add satellite as default
-      satellite.addTo(map);
+        // Add satellite as default
+        satellite.addTo(map);
 
-      // Add layer control (top-right like Google Maps)
-      L.control.layers({
-        "Satellite": satellite,
-        "Road Map": roadMap,
-        "Dark": darkMode
-      }, {}, {
-        position: "topright",
-        collapsed: true
-      }).addTo(map);
+        // Add layer control (top-right like Google Maps)
+        L.control.layers({
+          "Satellite": satellite,
+          "Road Map": roadMap,
+          "Dark": darkMode
+        }, {}, {
+          position: "topright",
+          collapsed: true
+        }).addTo(map);
 
-      mapInstanceRef.current = map;
-      markerLayerRef.current = L.layerGroup().addTo(map);
+        mapInstanceRef.current = map;
+        markerLayerRef.current = L.layerGroup().addTo(map);
+      } catch (err) {
+        console.error("InteractiveMap init error:", err);
+      }
     }
 
     const map = mapInstanceRef.current;
