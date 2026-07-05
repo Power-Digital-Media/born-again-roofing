@@ -2910,9 +2910,11 @@ a {
      SECTION 5: PROJECTS — Refined Cards
      ========================================================================== */
 
-  /* Hide the satellite map on mobile — too small to be useful, kills perf */
+  /* Satellite map on mobile — compact height */
   .pin-card-img-container {
-    display: none !important;
+    height: 160px !important;
+    border-radius: 8px;
+    overflow: hidden;
   }
 
   /* Subtitle text swap for mobile */
