@@ -9,6 +9,7 @@ export default function ContactForm() {
   const [date, setDate] = useState("");
   const [timeSlot, setTimeSlot] = useState("");
   
+  const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -39,7 +40,7 @@ export default function ContactForm() {
     }
   }, [date]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -61,27 +62,56 @@ export default function ContactForm() {
       return;
     }
 
-    // Trigger GA4 event tracking
-    if (typeof window !== "undefined") {
-      const win = window as Window & { gtag?: (event: string, action: string, params: Record<string, string | number>) => void };
-      if (win.gtag) {
-        win.gtag("event", "generate_lead", {
-          value: 1.0,
-          currency: "USD",
-          lead_origin: "Estimate Form",
-          appointment_date: date,
-          appointment_time: timeSlot
-        });
-      }
-    }
+    setSubmitting(true);
 
-    setSuccess(true);
-    setName("");
-    setEmail("");
-    setPhone("");
-    setDate("");
-    setTimeSlot("");
-    setMessage("");
+    try {
+      // POST to Transpond/Capsule CRM pipeline
+      const res = await fetch("/api/forms/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          date,
+          timeSlot,
+          message,
+          _form_source: "estimate-request",
+          page_url: typeof window !== "undefined" ? window.location.href : ""
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error("Form submission failed");
+      }
+
+      // Trigger GA4 event tracking
+      if (typeof window !== "undefined") {
+        const win = window as Window & { gtag?: (event: string, action: string, params: Record<string, string | number>) => void };
+        if (win.gtag) {
+          win.gtag("event", "generate_lead", {
+            value: 1.0,
+            currency: "USD",
+            lead_origin: "Estimate Form",
+            appointment_date: date,
+            appointment_time: timeSlot
+          });
+        }
+      }
+
+      setSuccess(true);
+      setName("");
+      setEmail("");
+      setPhone("");
+      setDate("");
+      setTimeSlot("");
+      setMessage("");
+    } catch (err) {
+      console.error("Form error:", err);
+      setError("Something went wrong. Please call us at (601) 573-6178.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -189,8 +219,8 @@ export default function ContactForm() {
               />
             </div>
 
-            <button type="submit" className="btn btn-secondary submit-btn">
-              Submit Request
+            <button type="submit" className="btn btn-secondary submit-btn" disabled={submitting}>
+              {submitting ? "Submitting…" : "Submit Request"}
             </button>
 
           </form>
