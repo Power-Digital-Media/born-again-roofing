@@ -173,13 +173,13 @@ export default async function StormDamageSubpage({ params }: PageProps) {
       <LocalBusinessSchema pageTitle={page.title} pageDescription={page.description} path={`/storm-damage-roof-repair/${slug}/`} />
 
       {/* Hero */}
-      <section className="section" style={{ background: "linear-gradient(rgba(15, 34, 64, 0.95), rgba(15, 34, 64, 0.95))", color: "#ffffff", padding: "5rem 0 4rem" }}>
-        <div className="container" style={{ textAlign: "center" }}>
-          <span style={{ color: "var(--secondary)", fontWeight: 700, textTransform: "uppercase", fontSize: "0.85rem", letterSpacing: "0.15em" }}>
+      <section className="service-hero">
+        <div className="container service-hero-inner scroll-reveal">
+          <span className="eyebrow">
             Storm Damage Specialty
           </span>
-          <h1 style={{ color: "#ffffff", fontSize: "2.5rem", margin: "0.5rem 0 1rem" }}>{page.heading}</h1>
-          <p style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "1.1rem", maxWidth: "600px", margin: "0 auto" }}>{page.subheading}</p>
+          <h1>{page.heading}</h1>
+          <p className="hero-subtext">{page.subheading}</p>
         </div>
       </section>
 
