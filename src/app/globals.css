@@ -2593,7 +2593,7 @@ a {
   }
 
   .hero-overlay {
-    background: linear-gradient(to bottom, rgba(10, 12, 16, 0.62) 0%, rgba(10, 12, 16, 0.72) 60%, rgba(10, 12, 16, 0.95) 100%);
+    background: linear-gradient(to bottom, rgba(10, 12, 16, 0.35) 0%, rgba(10, 12, 16, 0.6) 40%, rgba(10, 12, 16, 0.92) 100%);
   }
 
   .hero-section::before {
@@ -2605,7 +2605,7 @@ a {
     z-index: 2;
     display: flex;
     flex-direction: column;
-    padding-top: 100px;
+    padding-top: 80px;
     padding-bottom: 3.5rem;
   }
 
