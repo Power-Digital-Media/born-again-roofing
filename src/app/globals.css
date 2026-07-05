@@ -596,8 +596,8 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
-  padding: 2.5rem 2rem 2rem;
+  gap: 1.5rem;
+  padding: 3rem 2rem 2.5rem;
 }
 
 .trusted-brands-label {
@@ -613,13 +613,14 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2.5rem;
+  gap: 3.5rem;
   flex-wrap: wrap;
 }
 
 .trusted-brand-logo {
-  height: 52px;
-  width: auto;
+  width: 120px;
+  height: auto;
+  max-height: 50px;
   object-fit: contain;
   filter: brightness(0) invert(1);
   opacity: 0.5;
@@ -2912,7 +2913,9 @@ a {
   }
 
   .trusted-brand-logo {
+    width: auto;
     height: 32px;
+    max-height: none;
     opacity: 0.35;
   }
 
