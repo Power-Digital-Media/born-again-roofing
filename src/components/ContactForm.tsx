@@ -16,6 +16,7 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
   
   // Service selection for Estimate form
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
@@ -155,6 +156,7 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
       setDamageSeverity("");
       setInsuranceCompany("");
       setSelectedServices([]);
+      setDropdownOpen(false);
       setMessage("");
     } catch (err) {
       console.error("Form error:", err);
@@ -300,26 +302,60 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
               </>
             )}
 
-            {/* Services Needed Checkboxes */}
+            {/* Services Needed Custom Multi-Select Dropdown */}
             {type === "estimate" && (
-              <div className="form-group">
+              <div className="form-group" style={{ position: "relative" }}>
                 <label className="form-label">Services Needed * (Select all that apply)</label>
-                <div className="checkbox-grid">
-                  {servicesList.map((srv) => {
-                    const isChecked = selectedServices.includes(srv);
-                    return (
-                      <label key={srv} className={`checkbox-label${isChecked ? " checked" : ""}`}>
-                        <input
-                          type="checkbox"
-                          className="checkbox-input"
-                          checked={isChecked}
-                          onChange={() => handleServiceChange(srv)}
-                        />
-                        <span>{srv}</span>
-                      </label>
-                    );
-                  })}
+                <div 
+                  className="form-input dropdown-trigger" 
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  style={{ 
+                    cursor: "pointer", 
+                    display: "flex", 
+                    justifyContent: "space-between", 
+                    alignItems: "center",
+                    background: "var(--card-bg)"
+                  }}
+                >
+                  <span style={{ 
+                    whiteSpace: "nowrap", 
+                    overflow: "hidden", 
+                    textOverflow: "ellipsis",
+                    maxWidth: "90%",
+                    color: selectedServices.length === 0 ? "var(--text-muted)" : "var(--text)"
+                  }}>
+                    {selectedServices.length === 0 
+                      ? "Select services..." 
+                      : selectedServices.join(", ")
+                    }
+                  </span>
+                  <span style={{ 
+                    fontSize: "10px", 
+                    color: "var(--text-muted)",
+                    transition: "transform 0.2s", 
+                    transform: dropdownOpen ? "rotate(180deg)" : "rotate(0)" 
+                  }}>
+                    ▼
+                  </span>
                 </div>
+                {dropdownOpen && (
+                  <div className="dropdown-menu">
+                    {servicesList.map((srv) => {
+                      const isChecked = selectedServices.includes(srv);
+                      return (
+                        <label key={srv} className="dropdown-item" onClick={(e) => e.stopPropagation()}>
+                          <input
+                            type="checkbox"
+                            className="checkbox-input-small"
+                            checked={isChecked}
+                            onChange={() => handleServiceChange(srv)}
+                          />
+                          <span>{srv}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
 
