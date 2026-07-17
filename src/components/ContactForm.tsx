@@ -15,29 +15,12 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
   const [insuranceCompany, setInsuranceCompany] = useState("");
   
   // Service selection for Estimate form
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [service, setService] = useState("");
   
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
-  const servicesList = useMemo(() => [
-    "Roof Replacement",
-    "Roof Repair",
-    "Metal Roofing",
-    "Storm Damage Restoration",
-    "Home Remodeling / Additions"
-  ], []);
-
-  const handleServiceChange = (serviceName: string) => {
-    setSelectedServices(prev =>
-      prev.includes(serviceName)
-        ? prev.filter(s => s !== serviceName)
-        : [...prev, serviceName]
-    );
-  };
 
   const timeOptions = useMemo(() => {
     if (!date) {
@@ -71,13 +54,8 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
 
     // Form validation based on variant type
     if (type === "estimate") {
-      if (!name || !phone || !date || !timeSlot) {
+      if (!name || !phone || !date || !timeSlot || !service) {
         setError("Please fill in all required fields.");
-        return;
-      }
-
-      if (selectedServices.length === 0) {
-        setError("Please select at least one service you need an estimate for.");
         return;
       }
 
@@ -118,7 +96,7 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
           phone,
           date: type === "estimate" ? date : "",
           timeSlot: type === "estimate" ? timeSlot : "",
-          service: type === "estimate" ? selectedServices.join(", ") : "",
+          service: type === "estimate" ? service : "",
           message,
           propertyAddress: type === "emergency" ? propertyAddress : "",
           damageSeverity: type === "emergency" ? damageSeverity : "",
@@ -155,8 +133,7 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
       setPropertyAddress("");
       setDamageSeverity("");
       setInsuranceCompany("");
-      setSelectedServices([]);
-      setDropdownOpen(false);
+      setService("");
       setMessage("");
     } catch (err) {
       console.error("Form error:", err);
@@ -302,60 +279,24 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
               </>
             )}
 
-            {/* Services Needed Custom Multi-Select Dropdown */}
+            {/* Service Interest Dropdown */}
             {type === "estimate" && (
-              <div className="form-group" style={{ position: "relative" }}>
-                <label className="form-label">Services Needed * (Select all that apply)</label>
-                <div 
-                  className="form-input dropdown-trigger" 
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  style={{ 
-                    cursor: "pointer", 
-                    display: "flex", 
-                    justifyContent: "space-between", 
-                    alignItems: "center",
-                    background: "var(--card-bg)"
-                  }}
+              <div className="form-group">
+                <label className="form-label" htmlFor="service">Service Needed *</label>
+                <select
+                  id="service"
+                  className="form-input"
+                  value={service}
+                  onChange={(e) => setService(e.target.value)}
+                  required
                 >
-                  <span style={{ 
-                    whiteSpace: "nowrap", 
-                    overflow: "hidden", 
-                    textOverflow: "ellipsis",
-                    maxWidth: "90%",
-                    color: selectedServices.length === 0 ? "var(--text-muted)" : "var(--text)"
-                  }}>
-                    {selectedServices.length === 0 
-                      ? "Select services..." 
-                      : selectedServices.join(", ")
-                    }
-                  </span>
-                  <span style={{ 
-                    fontSize: "10px", 
-                    color: "var(--text-muted)",
-                    transition: "transform 0.2s", 
-                    transform: dropdownOpen ? "rotate(180deg)" : "rotate(0)" 
-                  }}>
-                    ▼
-                  </span>
-                </div>
-                {dropdownOpen && (
-                  <div className="dropdown-menu">
-                    {servicesList.map((srv) => {
-                      const isChecked = selectedServices.includes(srv);
-                      return (
-                        <label key={srv} className="dropdown-item" onClick={(e) => e.stopPropagation()}>
-                          <input
-                            type="checkbox"
-                            className="checkbox-input-small"
-                            checked={isChecked}
-                            onChange={() => handleServiceChange(srv)}
-                          />
-                          <span>{srv}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                )}
+                  <option value="">Select a service...</option>
+                  <option value="Roof Replacement">Roof Replacement</option>
+                  <option value="Roof Repair">Roof Repair</option>
+                  <option value="Metal Roofing">Metal Roofing</option>
+                  <option value="Storm Damage Restoration">Storm Damage Restoration</option>
+                  <option value="Home Remodeling / Additions">Home Remodeling / Additions</option>
+                </select>
               </div>
             )}
 
