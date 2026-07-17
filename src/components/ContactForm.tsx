@@ -14,10 +14,29 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
   const [damageSeverity, setDamageSeverity] = useState("");
   const [insuranceCompany, setInsuranceCompany] = useState("");
   
+  // Service selection for Estimate form
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  const servicesList = useMemo(() => [
+    "Roof Replacement",
+    "Roof Repair",
+    "Metal Roofing",
+    "Storm Damage Restoration",
+    "Home Remodeling / Additions"
+  ], []);
+
+  const handleServiceChange = (serviceName: string) => {
+    setSelectedServices(prev =>
+      prev.includes(serviceName)
+        ? prev.filter(s => s !== serviceName)
+        : [...prev, serviceName]
+    );
+  };
 
   const timeOptions = useMemo(() => {
     if (!date) {
@@ -53,6 +72,11 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
     if (type === "estimate") {
       if (!name || !phone || !date || !timeSlot) {
         setError("Please fill in all required fields.");
+        return;
+      }
+
+      if (selectedServices.length === 0) {
+        setError("Please select at least one service you need an estimate for.");
         return;
       }
 
@@ -93,6 +117,7 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
           phone,
           date: type === "estimate" ? date : "",
           timeSlot: type === "estimate" ? timeSlot : "",
+          service: type === "estimate" ? selectedServices.join(", ") : "",
           message,
           propertyAddress: type === "emergency" ? propertyAddress : "",
           damageSeverity: type === "emergency" ? damageSeverity : "",
@@ -129,6 +154,7 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
       setPropertyAddress("");
       setDamageSeverity("");
       setInsuranceCompany("");
+      setSelectedServices([]);
       setMessage("");
     } catch (err) {
       console.error("Form error:", err);
@@ -272,6 +298,29 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
                   />
                 </div>
               </>
+            )}
+
+            {/* Services Needed Checkboxes */}
+            {type === "estimate" && (
+              <div className="form-group">
+                <label className="form-label">Services Needed * (Select all that apply)</label>
+                <div className="checkbox-grid">
+                  {servicesList.map((srv) => {
+                    const isChecked = selectedServices.includes(srv);
+                    return (
+                      <label key={srv} className={`checkbox-label${isChecked ? " checked" : ""}`}>
+                        <input
+                          type="checkbox"
+                          className="checkbox-input"
+                          checked={isChecked}
+                          onChange={() => handleServiceChange(srv)}
+                        />
+                        <span>{srv}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
             )}
 
             {/* Estimate Scheduling Fields */}

@@ -121,7 +121,14 @@ export async function POST(request: NextRequest) {
         "born-again-roofing",
         ...(_form_source === "storm-damage-emergency" || _form_source === "emergency-lead" ? ["emergency-lead", "storm-damage"] : []),
         ...(_form_source === "quick-callback" ? ["quick-callback"] : []),
-        ...(service ? [service.toLowerCase().replace(/\s+/g, "-")] : [])
+        ...(service 
+          ? service.split(", ").map((s: string) => 
+              s.toLowerCase()
+               .replace(/\s+\/\s+/g, "-") 
+               .replace(/\s+/g, "-") 
+               .replace(/[^a-z0-9-]/g, "")
+            )
+          : [])
       ],
       customFields: {
         "_capsule_firstName": firstName,
