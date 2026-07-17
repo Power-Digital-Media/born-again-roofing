@@ -8,7 +8,7 @@ import ServicePinsCarousel from "@/components/ServicePinsCarousel";
 import ServiceBentoGrid from "@/components/ServiceBentoGrid";
 import ServiceArticle from "@/components/ServiceArticle";
 import TrustedBrands from "@/components/TrustedBrands";
-import ServiceCTA from "@/components/ServiceCTA";
+import EmergencyCTA from "@/components/EmergencyCTA";
 
 export const metadata: Metadata = {
   title: "Storm Damage Roof Repair in Jackson, MS | Born Again Home Remodeling and Roofing",
@@ -252,7 +252,7 @@ export default function StormDamagePage() {
         </div>
       </section>
 
-      <ServiceCTA />
+      <EmergencyCTA />
     </>
   );
 }

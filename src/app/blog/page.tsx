@@ -44,7 +44,7 @@ export default function BlogPage() {
           </div>
           
           <div className="blog-sidebar">
-            <ContactForm />
+            <ContactForm type="callback" />
           </div>
 
         </div>

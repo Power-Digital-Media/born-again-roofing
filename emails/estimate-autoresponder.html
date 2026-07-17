@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estimate Request Received</title>
+  <style>
+    body {
+      background-color: #f4f5f7;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrapper {
+      width: 100%;
+      background-color: #f4f5f7;
+      padding: 20px 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #0c0f16;
+      border: 1px solid #b88630;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+    .header {
+      padding: 30px 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(184, 134, 48, 0.2);
+      background: linear-gradient(135deg, #0e121b, #07090d);
+    }
+    .logo-img {
+      height: 60px;
+      width: auto;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    .logo-text {
+      color: #f3c973;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .logo-subtext {
+      color: #a1aab9;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      margin: 5px 0 0;
+      text-transform: uppercase;
+    }
+    .content {
+      padding: 40px 30px;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    p {
+      margin: 0 0 15px;
+      font-size: 15px;
+    }
+    .highlight-box {
+      background-color: rgba(255,255,255,0.02);
+      border-left: 3px solid #b88630;
+      padding: 15px;
+      margin: 25px 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .highlight-title {
+      font-weight: bold;
+      color: #f3c973;
+      margin-bottom: 5px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .scripture-box {
+      margin: 30px 0;
+      padding: 20px;
+      border: 1px dashed rgba(243, 201, 115, 0.2);
+      background-color: rgba(184, 134, 48, 0.03);
+      text-align: center;
+      border-radius: 6px;
+    }
+    .scripture-text {
+      font-family: Georgia, serif;
+      font-style: italic;
+      color: #f3c973;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .scripture-ref {
+      font-size: 11px;
+      color: #a1aab9;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: bold;
+    }
+    .footer {
+      background-color: #07090d;
+      padding: 25px 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #718096;
+      border-top: 1px solid rgba(184, 134, 48, 0.1);
+    }
+    .footer a {
+      color: #f3c973;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      
+      <!-- Header -->
+      <div class="header" style="padding: 25px 20px; text-align: center; background-color: #0c0f16; border-bottom: 1px solid rgba(184, 134, 48, 0.2);">
+        <img src="https://born-again-roofing.netlify.app/images/email_logo.png" alt="Born Again Home Remodeling & Roofing" style="max-width: 320px; width: 100%; height: auto; display: inline-block;">
+      </div>
+      
+      <!-- Content -->
+      <div class="content">
+        <h1>Estimate Request Received</h1>
+        <p>Hello {{_capsule_firstName}},</p>
+        <p>Thank you for reaching out to Born Again Home Remodeling and Roofing. We have received your request for a free roofing and remodeling estimate.</p>
+        <p>Here are the appointment details you requested:</p>
+        
+        <div class="highlight-box">
+          <div class="highlight-title">Requested Appointment</div>
+          <p style="margin: 0; font-size: 16px; font-weight: bold; color: #ffffff;">
+            Date: <span style="color: #f3c973;">{{APPOINTMENT_DATE}}</span><br>
+            Time: <span style="color: #f3c973;">{{APPOINTMENT_TIME}}</span>
+          </p>
+        </div>
+        
+        <p>Our office manager will review our schedule and call you at <strong>{{PHONE}}</strong> within the next 2 business hours to confirm your booking and verify details.</p>
+        
+        <div class="scripture-box">
+          <div class="scripture-text">"Whatever you do, work at it with all your heart, as working for the Lord and not for human masters..."</div>
+          <div class="scripture-ref">— Colossians 3:23</div>
+        </div>
+        
+        <p>We look forward to serving you and helping you protect your home!</p>
+        <p>Sincerely,</p>
+        <p style="margin-bottom: 0; font-weight: bold; color: #f3c973;">David Dilmore</p>
+        <p style="margin: 0; font-size: 13px; color: #a1aab9;">Owner, Born Again Home Remodeling & Roofing</p>
+      </div>
+      
+      <!-- Footer -->
+      <div class="footer">
+        <p style="margin: 0 0 10px 0;">Born Again Home Remodeling & Roofing · 150 Highland Dr, Florence, MS 39073</p>
+        <p style="margin: 0 0 10px 0;">Phone: <a href="tel:6015736178">(601) 573-6178</a> · Email: <a href="mailto:ddilmore@bornagainroofing.com">ddilmore@bornagainroofing.com</a></p>
+        <p style="margin: 0; font-size: 11px;">You are receiving this email because you submitted an estimate request on our website.</p>
+      </div>
+      
+    </div>
+  </div>
+</body>
+</html>

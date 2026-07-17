@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You & Review Request</title>
+  <style>
+    body {
+      background-color: #f4f5f7;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrapper {
+      width: 100%;
+      background-color: #f4f5f7;
+      padding: 20px 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #0c0f16;
+      border: 1px solid #b88630;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+    .header {
+      padding: 30px 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(184, 134, 48, 0.2);
+      background: linear-gradient(135deg, #0e121b, #07090d);
+    }
+    .logo-img {
+      height: 60px;
+      width: auto;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    .logo-text {
+      color: #f3c973;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .logo-subtext {
+      color: #a1aab9;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      margin: 5px 0 0;
+      text-transform: uppercase;
+    }
+    .content {
+      padding: 40px 30px;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    p {
+      margin: 0 0 15px;
+      font-size: 15px;
+    }
+    .stars {
+      text-align: center;
+      font-size: 32px;
+      color: #f3c973;
+      margin: 20px 0;
+      letter-spacing: 0.1em;
+    }
+    .button-container {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(to right, #f3c973, #b88630);
+      color: #0c0f16 !important;
+      text-decoration: none;
+      padding: 14px 35px;
+      font-weight: bold;
+      border-radius: 4px;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      letter-spacing: 0.05em;
+    }
+    .scripture-box {
+      margin: 30px 0;
+      padding: 20px;
+      border: 1px dashed rgba(243, 201, 115, 0.2);
+      background-color: rgba(184, 134, 48, 0.03);
+      text-align: center;
+      border-radius: 6px;
+    }
+    .scripture-text {
+      font-family: Georgia, serif;
+      font-style: italic;
+      color: #f3c973;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .scripture-ref {
+      font-size: 11px;
+      color: #a1aab9;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: bold;
+    }
+    .footer {
+      background-color: #07090d;
+      padding: 25px 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #718096;
+      border-top: 1px solid rgba(184, 134, 48, 0.1);
+    }
+    .footer a {
+      color: #f3c973;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      
+      <!-- Header -->
+      <div class="header" style="padding: 25px 20px; text-align: center; background-color: #0c0f16; border-bottom: 1px solid rgba(184, 134, 48, 0.2);">
+        <img src="https://born-again-roofing.netlify.app/images/email_logo.png" alt="Born Again Home Remodeling & Roofing" style="max-width: 320px; width: 100%; height: auto; display: inline-block;">
+      </div>
+      
+      <!-- Content -->
+      <div class="content">
+        <h1>Thank You For Letting Us Serve You!</h1>
+        <p>Hello {{_capsule_firstName}},</p>
+        <p>We are so grateful that you chose Born Again Home Remodeling and Roofing for your recent project. We hope our craftsmanship and service left your home feeling "born again."</p>
+        <p>Our business relies on honest word-of-mouth feedback from our neighbors in the Central Mississippi community. If you are happy with the work we did, would you take 60 seconds to share your experience on our Google Business Profile?</p>
+        
+        <div class="stars">★★★★★</div>
+        
+        <div class="button-container">
+          <a href="https://www.google.com/search?q=Born+Again+Home+Remodeling+and+Roofing+Pearl+MS" class="cta-button" target="_blank">Share a Google Review</a>
+        </div>
+        
+        <p>Your review helps other homeowners find a contractor they can trust for honest pricing and quality work.</p>
+        
+        <div class="scripture-box">
+          <div class="scripture-text">"A false balance is an abomination to the Lord, but a just weight is His delight."</div>
+          <div class="scripture-ref">— Proverbs 11:1</div>
+        </div>
+        
+        <p>Thank you again for your trust and support. If you ever need anything in the future, please don't hesitate to reach out.</p>
+        <p>Sincerely,</p>
+        <p style="margin-bottom: 0; font-weight: bold; color: #f3c973;">David Dilmore</p>
+        <p style="margin: 0; font-size: 13px; color: #a1aab9;">Owner, Born Again Home Remodeling & Roofing</p>
+      </div>
+      
+      <!-- Footer -->
+      <div class="footer">
+        <p style="margin: 0 0 10px 0;">Born Again Home Remodeling & Roofing · 150 Highland Dr, Florence, MS 39073</p>
+        <p style="margin: 0 0 10px 0;">Phone: <a href="tel:6015736178">(601) 573-6178</a> · Email: <a href="mailto:ddilmore@bornagainroofing.com">ddilmore@bornagainroofing.com</a></p>
+        <p style="margin: 0; font-size: 11px;">You are receiving this email because you recently completed a project with us.</p>
+      </div>
+      
+    </div>
+  </div>
+</body>
+</html>

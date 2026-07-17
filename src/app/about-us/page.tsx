@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import TrustedBrands from "@/components/TrustedBrands";
+import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
   title: "About Us | Born Again Home Remodeling and Roofing",
@@ -252,31 +253,38 @@ export default function AboutUsPage() {
         </div>
       </section>
 
-      {/* High-Impact CTA Section */}
-      <section className="about-cta-section">
+      {/* High-Impact CTA Section with Callback Form */}
+      <section className="about-cta-section" style={{ padding: "5rem 0" }}>
         <div className="container">
-          <div className="double-bezel-wrapper about-cta-card">
-            <div className="double-bezel-inner" style={{ padding: "3.5rem 2.5rem", textAlign: "center" }}>
+          <div className="about-cta-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "3rem", alignItems: "center" }}>
+            
+            <div className="about-cta-info">
               <span className="eyebrow" style={{ color: "var(--secondary)" }}>Get In Touch</span>
-              <h2>Ready to Transform Your Home?</h2>
-              <p>
-                {"Let Born Again Home Remodeling and Roofing show you why so many families in Jackson, MS, trust us with their homes. Call us today for a free, honest inspection and estimate."}
+              <h2 style={{ fontSize: "2.2rem", color: "#ffffff", marginBottom: "1.5rem", fontWeight: 850 }}>Ready to Transform Your Home?</h2>
+              <p style={{ color: "var(--text-muted)", fontSize: "1.05rem", lineHeight: "1.7", marginBottom: "2rem" }}>
+                {"Let Born Again Home Remodeling and Roofing show you why so many families in Jackson, MS, trust us with their homes. Have a quick question or want us to call you back? Fill out the form, or call us directly."}
               </p>
-              <div className="about-cta-buttons">
-                <a href="tel:6015736178" className="btn btn-primary">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" style={{ width: "18px", height: "18px", marginRight: "8px", verticalAlign: "middle", display: "inline-block" }}>
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                <a href="tel:6015736178" className="btn btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", width: "fit-content", textDecoration: "none" }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" style={{ width: "18px", height: "18px" }}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.387a20.373 20.373 0 0 1-7.147-7.147c-.453-.44-.287-.927.09-1.21l1.293-.97a1.125 1.125 0 0 0 .417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
                   </svg>
                   <span>Call (601) 573-6178</span>
                 </a>
-                <Link href="/contact-us" className="btn btn-secondary">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" style={{ width: "18px", height: "18px", marginRight: "8px", verticalAlign: "middle", display: "inline-block" }}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                <Link href="/contact-us" style={{ color: "var(--secondary)", fontWeight: 700, fontSize: "0.95rem", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", width: "fit-content", marginTop: "5px" }}>
+                  <span>Or book a free estimate online</span>
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                  <span>Book Free Estimate</span>
                 </Link>
               </div>
             </div>
+
+            <div className="about-cta-form">
+              <ContactForm type="callback" />
+            </div>
+
           </div>
         </div>
       </section>

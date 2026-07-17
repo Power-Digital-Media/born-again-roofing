@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency Storm Dispatch Activated</title>
+  <style>
+    body {
+      background-color: #f4f5f7;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrapper {
+      width: 100%;
+      background-color: #f4f5f7;
+      padding: 20px 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #0c0f16;
+      border: 1px solid #e53e3e; /* Red border for urgency */
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+    .header {
+      padding: 30px 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(229, 62, 62, 0.2);
+      background: linear-gradient(135deg, #1f0d0d, #07090d);
+    }
+    .logo-img {
+      height: 60px;
+      width: auto;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    .logo-text {
+      color: #e53e3e;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .logo-subtext {
+      color: #a1aab9;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      margin: 5px 0 0;
+      text-transform: uppercase;
+    }
+    .content {
+      padding: 40px 30px;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    p {
+      margin: 0 0 15px;
+      font-size: 15px;
+    }
+    .warning-banner {
+      background-color: rgba(229, 62, 62, 0.08);
+      border-left: 4px solid #e53e3e;
+      padding: 15px;
+      margin: 25px 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .warning-title {
+      font-weight: bold;
+      color: #e53e3e;
+      margin-bottom: 5px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .details-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 15px;
+    }
+    .details-list li {
+      margin-bottom: 8px;
+    }
+    .details-list strong {
+      color: #ffffff;
+    }
+    .scripture-box {
+      margin: 30px 0;
+      padding: 20px;
+      border: 1px dashed rgba(229, 62, 62, 0.2);
+      background-color: rgba(229, 62, 62, 0.03);
+      text-align: center;
+      border-radius: 6px;
+    }
+    .scripture-text {
+      font-family: Georgia, serif;
+      font-style: italic;
+      color: #e53e3e;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .scripture-ref {
+      font-size: 11px;
+      color: #a1aab9;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: bold;
+    }
+    .safety-tips {
+      background-color: rgba(255,255,255,0.02);
+      padding: 20px;
+      border-radius: 6px;
+      margin: 25px 0;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .safety-title {
+      font-weight: bold;
+      color: #ffffff;
+      margin-bottom: 10px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .safety-tips ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .safety-tips li {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .footer {
+      background-color: #07090d;
+      padding: 25px 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #718096;
+      border-top: 1px solid rgba(229, 62, 62, 0.1);
+    }
+    .footer a {
+      color: #e53e3e;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      
+      <!-- Header -->
+      <div class="header" style="padding: 25px 20px; text-align: center; background-color: #0c0f16; border-bottom: 1px solid rgba(229, 62, 62, 0.2);">
+        <img src="https://born-again-roofing.netlify.app/images/email_logo.png" alt="Born Again Home Remodeling & Roofing" style="max-width: 320px; width: 100%; height: auto; display: inline-block;">
+      </div>
+      
+      <!-- Content -->
+      <div class="content">
+        <h1>Storm Damage Dispatch Activated</h1>
+        <p>Hello {{_capsule_firstName}},</p>
+        <p>We have received your emergency storm damage report. Our team treats active roof leaks and wind/structural storm damage with the highest priority.</p>
+        
+        <div class="warning-banner">
+          <div class="warning-title">Report Details Received</div>
+          <ul class="details-list">
+            <li><strong>Property Address:</strong> {{PROPERTY_ADDRESS}}</li>
+            <li><strong>Reported Severity:</strong> <span style="color: #e53e3e; font-weight: bold;">{{DAMAGE_SEVERITY}}</span></li>
+            <li><strong>Insurance Provider:</strong> {{INSURANCE_PROVIDER}}</li>
+          </ul>
+        </div>
+        
+        <p>An inspector has been alerted and will contact you at <strong>{{PHONE}}</strong> immediately to coordinate tarping crews or inspect the damage.</p>
+        
+        <div class="safety-tips">
+          <div class="safety-title">⚠️ Immediate Safety Guidelines</div>
+          <ul>
+            <li><strong>Stay Off the Roof:</strong> Never attempt to climb or tarp a wet or damaged roof during or immediately after a storm. It is highly hazardous.</li>
+            <li><strong>Water Near Electrics:</strong> If water is actively leaking near light fixtures, outlets, or appliances, immediately turn off the corresponding breaker in your electrical panel.</li>
+            <li><strong>Clear Belongings:</strong> Move any furniture, electronics, or personal valuables away from active drip areas to minimize home damage.</li>
+          </ul>
+        </div>
+        
+        <div class="scripture-box">
+          <div class="scripture-text">"The Lord is good, a refuge in times of trouble. He cares for those who trust in Him."</div>
+          <div class="scripture-ref">— Nahum 1:7</div>
+        </div>
+        
+        <p>We are praying for your family's safety and are on the way to help restore your home.</p>
+        <p>Sincerely,</p>
+        <p style="margin-bottom: 0; font-weight: bold; color: #e53e3e;">David Dilmore</p>
+        <p style="margin: 0; font-size: 13px; color: #a1aab9;">Owner, Born Again Home Remodeling & Roofing</p>
+      </div>
+      
+      <!-- Footer -->
+      <div class="footer">
+        <p style="margin: 0 0 10px 0;">Born Again Home Remodeling & Roofing · 150 Highland Dr, Florence, MS 39073</p>
+        <p style="margin: 0 0 10px 0;">Urgent Line: <a href="tel:6015736178">(601) 573-6178</a> · Email: <a href="mailto:ddilmore@bornagainroofing.com">ddilmore@bornagainroofing.com</a></p>
+        <p style="margin: 0; font-size: 11px;">You are receiving this email because you submitted an emergency repair request on our website.</p>
+      </div>
+      
+    </div>
+  </div>
+</body>
+</html>

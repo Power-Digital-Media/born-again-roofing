@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import TrustedBrands from "@/components/TrustedBrands";
-import ServiceCTA from "@/components/ServiceCTA";
+import EmergencyCTA from "@/components/EmergencyCTA";
 import FAQSchema from "@/components/FAQSchema";
 
 interface SubpageDetail {
@@ -228,7 +228,7 @@ export default async function StormDamageSubpage({ params }: PageProps) {
             </div>
         </div>
       </section>
-      <ServiceCTA />
+      <EmergencyCTA />
 
       <FAQSchema faqs={page.faqs.map((faq) => ({ question: faq.q, answer: faq.a }))} />
     </>

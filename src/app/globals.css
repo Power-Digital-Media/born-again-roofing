@@ -3534,7 +3534,65 @@ a {
   }
 
   .mobile-bottom-btn--estimate:active {
-    transform: scale(0.96);
     box-shadow: 0 2px 8px rgba(209, 164, 83, 0.2);
   }
 }
+
+/* ──────────────────────────────────────────────
+   Specialized Form Variants (Emergency & Callback)
+   ────────────────────────────────────────────── */
+
+/* Emergency Red Bezel Accents */
+.double-bezel-wrapper.emergency-bezel {
+  background: rgba(229, 62, 62, 0.03);
+  border-color: rgba(229, 62, 62, 0.08);
+}
+.double-bezel-wrapper.emergency-bezel .double-bezel-inner {
+  border-color: rgba(229, 62, 62, 0.25);
+}
+.double-bezel-wrapper.emergency-bezel:hover {
+  border-color: rgba(229, 62, 62, 0.35);
+}
+.double-bezel-wrapper.emergency-bezel:hover .double-bezel-inner {
+  border-color: rgba(229, 62, 62, 0.55);
+  box-shadow: 0 0 25px rgba(229, 62, 62, 0.12);
+}
+
+.form-emergency .form-title {
+  color: #f56565 !important;
+}
+
+.form-emergency .form-input:focus {
+  border-color: #e53e3e !important;
+  box-shadow: 0 0 0 4px rgba(229, 62, 62, 0.15) !important;
+}
+
+.btn-emergency {
+  background: linear-gradient(135deg, #e53e3e, #b71c1c) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(229, 62, 62, 0.25) !important;
+}
+
+.btn-emergency:hover {
+  background: linear-gradient(135deg, #f56565, #c53030) !important;
+  box-shadow: 0 6px 20px rgba(229, 62, 62, 0.35) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+}
+
+.btn-emergency:active {
+  transform: scale(0.97) !important;
+}
+
+/* Callback Form Layout Adjustments (for sidebar/tighter spots) */
+.form-callback .form-title {
+  font-size: 1.25rem !important;
+  margin-bottom: 1rem !important;
+}
+.form-callback .form-group {
+  margin-bottom: 1rem !important;
+}
+.form-callback .double-bezel-inner {
+  padding: 2rem 1.5rem !important;
+}
+

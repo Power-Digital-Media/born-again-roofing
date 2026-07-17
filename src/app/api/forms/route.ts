@@ -23,7 +23,10 @@ export async function POST(request: NextRequest) {
       message = "",
       _form_source = "estimate-request",
       service = "",
-      page_url = ""
+      page_url = "",
+      propertyAddress = "",
+      damageSeverity = "",
+      insuranceCompany = ""
     } = body;
 
     // Parse first/last name
@@ -58,21 +61,52 @@ export async function POST(request: NextRequest) {
       timeStyle: "short"
     });
 
-    const noteLines = [
-      `## 📋 Free Estimate Request`,
-      `**Submitted:** ${timestamp}`,
-      `**Source:** ${_form_source}`,
-      "",
-      `**Name:** ${name}`,
-      `**Phone:** ${phone}`,
-      email ? `**Email:** ${email}` : "",
-      date ? `**Requested Date:** ${date}` : "",
-      timeSlot ? `**Time Slot:** ${timeSlot}` : "",
-      service ? `**Service Interest:** ${service}` : "",
-      page_url ? `**Page:** ${page_url}` : "",
-      "",
-      message ? `### Message\n${message}` : ""
-    ].filter(Boolean).join("\n");
+    let noteLines = "";
+    if (_form_source === "storm-damage-emergency" || _form_source === "emergency-lead") {
+      noteLines = [
+        `# ⚠️ URGENT STORM DAMAGE DISPATCH`,
+        `**Submitted:** ${timestamp}`,
+        `**Source:** ${_form_source}`,
+        "",
+        `**Name:** ${name}`,
+        `**Phone:** ${phone}`,
+        email ? `**Email:** ${email}` : "",
+        propertyAddress ? `**Property Address:** ${propertyAddress}` : "",
+        damageSeverity ? `**Damage Severity:** ${damageSeverity}` : "",
+        insuranceCompany ? `**Insurance Provider:** ${insuranceCompany}` : "",
+        "",
+        message ? `### Message / Urgent Details\n${message}` : ""
+      ].filter(Boolean).join("\n");
+    } else if (_form_source === "quick-callback") {
+      noteLines = [
+        `## 📞 Quick Callback Request`,
+        `**Submitted:** ${timestamp}`,
+        `**Source:** ${_form_source}`,
+        "",
+        `**Name:** ${name}`,
+        `**Phone:** ${phone}`,
+        email ? `**Email:** ${email}` : "",
+        page_url ? `**Page:** ${page_url}` : "",
+        "",
+        message ? `### Message / Question\n${message}` : ""
+      ].filter(Boolean).join("\n");
+    } else {
+      noteLines = [
+        `## 📋 Free Estimate Request`,
+        `**Submitted:** ${timestamp}`,
+        `**Source:** ${_form_source}`,
+        "",
+        `**Name:** ${name}`,
+        `**Phone:** ${phone}`,
+        email ? `**Email:** ${email}` : "",
+        date ? `**Requested Date:** ${date}` : "",
+        timeSlot ? `**Time Slot:** ${timeSlot}` : "",
+        service ? `**Service Interest:** ${service}` : "",
+        page_url ? `**Page:** ${page_url}` : "",
+        "",
+        message ? `### Message\n${message}` : ""
+      ].filter(Boolean).join("\n");
+    }
 
     // ── Build Transpond payload with Capsule sync fields ──
     const transpondPayload: Record<string, unknown> = {
@@ -85,6 +119,8 @@ export async function POST(request: NextRequest) {
         _form_source,
         "website-lead",
         "born-again-roofing",
+        ...(_form_source === "storm-damage-emergency" || _form_source === "emergency-lead" ? ["emergency-lead", "storm-damage"] : []),
+        ...(_form_source === "quick-callback" ? ["quick-callback"] : []),
         ...(service ? [service.toLowerCase().replace(/\s+/g, "-")] : [])
       ],
       customFields: {
@@ -95,8 +131,11 @@ export async function POST(request: NextRequest) {
         "_capsule_phone": phone,
         "PHONE": phone,
         "SERVICE": service || _form_source,
-        "APPOINTMENT_DATE": date || "",
-        "APPOINTMENT_TIME": timeSlot || "",
+        ...(date ? { "APPOINTMENT_DATE": date } : {}),
+        ...(timeSlot ? { "APPOINTMENT_TIME": timeSlot } : {}),
+        ...(propertyAddress ? { "PROPERTY_ADDRESS": propertyAddress, "_capsule_address": propertyAddress } : {}),
+        ...(damageSeverity ? { "DAMAGE_SEVERITY": damageSeverity } : {}),
+        ...(insuranceCompany ? { "INSURANCE_PROVIDER": insuranceCompany } : {}),
         "MESSAGE": message || "",
         "SOURCE_URL": page_url || ""
       }
