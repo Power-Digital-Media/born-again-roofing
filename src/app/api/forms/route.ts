@@ -170,7 +170,60 @@ export async function POST(request: NextRequest) {
     }
 
     const transpondData = await transpondRes.json();
-    console.log("[forms] Transpond subscriber created/updated:", transpondData?.id || "ok");
+    const subscriberId = transpondData?.id || transpondData?.Subscriber?.id || transpondData?.Subscriber?.subscriberId;
+    console.log("[forms] Transpond subscriber created/updated:", subscriberId || "ok");
+
+    // ── Attach Numeric Tag IDs to Subscriber ──
+    if (subscriberId) {
+      const tagMap: Record<string, number> = {
+        "estimate-request": 625024,
+        "emergency-request": 625025,
+        "quick-callback": 625026,
+        "roof-replacement": 625027,
+        "roof-repair": 625028,
+        "metal-roofing": 625029,
+        "storm-damage-restoration": 625030,
+        "home-remodeling-additions": 625031
+      };
+
+      const tagsToMatch = [
+        _form_source,
+        ...(service 
+          ? service.split(", ").map((s: string) => 
+              s.toLowerCase()
+               .replace(/\s+\/\s+/g, "-") 
+               .replace(/\s+/g, "-") 
+               .replace(/[^a-z0-9-]/g, "")
+            )
+          : [])
+      ];
+
+      const tagIds = tagsToMatch
+        .map(t => tagMap[t])
+        .filter((id): id is number => id !== undefined);
+
+      if (tagIds.length > 0) {
+        try {
+          const tagsRes = await fetch(`https://api.transpond.io/subscriber/${subscriberId}/tags`, {
+            method: "PUT",
+            headers: {
+              "Authorization": `Bearer ${transpondKey}`,
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify({ tags: tagIds })
+          });
+          if (!tagsRes.ok) {
+            const tagsErrText = await tagsRes.text();
+            console.error("[forms] Transpond tag attachment error:", tagsRes.status, tagsErrText);
+          } else {
+            console.log("[forms] Transpond tags attached successfully:", tagIds);
+          }
+        } catch (tagErr) {
+          console.error("[forms] Error attaching tags:", tagErr);
+        }
+      }
+    }
 
     return NextResponse.json({ success: true }, { status: 200 });
 
