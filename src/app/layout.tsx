@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     default: "Remodeling and Roofing Solutions in Jackson, MS | Born Again Home Remodeling and Roofing"
   },
   description: "At Born Again Home Remodeling and Roofing, we combine faith, integrity, and craftsmanship to deliver premium roofing and remodeling solutions in Jackson, MS, and surrounding areas. Call (601) 573-6178 for free estimates.",
-  metadataBase: new URL("https://born-again-roofing.netlify.app"),
+  metadataBase: new URL("https://www.bornagainroofing.com"),
   alternates: {
     canonical: "/"
   },
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Remodeling and Roofing Solutions in Jackson, MS",
     description: "At Born Again Home Remodeling and Roofing, we combine faith, integrity, and craftsmanship to deliver premium roofing and remodeling solutions in Jackson, MS.",
-    url: "https://born-again-roofing.netlify.app/",
+    url: "https://www.bornagainroofing.com/",
     siteName: "Born Again Home Remodeling and Roofing",
     locale: "en_US",
     type: "website",

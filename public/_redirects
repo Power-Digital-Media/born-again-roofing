@@ -19,3 +19,7 @@
 # WordPress cron and trackback
 /wp-cron.php         /          301
 /wp-trackback.php    /          301
+
+# Sitemap redirect
+/sitemap.html        /sitemap/  301
+
