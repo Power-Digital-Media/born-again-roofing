@@ -26,7 +26,8 @@ export async function POST(request: NextRequest) {
       page_url = "",
       propertyAddress = "",
       damageSeverity = "",
-      insuranceCompany = ""
+      insuranceCompany = "",
+      scheduleType = ""
     } = body;
 
     // Parse first/last name
@@ -91,6 +92,11 @@ export async function POST(request: NextRequest) {
         message ? `### Message / Question\n${message}` : ""
       ].filter(Boolean).join("\n");
     } else {
+      let scheduleLabel = "";
+      if (scheduleType === "schedule-inspection") scheduleLabel = "Inspection";
+      else if (scheduleType === "schedule-call") scheduleLabel = "Call";
+      else if (scheduleType === "schedule-meeting") scheduleLabel = "Meeting";
+
       noteLines = [
         `## 📋 Free Estimate Request`,
         `**Submitted:** ${timestamp}`,
@@ -99,9 +105,11 @@ export async function POST(request: NextRequest) {
         `**Name:** ${name}`,
         `**Phone:** ${phone}`,
         email ? `**Email:** ${email}` : "",
+        scheduleLabel ? `**Appointment Type:** ${scheduleLabel}` : "",
         date ? `**Requested Date:** ${date}` : "",
         timeSlot ? `**Time Slot:** ${timeSlot}` : "",
         service ? `**Service Interest:** ${service}` : "",
+        propertyAddress ? `**Property Address:** ${propertyAddress}` : "",
         page_url ? `**Page:** ${page_url}` : "",
         "",
         message ? `### Message\n${message}` : ""
@@ -119,6 +127,7 @@ export async function POST(request: NextRequest) {
         _form_source,
         "website-lead",
         "born-again-roofing",
+        ...(scheduleType ? [scheduleType] : []),
         ...(_form_source === "storm-damage-emergency" || _form_source === "emergency-lead" ? ["emergency-lead", "storm-damage"] : []),
         ...(_form_source === "quick-callback" ? ["quick-callback"] : []),
         ...(service 
@@ -176,18 +185,23 @@ export async function POST(request: NextRequest) {
     // ── Attach Numeric Tag IDs to Subscriber ──
     if (subscriberId) {
       const tagMap: Record<string, number> = {
-        "estimate-request": 625024,
-        "emergency-request": 625025,
-        "quick-callback": 625026,
-        "roof-replacement": 625027,
-        "roof-repair": 625028,
-        "metal-roofing": 625029,
-        "storm-damage-restoration": 625030,
-        "home-remodeling-additions": 625031
+        "estimate-request": 625032,
+        "emergency-request": 625033,
+        "storm-damage-emergency": 625033,
+        "quick-callback": 625034,
+        "roof-replacement": 625088,
+        "roof-repair": 625089,
+        "metal-roofing": 625090,
+        "storm-damage-restoration": 625091,
+        "home-remodeling-additions": 625092,
+        "schedule-call": 625097,
+        "schedule-meeting": 625099,
+        "schedule-inspection": 625100
       };
 
       const tagsToMatch = [
         _form_source,
+        ...(scheduleType ? [scheduleType] : []),
         ...(service 
           ? service.split(", ").map((s: string) => 
               s.toLowerCase()

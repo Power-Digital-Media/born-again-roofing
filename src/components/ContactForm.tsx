@@ -17,6 +17,9 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
   // Service selection for Estimate form
   const [service, setService] = useState("");
   
+  // Scheduling type for Estimate form
+  const [scheduleType, setScheduleType] = useState("schedule-inspection");
+  
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -54,8 +57,13 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
 
     // Form validation based on variant type
     if (type === "estimate") {
-      if (!name || !phone || !date || !timeSlot || !service) {
+      if (!name || !phone || !date || !timeSlot || !service || !scheduleType) {
         setError("Please fill in all required fields.");
+        return;
+      }
+
+      if (scheduleType === "schedule-inspection" && !propertyAddress.trim()) {
+        setError("Please enter the property address for the inspection.");
         return;
       }
 
@@ -98,9 +106,10 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
           timeSlot: type === "estimate" ? timeSlot : "",
           service: type === "estimate" ? service : "",
           message,
-          propertyAddress: type === "emergency" ? propertyAddress : "",
+          propertyAddress: type === "emergency" ? propertyAddress : (type === "estimate" && scheduleType === "schedule-inspection" ? propertyAddress : ""),
           damageSeverity: type === "emergency" ? damageSeverity : "",
           insuranceCompany: type === "emergency" ? insuranceCompany : "",
+          scheduleType: type === "estimate" ? scheduleType : "",
           _form_source: type === "emergency" ? "storm-damage-emergency" : (type === "callback" ? "quick-callback" : "estimate-request"),
           page_url: typeof window !== "undefined" ? window.location.href : ""
         })
@@ -119,7 +128,8 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
             currency: "USD",
             lead_origin: type === "emergency" ? "Emergency Form" : (type === "callback" ? "Callback Form" : "Estimate Form"),
             appointment_date: type === "estimate" ? date : "",
-            appointment_time: type === "estimate" ? timeSlot : ""
+            appointment_time: type === "estimate" ? timeSlot : "",
+            schedule_type: type === "estimate" ? scheduleType : ""
           });
         }
       }
@@ -134,6 +144,7 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
       setDamageSeverity("");
       setInsuranceCompany("");
       setService("");
+      setScheduleType("schedule-inspection");
       setMessage("");
     } catch (err) {
       console.error("Form error:", err);
@@ -279,25 +290,64 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
               </>
             )}
 
-            {/* Service Interest Dropdown */}
+            {/* Appointment Type & Service Interest Dropdowns */}
             {type === "estimate" && (
-              <div className="form-group">
-                <label className="form-label" htmlFor="service">Service Needed *</label>
-                <select
-                  id="service"
-                  className="form-input"
-                  value={service}
-                  onChange={(e) => setService(e.target.value)}
-                  required
-                >
-                  <option value="">Select a service...</option>
-                  <option value="Roof Replacement">Roof Replacement</option>
-                  <option value="Roof Repair">Roof Repair</option>
-                  <option value="Metal Roofing">Metal Roofing</option>
-                  <option value="Storm Damage Restoration">Storm Damage Restoration</option>
-                  <option value="Home Remodeling / Additions">Home Remodeling / Additions</option>
-                </select>
-              </div>
+              <>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="scheduleType">Appointment Type *</label>
+                    <select
+                      id="scheduleType"
+                      className="form-input"
+                      value={scheduleType}
+                      onChange={(e) => {
+                        setScheduleType(e.target.value);
+                        if (e.target.value !== "schedule-inspection") {
+                          setPropertyAddress("");
+                        }
+                      }}
+                      required
+                    >
+                      <option value="schedule-inspection">Schedule an Inspection</option>
+                      <option value="schedule-call">Schedule a Call</option>
+                      <option value="schedule-meeting">Schedule a Meeting</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="service">Service Needed *</label>
+                    <select
+                      id="service"
+                      className="form-input"
+                      value={service}
+                      onChange={(e) => setService(e.target.value)}
+                      required
+                    >
+                      <option value="">Select a service...</option>
+                      <option value="Roof Replacement">Roof Replacement</option>
+                      <option value="Roof Repair">Roof Repair</option>
+                      <option value="Metal Roofing">Metal Roofing</option>
+                      <option value="Storm Damage Restoration">Storm Damage Restoration</option>
+                      <option value="Home Remodeling / Additions">Home Remodeling / Additions</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Conditional Property Address for Roof Inspections */}
+                {scheduleType === "schedule-inspection" && (
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="propertyAddress">Property Address *</label>
+                    <input
+                      type="text"
+                      id="propertyAddress"
+                      className="form-input"
+                      value={propertyAddress}
+                      onChange={(e) => setPropertyAddress(e.target.value)}
+                      placeholder="123 Main St, Jackson, MS"
+                      required
+                    />
+                  </div>
+                )}
+              </>
             )}
 
             {/* Estimate Scheduling Fields */}
