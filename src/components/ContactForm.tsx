@@ -10,7 +10,10 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
   const [timeSlot, setTimeSlot] = useState("");
   
   // Emergency specific fields
-  const [propertyAddress, setPropertyAddress] = useState("");
+  const [addressStreet, setAddressStreet] = useState("");
+  const [addressCity, setAddressCity] = useState("");
+  const [addressState, setAddressState] = useState("");
+  const [addressZip, setAddressZip] = useState("");
   const [damageSeverity, setDamageSeverity] = useState("");
   const [insuranceCompany, setInsuranceCompany] = useState("");
   
@@ -62,8 +65,8 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
         return;
       }
 
-      if (scheduleType === "schedule-inspection" && !propertyAddress.trim()) {
-        setError("Please enter the property address for the inspection.");
+      if (scheduleType === "schedule-inspection" && (!addressStreet.trim() || !addressCity.trim() || !addressState.trim() || !addressZip.trim())) {
+        setError("Please enter the complete property address (Street, City, State, ZIP) for the inspection.");
         return;
       }
 
@@ -80,7 +83,7 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
         return;
       }
     } else if (type === "emergency") {
-      if (!name || !phone || !propertyAddress || !damageSeverity) {
+      if (!name || !phone || !addressStreet.trim() || !addressCity.trim() || !addressState.trim() || !addressZip.trim() || !damageSeverity) {
         setError("Please fill in all required fields (Name, Phone, Address, and Severity).");
         return;
       }
@@ -106,7 +109,10 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
           timeSlot: type === "estimate" ? timeSlot : "",
           service: type === "estimate" ? service : "",
           message,
-          propertyAddress: type === "emergency" ? propertyAddress : (type === "estimate" && scheduleType === "schedule-inspection" ? propertyAddress : ""),
+          addressStreet: (type === "emergency" || (type === "estimate" && scheduleType === "schedule-inspection")) ? addressStreet : "",
+          addressCity: (type === "emergency" || (type === "estimate" && scheduleType === "schedule-inspection")) ? addressCity : "",
+          addressState: (type === "emergency" || (type === "estimate" && scheduleType === "schedule-inspection")) ? addressState : "",
+          addressZip: (type === "emergency" || (type === "estimate" && scheduleType === "schedule-inspection")) ? addressZip : "",
           damageSeverity: type === "emergency" ? damageSeverity : "",
           insuranceCompany: type === "emergency" ? insuranceCompany : "",
           scheduleType: type === "estimate" ? scheduleType : "",
@@ -140,7 +146,10 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
       setPhone("");
       setDate("");
       setTimeSlot("");
-      setPropertyAddress("");
+      setAddressStreet("");
+      setAddressCity("");
+      setAddressState("");
+      setAddressZip("");
       setDamageSeverity("");
       setInsuranceCompany("");
       setService("");
@@ -246,19 +255,57 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
             {/* Emergency Specific Fields */}
             {type === "emergency" && (
               <>
-                <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label" htmlFor="street">Property Street Address *</label>
+                  <input
+                    type="text"
+                    id="street"
+                    className="form-input"
+                    value={addressStreet}
+                    onChange={(e) => setAddressStreet(e.target.value)}
+                    placeholder="123 Main St"
+                    required
+                  />
+                </div>
+                <div className="form-row-3col">
                   <div className="form-group">
-                    <label className="form-label" htmlFor="address">Property Address *</label>
+                    <label className="form-label" htmlFor="city">City *</label>
                     <input
                       type="text"
-                      id="address"
+                      id="city"
                       className="form-input"
-                      value={propertyAddress}
-                      onChange={(e) => setPropertyAddress(e.target.value)}
-                      placeholder="123 Main St, Jackson, MS"
+                      value={addressCity}
+                      onChange={(e) => setAddressCity(e.target.value)}
+                      placeholder="Jackson"
                       required
                     />
                   </div>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="state">State *</label>
+                    <input
+                      type="text"
+                      id="state"
+                      className="form-input"
+                      value={addressState}
+                      onChange={(e) => setAddressState(e.target.value)}
+                      placeholder="MS"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="zip">ZIP *</label>
+                    <input
+                      type="text"
+                      id="zip"
+                      className="form-input"
+                      value={addressZip}
+                      onChange={(e) => setAddressZip(e.target.value)}
+                      placeholder="39209"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="form-row">
                   <div className="form-group">
                     <label className="form-label" htmlFor="severity">Damage Severity *</label>
                     <select
@@ -275,17 +322,17 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
                       <option value="Hail Inspection / Assessment">Hail Inspection / Assessment</option>
                     </select>
                   </div>
-                </div>
-                <div className="form-group">
-                  <label className="form-label" htmlFor="insurance">Insurance Provider (Optional)</label>
-                  <input
-                    type="text"
-                    id="insurance"
-                    className="form-input"
-                    value={insuranceCompany}
-                    onChange={(e) => setInsuranceCompany(e.target.value)}
-                    placeholder="State Farm, Allstate, etc."
-                  />
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="insurance">Insurance Provider (Optional)</label>
+                    <input
+                      type="text"
+                      id="insurance"
+                      className="form-input"
+                      value={insuranceCompany}
+                      onChange={(e) => setInsuranceCompany(e.target.value)}
+                      placeholder="State Farm, Allstate, etc."
+                    />
+                  </div>
                 </div>
               </>
             )}
@@ -303,7 +350,10 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
                       onChange={(e) => {
                         setScheduleType(e.target.value);
                         if (e.target.value !== "schedule-inspection") {
-                          setPropertyAddress("");
+                          setAddressStreet("");
+                          setAddressCity("");
+                          setAddressState("");
+                          setAddressZip("");
                         }
                       }}
                       required
@@ -334,18 +384,58 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
 
                 {/* Conditional Property Address for Roof Inspections */}
                 {scheduleType === "schedule-inspection" && (
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="propertyAddress">Property Address *</label>
-                    <input
-                      type="text"
-                      id="propertyAddress"
-                      className="form-input"
-                      value={propertyAddress}
-                      onChange={(e) => setPropertyAddress(e.target.value)}
-                      placeholder="123 Main St, Jackson, MS"
-                      required
-                    />
-                  </div>
+                  <>
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="street">Property Street Address *</label>
+                      <input
+                        type="text"
+                        id="street"
+                        className="form-input"
+                        value={addressStreet}
+                        onChange={(e) => setAddressStreet(e.target.value)}
+                        placeholder="123 Main St"
+                        required
+                      />
+                    </div>
+                    <div className="form-row-3col">
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="city">City *</label>
+                        <input
+                          type="text"
+                          id="city"
+                          className="form-input"
+                          value={addressCity}
+                          onChange={(e) => setAddressCity(e.target.value)}
+                          placeholder="Jackson"
+                          required
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="state">State *</label>
+                        <input
+                          type="text"
+                          id="state"
+                          className="form-input"
+                          value={addressState}
+                          onChange={(e) => setAddressState(e.target.value)}
+                          placeholder="MS"
+                          required
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="zip">ZIP *</label>
+                        <input
+                          type="text"
+                          id="zip"
+                          className="form-input"
+                          value={addressZip}
+                          onChange={(e) => setAddressZip(e.target.value)}
+                          placeholder="39209"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </>
                 )}
               </>
             )}

@@ -24,11 +24,18 @@ export async function POST(request: NextRequest) {
       _form_source = "estimate-request",
       service = "",
       page_url = "",
-      propertyAddress = "",
+      addressStreet = "",
+      addressCity = "",
+      addressState = "",
+      addressZip = "",
       damageSeverity = "",
       insuranceCompany = "",
       scheduleType = ""
     } = body;
+
+    const fullAddress = addressStreet
+      ? `${addressStreet}, ${addressCity}, ${addressState} ${addressZip}`.trim()
+      : "";
 
     // Parse first/last name
     const nameParts = name.trim().split(/\s+/);
@@ -72,7 +79,7 @@ export async function POST(request: NextRequest) {
         `**Name:** ${name}`,
         `**Phone:** ${phone}`,
         email ? `**Email:** ${email}` : "",
-        propertyAddress ? `**Property Address:** ${propertyAddress}` : "",
+        fullAddress ? `**Property Address:** ${fullAddress}` : "",
         damageSeverity ? `**Damage Severity:** ${damageSeverity}` : "",
         insuranceCompany ? `**Insurance Provider:** ${insuranceCompany}` : "",
         "",
@@ -109,7 +116,7 @@ export async function POST(request: NextRequest) {
         date ? `**Requested Date:** ${date}` : "",
         timeSlot ? `**Time Slot:** ${timeSlot}` : "",
         service ? `**Service Interest:** ${service}` : "",
-        propertyAddress ? `**Property Address:** ${propertyAddress}` : "",
+        fullAddress ? `**Property Address:** ${fullAddress}` : "",
         page_url ? `**Page:** ${page_url}` : "",
         "",
         message ? `### Message\n${message}` : ""
@@ -147,8 +154,11 @@ export async function POST(request: NextRequest) {
         "_capsule_phone": phone,
         "_capsule_Service": service || _form_source,
         "_capsule_Message": message || "",
-        ...(propertyAddress ? { 
-          "_capsule_street": propertyAddress,
+        ...(addressStreet ? { 
+          "_capsule_street": addressStreet,
+          "_capsule_city": addressCity,
+          "_capsule_state": addressState,
+          "_capsule_zip": addressZip,
           "_capsule_hasAddress": true
         } : {}),
         ...(date ? { "_capsule_Appointment_Date": date } : {}),
