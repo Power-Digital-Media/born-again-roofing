@@ -3755,5 +3755,45 @@ a {
   opacity: 0.85;
 }
 
+/* Compact styling overrides specifically for the hero section form */
+.hero-form-wrapper .contact-form-inner {
+  padding: 1.75rem 1.5rem !important;
+}
+
+.hero-form-wrapper .form-title {
+  font-size: 1.5rem !important;
+  margin-bottom: 1.25rem !important;
+}
+
+.hero-form-wrapper .form-group {
+  margin-bottom: 0.9rem !important;
+}
+
+.hero-form-wrapper .form-label {
+  margin-bottom: 0.4rem !important;
+  font-size: 0.85rem !important;
+}
+
+.hero-form-wrapper .form-input {
+  padding: 0.65rem 0.9rem !important;
+  font-size: 0.9rem !important;
+  border-radius: 8px !important;
+}
+
+.hero-form-wrapper .form-row, 
+.hero-form-wrapper .form-row-3col {
+  gap: 0.9rem !important;
+}
+
+.hero-form-wrapper .submit-btn {
+  padding: 0.75rem 1.5rem !important;
+  font-size: 0.95rem !important;
+  margin-top: 0.5rem !important;
+}
+
+.hero-form-wrapper .form-disclaimer {
+  margin-top: 0.9rem !important;
+}
+
 
 
