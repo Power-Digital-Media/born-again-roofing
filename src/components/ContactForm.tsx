@@ -499,6 +499,10 @@ export default function ContactForm({ type = "estimate" }: { type?: "estimate" |
               {buttonText}
             </button>
 
+            <p className="form-disclaimer">
+              By submitting this request, you agree to allow Born Again Home Remodeling & Roofing to contact you regarding your project. We respect your privacy: your personal information is stored securely, used solely to communicate with you, and will never be shared or sold to third parties.
+            </p>
+
           </form>
         )}
       </div>
