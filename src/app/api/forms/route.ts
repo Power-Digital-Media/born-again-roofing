@@ -145,14 +145,16 @@ export async function POST(request: NextRequest) {
         "_capsule_name": name,
         "_capsule_person": true,
         "_capsule_phone": phone,
-        "PHONE": phone,
-        "SERVICE": service || _form_source,
-        ...(date ? { "APPOINTMENT_DATE": date } : {}),
-        ...(timeSlot ? { "APPOINTMENT_TIME": timeSlot } : {}),
-        ...(propertyAddress ? { "PROPERTY_ADDRESS": propertyAddress, "_capsule_address": propertyAddress } : {}),
+        "_capsule_Service": service || _form_source,
+        "_capsule_Message": message || "",
+        ...(propertyAddress ? { 
+          "_capsule_street": propertyAddress,
+          "_capsule_hasAddress": true
+        } : {}),
+        ...(date ? { "_capsule_Appointment_Date": date } : {}),
+        ...(timeSlot ? { "_capsule_Appointment_Time": timeSlot } : {}),
         ...(damageSeverity ? { "DAMAGE_SEVERITY": damageSeverity } : {}),
         ...(insuranceCompany ? { "INSURANCE_PROVIDER": insuranceCompany } : {}),
-        "MESSAGE": message || "",
         "SOURCE_URL": page_url || ""
       }
     };
