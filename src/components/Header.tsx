@@ -52,7 +52,18 @@ export default function Header() {
           <Link href="/areas-we-service" className="nav-link">Areas Served</Link>
           <Link href="/pins" className="nav-link">Project Pins</Link>
           <Link href="/reviews" className="nav-link">Reviews</Link>
-          <Link href="/contact-us" className="btn btn-primary btn-island">
+          <Link 
+            href="/contact-us" 
+            className="btn btn-primary btn-island"
+            onClick={(e) => {
+              e.preventDefault();
+              window.dispatchEvent(
+                new CustomEvent("open-estimate-drawer", {
+                  detail: { type: "estimate" }
+                })
+              );
+            }}
+          >
             Free Estimate
             <span className="btn-icon-wrapper">
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -110,7 +121,19 @@ export default function Header() {
           <Link href="/areas-we-service" className="mobile-nav-link" onClick={closeMenu}>Areas Served</Link>
           <Link href="/pins" className="mobile-nav-link" onClick={closeMenu}>Project Pins</Link>
           <Link href="/reviews" className="mobile-nav-link" onClick={closeMenu}>Reviews</Link>
-          <Link href="/contact-us" className="btn btn-primary btn-island mobile-nav-link mobile-cta" onClick={closeMenu}>
+          <Link 
+            href="/contact-us" 
+            className="btn btn-primary btn-island mobile-nav-link mobile-cta" 
+            onClick={(e) => {
+              e.preventDefault();
+              closeMenu();
+              window.dispatchEvent(
+                new CustomEvent("open-estimate-drawer", {
+                  detail: { type: "estimate" }
+                })
+              );
+            }}
+          >
             Free Estimate
             <span className="btn-icon-wrapper">
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -3795,5 +3795,269 @@ a {
   margin-top: 0.9rem !important;
 }
 
+/* ── Form Drawer (Slide-out Panel) Styles ── */
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 580px;
+  height: 100vh;
+  background: #0b0d13;
+  border-left: 1px solid rgba(243, 201, 115, 0.15);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.6);
+  z-index: 1001;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer-panel.open {
+  transform: translateX(0);
+}
+
+.drawer-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #a1aab9;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.drawer-close-btn:hover {
+  background: rgba(243, 201, 115, 0.15);
+  color: #f3c973;
+  border-color: rgba(243, 201, 115, 0.3);
+  transform: rotate(90deg);
+}
+
+.drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 3.5rem 2rem 2rem;
+}
+
+/* Ensure the contact form inside the drawer doesn't have bezel margin/wrapper space */
+.drawer-content .contact-form-wrapper {
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+.drawer-content .contact-form-inner {
+  border: none !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ── Floating CTA Styles ── */
+.floating-cta-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 999;
+  transform: translateY(100px) scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.floating-cta-container.visible {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.floating-cta-btn {
+  background: linear-gradient(135deg, #b88630 0%, #d4af37 50%, #f3c973 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #07090d;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.9rem 1.6rem;
+  border-radius: 50px;
+  box-shadow: 0 10px 30px rgba(184, 134, 48, 0.35);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.floating-cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(184, 134, 48, 0.5);
+  filter: brightness(1.05);
+}
+
+.floating-cta-btn:active {
+  transform: translateY(-1px);
+}
+
+/* Sticky Bottom Bar on Mobile */
+@media (max-width: 768px) {
+  .floating-cta-container {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    transform: translateY(100px);
+    border-radius: 0;
+  }
+  
+  .floating-cta-container.visible {
+    transform: translateY(0);
+  }
+
+  .floating-cta-btn {
+    width: 100%;
+    border-radius: 0;
+    padding: 1.1rem;
+    justify-content: center;
+    font-size: 1.05rem;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* ── Hero Badge Showcase Styles ── */
+.hero-badge-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.badge-card {
+  background: rgba(15, 18, 25, 0.45);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(243, 201, 115, 0.15);
+  border-radius: 20px;
+  padding: 1.75rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.badge-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(243, 201, 115, 0.3);
+  box-shadow: 0 15px 35px rgba(184, 134, 48, 0.15);
+}
+
+.primary-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  background: linear-gradient(135deg, rgba(15, 18, 25, 0.8) 0%, rgba(20, 25, 35, 0.6) 100%);
+  border-left: 4px solid var(--secondary);
+}
+
+.badge-gold-ring {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--secondary);
+  background: rgba(184, 134, 48, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 15px rgba(184, 134, 48, 0.2);
+}
+
+.badge-details h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0.25rem 0 0.5rem 0;
+}
+
+.badge-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--secondary);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.badge-details p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.badge-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.mini-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+}
+
+.mini-badge-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.mini-badge-text h4 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+
+.mini-badge-text p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 2px 0 0 0;
+}
+
+/* Hide the showcase on tablet/mobile so layout stays compact */
+@media (max-width: 991px) {
+  .hero-badge-showcase {
+    display: none !important;
+  }
+}
+
 
 

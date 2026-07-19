@@ -6,6 +6,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import ScrollRevealInit from "@/components/ScrollRevealInit";
+import FormDrawer from "@/components/FormDrawer";
+import FloatingCTA from "@/components/FloatingCTA";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -104,6 +106,8 @@ export default function RootLayout({
         <Footer />
         <MobileBottomBar />
         <ScrollRevealInit />
+        <FormDrawer />
+        <FloatingCTA />
       </body>
     </html>
   );

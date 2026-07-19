@@ -1,11 +1,26 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 
 export default function HeroCTAs() {
+  const openDrawer = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.dispatchEvent(
+      new CustomEvent("open-estimate-drawer", {
+        detail: { type: "estimate" }
+      })
+    );
+  };
+
   return (
     <div className="hero-ctas">
-      {/* Desktop: links to contact page */}
-      <Link href="/contact-us" className="btn btn-secondary btn-island hero-cta-desktop">
+      {/* Desktop: opens slide-out drawer */}
+      <Link 
+        href="/contact-us" 
+        className="btn btn-secondary btn-island hero-cta-desktop"
+        onClick={openDrawer}
+      >
         Get A Free Estimate
         <span className="btn-icon-wrapper">
           <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -13,8 +28,12 @@ export default function HeroCTAs() {
           </svg>
         </span>
       </Link>
-      {/* Mobile: smooth-scrolls to form below */}
-      <a href="/contact-us" className="btn btn-secondary btn-island hero-cta-mobile">
+      {/* Mobile: opens slide-out drawer */}
+      <a 
+        href="/contact-us" 
+        className="btn btn-secondary btn-island hero-cta-mobile"
+        onClick={openDrawer}
+      >
         Request Free Estimate
         <span className="btn-icon-wrapper">
           <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">

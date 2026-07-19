@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import ContactForm from "@/components/ContactForm";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import ProjectsCarousel from "@/components/ProjectsCarousel";
 import ReviewsCarousel from "@/components/ReviewsCarousel";
@@ -76,8 +75,35 @@ export default function Home() {
             </div>
           </div>
           
-          <div id="estimate-form" className="hero-form-wrapper scroll-reveal">
-            <ContactForm />
+          <div className="hero-badge-showcase scroll-reveal">
+            <div className="badge-card primary-badge">
+              <div className="badge-gold-ring">
+                <span className="badge-icon">🎖️</span>
+              </div>
+              <div className="badge-details">
+                <span className="badge-eyebrow">ELITE ROOFING STATUS</span>
+                <h3>GAF Certified Contractor</h3>
+                <p>Equipped with industry-leading materials & lifetime warranties to protect your home for 50+ years.</p>
+              </div>
+            </div>
+            
+            <div className="badge-grid">
+              <div className="badge-card mini-badge">
+                <div className="mini-badge-icon">⭐</div>
+                <div className="mini-badge-text">
+                  <h4>5.0 Rating</h4>
+                  <p>130+ Google Reviews</p>
+                </div>
+              </div>
+              
+              <div className="badge-card mini-badge">
+                <div className="mini-badge-icon">🛡️</div>
+                <div className="mini-badge-text">
+                  <h4>Licensed & Insured</h4>
+                  <p>Full liability protection</p>
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>
