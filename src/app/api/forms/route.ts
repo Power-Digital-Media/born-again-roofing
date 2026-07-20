@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
         "website-lead",
         "born-again-roofing",
         ...(scheduleType ? [scheduleType] : []),
-        ...(_form_source === "storm-damage-emergency" || _form_source === "emergency-lead" ? ["emergency-lead", "storm-damage"] : []),
+        ...(_form_source === "storm-damage-emergency" || _form_source === "emergency-lead" ? ["emergency-lead", "storm-damage", "emergency-request"] : []),
         ...(_form_source === "quick-callback" ? ["quick-callback"] : []),
         ...(service 
           ? service.split(", ").map((s: string) => 
