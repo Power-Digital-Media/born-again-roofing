@@ -154,6 +154,8 @@ export async function POST(request: NextRequest) {
         "_capsule_phone": phone,
         "_capsule_Service": service || _form_source,
         "_capsule_Message": message || "",
+        "_capsule_service": service || _form_source,
+        "_capsule_message": message || "",
         ...(addressStreet ? { 
           "_capsule_street": addressStreet,
           "_capsule_city": addressCity,
