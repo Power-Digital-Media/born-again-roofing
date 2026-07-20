@@ -165,8 +165,14 @@ export async function POST(request: NextRequest) {
         } : {}),
         ...(date ? { "_capsule_Appointment_Date": date } : {}),
         ...(timeSlot ? { "_capsule_Appointment_Time": timeSlot } : {}),
-        ...(damageSeverity ? { "DAMAGE_SEVERITY": damageSeverity } : {}),
-        ...(insuranceCompany ? { "INSURANCE_PROVIDER": insuranceCompany } : {}),
+        ...(damageSeverity ? { 
+          "DAMAGE_SEVERITY": damageSeverity,
+          "_capsule_damage_severity": damageSeverity
+        } : {}),
+        ...(insuranceCompany ? { 
+          "INSURANCE_PROVIDER": insuranceCompany,
+          "_capsule_insurance_provider": insuranceCompany
+        } : {}),
         "SOURCE_URL": page_url || ""
       }
     };
