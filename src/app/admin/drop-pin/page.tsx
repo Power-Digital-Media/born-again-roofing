@@ -40,10 +40,18 @@ const serviceList = [
   "Residential Roofing",
   "Metal Roofing",
   "Commercial Roofing",
+  "Roof Inspection & Tarping",
   "General Remodeling",
   "Bathroom Remodeling",
-  "Window Installation",
-  "Privacy Fence Installation"
+  "Kitchen Remodeling",
+  "Whole House Remodeling",
+  "Painting (Interior/Exterior)",
+  "Fencing & Decking",
+  "Sheetrock & Drywall",
+  "Siding & Gutters",
+  "Custom Cabinets & Carpentry",
+  "Flooring & Tile",
+  "Custom Category..."
 ];
 
 export default function DropPinPage() {
@@ -55,11 +63,74 @@ export default function DropPinPage() {
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
   const [service, setService] = useState("");
+  const [customService, setCustomService] = useState("");
+  const [addressSearch, setAddressSearch] = useState("");
+  const [isGeocoding, setIsGeocoding] = useState(false);
   const [description, setDescription] = useState("");
   const [latitude, setLatitude] = useState<number | "">("");
   const [longitude, setLongitude] = useState<number | "">("");
   const [images, setImages] = useState<string[]>([]);
   const [isCompressing, setIsCompressing] = useState(false);
+
+  const geocodeAddress = async () => {
+    if (!addressSearch.trim()) {
+      alert("Please enter an address to search.");
+      return;
+    }
+
+    setIsGeocoding(true);
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressSearch)}`
+      );
+      if (response.ok) {
+        const results = await response.json();
+        if (results && results.length > 0) {
+          const firstResult = results[0];
+          const lat = parseFloat(firstResult.lat);
+          const lon = parseFloat(firstResult.lon);
+          setLatitude(lat);
+          setLongitude(lon);
+
+          // Extract city from result
+          let matchedCity = "";
+          const displayName = firstResult.display_name.toLowerCase();
+          for (const city of Object.keys(cityCoords)) {
+            const cityNameOnly = city.split(",")[0].toLowerCase().trim();
+            if (displayName.includes(cityNameOnly)) {
+              matchedCity = city;
+              break;
+            }
+          }
+          if (matchedCity) {
+            setLocation(matchedCity);
+          } else {
+            let closestCity = "";
+            let minDistance = Infinity;
+            for (const [city, coords] of Object.entries(cityCoords)) {
+              const dist = Math.pow(lat - coords[0], 2) + Math.pow(lon - coords[1], 2);
+              if (dist < minDistance) {
+                minDistance = dist;
+                closestCity = city;
+              }
+            }
+            if (closestCity) {
+              setLocation(closestCity);
+            }
+          }
+        } else {
+          alert("Could not find coordinates for that address. Please enter coordinates manually.");
+        }
+      } else {
+        alert("Address lookup failed. Please enter coordinates manually.");
+      }
+    } catch (err) {
+      console.error("Geocoding error:", err);
+      alert("Error contacting address lookup service. Please enter coordinates manually.");
+    } finally {
+      setIsGeocoding(false);
+    }
+  };
 
   const [geoLoading, setGeoLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -195,7 +266,9 @@ export default function DropPinPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!author || !location || !service || !description || images.length === 0) {
+    const finalService = service === "Custom Category..." ? customService : service;
+
+    if (!author || !location || !finalService || !description || images.length === 0) {
       setSubmitError("Please fill in all fields and upload at least one image.");
       return;
     }
@@ -207,7 +280,7 @@ export default function DropPinPage() {
       author,
       date,
       location,
-      service,
+      service: finalService,
       description,
       images,
       latitude: latitude !== "" ? latitude : undefined,
@@ -231,6 +304,9 @@ export default function DropPinPage() {
         setImages([]);
         setLatitude("");
         setLongitude("");
+        setService("");
+        setCustomService("");
+        setAddressSearch("");
       } else {
         const errorData = await response.json();
         setSubmitError(errorData.error || "Failed to drop pin. Try again.");
@@ -344,12 +420,37 @@ export default function DropPinPage() {
             <div className="double-bezel-inner success-inner">
               <span className="success-icon">🎉</span>
               <h3>Pin Dropped Successfully!</h3>
-              <p>The job has been recorded and will show on the map and feed in real-time.</p>
+              <p style={{ marginBottom: "1.5rem" }}>The job has been recorded and will show on the map and feed in real-time.</p>
+              
+              {/* Review request integration */}
+              <div style={{ background: "rgba(255, 255, 255, 0.02)", border: "1px solid var(--border)", borderRadius: "12px", padding: "1.5rem", marginBottom: "2rem", textAlign: "left" }}>
+                <h4 style={{ color: "#ffffff", fontSize: "0.95rem", fontWeight: "800", marginBottom: "0.5rem" }}>👉 Send Google Review Request</h4>
+                <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "0 0 1rem 0", lineHeight: "1.5" }}>
+                  Send a pre-filled review request to the customer&apos;s phone or email right now:
+                </p>
+                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                  <a
+                    href="sms:?body=Hi! This is Damien from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: https://www.google.com/search?q=Born+Again+Home+Remodeling+and+Roofing+Pearl+MS"
+                    className="btn btn-outline"
+                    style={{ flex: "1 1 120px", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", padding: "8px 12px", background: "rgba(226, 176, 71, 0.05)" }}
+                  >
+                    💬 Send SMS
+                  </a>
+                  <a
+                    href="mailto:?subject=Review for Born Again Roofing&body=Hi there,%0D%0A%0D%0AThis is Damien from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0Ahttps://www.google.com/search?q=Born+Again+Home+Remodeling+and+Roofing+Pearl+MS%0D%0A%0D%0AThank you!"
+                    className="btn btn-outline"
+                    style={{ flex: "1 1 120px", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", padding: "8px 12px", background: "rgba(226, 176, 71, 0.05)" }}
+                  >
+                    ✉️ Send Email
+                  </a>
+                </div>
+              </div>
+
               <div className="success-buttons">
-                <button onClick={() => setSubmitSuccess(false)} className="btn btn-outline">
+                <button onClick={() => setSubmitSuccess(false)} className="btn btn-outline" style={{ width: "100%" }}>
                   Drop Another Pin
                 </button>
-                <Link href="/pins/" className="btn btn-outline" style={{ background: "transparent" }}>
+                <Link href="/pins/" className="btn btn-outline" style={{ background: "transparent", width: "100%" }}>
                   View Project Map
                 </Link>
               </div>
@@ -408,9 +509,23 @@ export default function DropPinPage() {
                   </select>
                 </div>
 
+                {service === "Custom Category..." && (
+                  <div className="form-group animate-fade-in">
+                    <label className="form-label">Specify Custom Service Type</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="e.g. Sheetrock & Drywall, Plumbing, Siding"
+                      value={customService}
+                      onChange={(e) => setCustomService(e.target.value)}
+                      required
+                    />
+                  </div>
+                )}
+
                 {/* GPS Coordinates Wrapper */}
                 <div className="form-group">
-                  <label className="form-label">GPS Tagging (Coordinates)</label>
+                  <label className="form-label">GPS / Location Coordinates</label>
                   <div className="gps-row">
                     <button
                       type="button"
@@ -424,23 +539,56 @@ export default function DropPinPage() {
                       <div className="coord-field">
                         <span>Lat:</span>
                         <input
-                          type="text"
-                          value={latitude !== "" ? latitude.toFixed(6) : "None"}
-                          disabled
+                          type="number"
+                          step="any"
+                          value={latitude}
+                          onChange={(e) => setLatitude(e.target.value === "" ? "" : parseFloat(e.target.value))}
+                          placeholder="e.g. 32.27"
                           className="coord-input"
+                          style={{ background: "rgba(255,255,255,0.01)", border: "1px solid var(--border)", borderRadius: "4px", padding: "4px 8px", color: "#ffffff" }}
                         />
                       </div>
                       <div className="coord-field">
                         <span>Lng:</span>
                         <input
-                          type="text"
-                          value={longitude !== "" ? longitude.toFixed(6) : "None"}
-                          disabled
+                          type="number"
+                          step="any"
+                          value={longitude}
+                          onChange={(e) => setLongitude(e.target.value === "" ? "" : parseFloat(e.target.value))}
+                          placeholder="e.g. -90.13"
                           className="coord-input"
+                          style={{ background: "rgba(255,255,255,0.01)", border: "1px solid var(--border)", borderRadius: "4px", padding: "4px 8px", color: "#ffffff" }}
                         />
                       </div>
                     </div>
                   </div>
+                </div>
+
+                {/* Address Lookup Helper */}
+                <div className="form-group" style={{ background: "rgba(255,255,255,0.01)", border: "1px solid var(--border)", borderRadius: "8px", padding: "1.25rem" }}>
+                  <label className="form-label" style={{ fontSize: "0.75rem", color: "var(--secondary)" }}>Convert Address to Coords (Optional)</label>
+                  <div style={{ display: "flex", gap: "10px", marginTop: "4px" }}>
+                    <input
+                      type="text"
+                      placeholder="e.g. 100 State St, Jackson, MS"
+                      value={addressSearch}
+                      onChange={(e) => setAddressSearch(e.target.value)}
+                      className="form-input"
+                      style={{ flexGrow: 1 }}
+                    />
+                    <button
+                      type="button"
+                      onClick={geocodeAddress}
+                      className="btn btn-outline"
+                      disabled={isGeocoding}
+                      style={{ padding: "0.5rem 1rem", fontSize: "0.8rem", whiteSpace: "nowrap" }}
+                    >
+                      {isGeocoding ? "Searching..." : "🔍 Convert"}
+                    </button>
+                  </div>
+                  <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", margin: "6px 0 0 0" }}>
+                    If you are in the office, enter the job address and click Convert to automatically update coordinates and matching city.
+                  </p>
                 </div>
 
                 {/* Date (Read-Only/Autocompleted) */}
@@ -469,7 +617,6 @@ export default function DropPinPage() {
                     <input
                       type="file"
                       accept="image/*"
-                      capture="environment"
                       multiple
                       className="upload-input"
                       id="photo-upload"
@@ -477,7 +624,7 @@ export default function DropPinPage() {
                       disabled={isCompressing}
                     />
                     <label htmlFor="photo-upload" className="upload-label">
-                      {isCompressing ? "Processing Images..." : "📸 Take Photo / Upload"}
+                      {isCompressing ? "Processing Images..." : "📸 Select Photos / Capture"}
                     </label>
                   </div>
 
