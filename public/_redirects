@@ -1,25 +1,75 @@
-# WordPress Legacy Redirects
-/wp-admin/*          /          301
-/wp-login.php        /          301
-/wp-content/*        /          301
-/wp-includes/*       /          301
-/wp-json/*           /          301
-/xmlrpc.php          /          301
-/feed/*              /          301
-/comments/feed/*     /          301
-/category/*          /blog/     301
-/tag/*               /blog/     301
-/author/*            /about-us/ 301
+# ──────────────────────────────────────────────────────────
+# BORN AGAIN HOME REMODELING & ROOFING — REDIRECTS MANIFEST
+# ──────────────────────────────────────────────────────────
 
-# Common WordPress query parameters
-/?p=*                /          301
-/?page_id=*          /          301
-/?attachment_id=*    /          301
+# ── Core SEO Domain & Path Mappings ──
+/about/                                  /about-us/                               301
+/contact/                                /contact-us/                             301
+/hire-us/                                /contact-us/                             301
+/sitemap.html/                           /sitemap/                                301
+/cookie-policy/                          /privacy-policy/                         301
+/disclaimer/                             /privacy-policy/                         301
+/dmca/                                   /privacy-policy/                         301
+/terms-of-use/                           /terms-and-conditions/                   301
 
-# WordPress cron and trackback
-/wp-cron.php         /          301
-/wp-trackback.php    /          301
+# ── Services URL Redirections ──
+/bathrooms/                              /bathroom-remodeling/                    301
+/kitchens/                               /kitchen-remodeling/                     301
+/additions-and-renovations/              /whole-house-remodeling/                 301
+/cabinets-and-flooring/                  /flooring/                               301
+/cabinets-flooring/                      /flooring/                               301
+/about-us/butler-kitchen-remodel/        /kitchen-remodeling/                     301
+/about-us/cabinets-b/                    /kitchen-remodeling/                     301
 
-# Sitemap redirect
-/sitemap.html        /sitemap/  301
+# ── Roofing & Storm Damage URL Redirections ──
+/metal-roofing/                          /metal-roofing-repair-and-installation/  301
+/roofing/                                /residential-roofing/                    301
+/residential/                            /residential-roofing/                    301
+/roofing-coverings/                      /residential-roofing/                    301
+/roofing-coverings/commercial/           /residential-roofing/                    301
+/roof-repair-maintenance/                /residential-roofing/roof-repair/        301
+/roof-repair-maintenance-2/              /residential-roofing/roof-repair/        301
+/roof-replacement-installation/          /residential-roofing/roof-installation/  301
+/roof-replacement-installation-2/        /residential-roofing/roof-installation/  301
+/roof-types/                             /residential-roofing/                    301
+/roof-types/asphalt-shingle-roofing/     /residential-roofing/asphalt-shingle-roof-repair-and-replacement/ 301
+/storm-damage/                           /storm-damage-roof-repair/               301
 
+# ── Blog Category & Tag Cleanups ──
+/blog/category/*                         /blog/                                   301
+/blog/tag/*                              /blog/                                   301
+/blog/page/*                             /blog/                                   301
+/author/*                                /about-us/                               301
+
+# ── Specific Blog Post Mappings ──
+/blog/2019/02/11/carr-bathroom-remodel/  /bathroom-remodeling/                    301
+/blog/2019/02/25/butler-kitchen-remodel/ /kitchen-remodeling/                     301
+/blog/2019/02/21/bozeman-attic-space-conversion/ /whole-house-remodeling/         301
+/blog/2019/04/16/davis-house-painting/   /painting/                               301
+/blog/2019/04/21/4-signs-of-roof-leaks/  /residential-roofing/roof-repair/        301
+/blog/2019/05/06/ms-mosley-roof-job/     /residential-roofing/                    301
+/blog/2019/05/17/custom-decks/           /whole-house-remodeling/                 301
+/blog/2019/05/20/home-depot-contest/     /blog/                                   301
+/blog/2019/05/24/donna-m-thornton-review/ /reviews/                                301
+/blog/2019/06/03/job-update-new-building/ /blog/                                   301
+/blog/2019/06/04/diy-porch-tips-for-summer/ /blog/                                 301
+
+# ── Catch-all Blog Dates to Main Blog ──
+/blog/2019/*                             /blog/                                   301
+
+# ── WordPress System Blockers & Legacy Files ──
+/wp-admin/*                              /                                        301
+/wp-login.php                            /                                        301
+/wp-content/*                            /                                        301
+/wp-includes/*                           /                                        301
+/wp-json/*                               /                                        301
+/xmlrpc.php                              /                                        301
+/feed/*                                  /                                        301
+/comments/feed/*                         /                                        301
+/wp-cron.php                             /                                        301
+/wp-trackback.php                        /                                        301
+
+# ── Common Query Parameters ──
+/?p=*                                    /                                        301
+/?page_id=*                              /                                        301
+/?attachment_id=*                        /                                        301
