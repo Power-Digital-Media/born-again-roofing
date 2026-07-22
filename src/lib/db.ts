@@ -14,13 +14,16 @@ export interface PinType {
   aeoAnswers?: { question: string; answer: string }[];
   latitude?: number;
   longitude?: number;
+  clientId?: string;
 }
 
 let inMemoryPins: PinType[] = [...pinsData] as PinType[];
 
 // Helper to convert Firestore REST document format to standard PinType JSON
 function parseFirestoreDocument(doc: any): PinType {
-  const fields = doc.fields || {};
+  // If the document is wrapped inside a runQuery response, it might be in doc.document
+  const actualDoc = doc.document ? doc.document : doc;
+  const fields = actualDoc.fields || {};
   
   const parseValue = (val: any): any => {
     if (!val) return undefined;
@@ -44,7 +47,7 @@ function parseFirestoreDocument(doc: any): PinType {
   };
 
   return {
-    id: parseValue(fields.id) || doc.name.split("/").pop() || "",
+    id: parseValue(fields.id) || actualDoc.name.split("/").pop() || "",
     author: parseValue(fields.author) || "Unknown",
     date: parseValue(fields.date) || "",
     location: parseValue(fields.location) || "",
@@ -55,6 +58,7 @@ function parseFirestoreDocument(doc: any): PinType {
     longitude: parseValue(fields.longitude),
     detailedExplanation: parseValue(fields.detailedExplanation) || "",
     aeoAnswers: parseValue(fields.aeoAnswers) || [],
+    clientId: parseValue(fields.clientId) || "born-again-roofing",
   };
 }
 
@@ -94,20 +98,43 @@ export async function getPins(): Promise<PinType[]> {
   const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+  const clientId = process.env.PDM_CLIENT_ID || "born-again-roofing";
 
-  // 1. Try Firebase Firestore REST API
+  // 1. Try Firebase Firestore REST API (using runQuery to filter by clientId)
   if (firebaseProjectId) {
     try {
+      const queryBody = {
+        structuredQuery: {
+          from: [{ collectionId: "pins" }],
+          where: {
+            fieldFilter: {
+              field: { fieldPath: "clientId" },
+              op: "EQUAL",
+              value: { stringValue: clientId }
+            }
+          }
+        }
+      };
+
       const res = await fetch(
-        `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/pins`,
+        `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents:runQuery`,
         {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(queryBody),
           next: { revalidate: 30 }, // Cache for 30 seconds
         }
       );
+
       if (res.ok) {
-        const data = await res.json();
-        const docs = data.documents || [];
-        const dbPins = docs.map((doc: any) => parseFirestoreDocument(doc));
+        const results = await res.json();
+        // Firebase runQuery returns an array of objects containing a 'document' property
+        // Filter out empty results (sometimes Firestore returns an empty final element in the array)
+        const dbPins = results
+          .filter((r: any) => r.document)
+          .map((r: any) => parseFirestoreDocument(r));
         
         // Merge with local static pins
         const merged = [...dbPins, ...pinsData] as PinType[];
@@ -118,17 +145,17 @@ export async function getPins(): Promise<PinType[]> {
           return !duplicate;
         });
       } else {
-        console.error("Firebase Firestore REST API error status:", res.status);
+        console.error("Firebase Firestore runQuery error status:", res.status);
       }
     } catch (err) {
-      console.error("Failed to fetch from Firebase Firestore:", err);
+      console.error("Failed to fetch from Firebase Firestore runQuery:", err);
     }
   }
   
-  // 2. Try Supabase REST API (fallback)
+  // 2. Try Supabase REST API (fallback filtering by clientId)
   if (supabaseUrl && supabaseKey) {
     try {
-      const res = await fetch(`${supabaseUrl}/rest/v1/pins?select=*&order=id.desc`, {
+      const res = await fetch(`${supabaseUrl}/rest/v1/pins?select=*&clientId=eq.${clientId}&order=id.desc`, {
         headers: {
           apikey: supabaseKey,
           Authorization: `Bearer ${supabaseKey}`,
@@ -158,11 +185,13 @@ export async function addPin(pin: Omit<PinType, "id">): Promise<PinType | null> 
   const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+  const clientId = process.env.PDM_CLIENT_ID || "born-again-roofing";
   
   const pinId = Date.now().toString();
   const newPin: PinType = {
     ...pin,
     id: pinId,
+    clientId: clientId, // Automatically tag pin with PDM_CLIENT_ID
   };
 
   // 1. Write to Firebase Firestore REST API
@@ -180,7 +209,7 @@ export async function addPin(pin: Omit<PinType, "id">): Promise<PinType | null> 
         }
       );
       if (res.ok) {
-        console.log("Successfully wrote new pin to Firebase Firestore!");
+        console.log(`Successfully wrote new pin to Firebase Firestore under clientId: ${clientId}`);
         return newPin;
       } else {
         const errText = await res.text();
