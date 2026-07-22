@@ -72,6 +72,7 @@ export default function DropPinPage() {
   const [longitude, setLongitude] = useState<number | "">("");
   const [images, setImages] = useState<string[]>([]);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
 
   const geocodeAddress = async () => {
     if (!addressSearch.trim()) {
@@ -206,58 +207,94 @@ export default function DropPinPage() {
     );
   };
 
-  // Client-side image compression helper using Canvas
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Client-side image compression and Firebase Storage upload helper
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     setIsCompressing(true);
-    const uploadedImages: string[] = [];
+    setUploadStatus("Processing images...");
 
-    Array.from(files).forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          // Compress image to 700px width/height maximum
-          const canvas = document.createElement("canvas");
-          const MAX_WIDTH = 700;
-          const MAX_HEIGHT = 700;
-          let width = img.width;
-          let height = img.height;
+    try {
+      const fileList = Array.from(files);
+      const newUrls: string[] = [];
 
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
+      for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i];
+        setUploadStatus(`Compressing photo ${i + 1} of ${fileList.length}...`);
+
+        // Get base64 data URL from file
+        const dataUrl = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (event) => resolve(event.target?.result as string);
+          reader.onerror = (err) => reject(err);
+          reader.readAsDataURL(file);
+        });
+
+        // Compress image via Canvas
+        const compressedBase64 = await new Promise<string>((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const MAX_WIDTH = 700;
+            const MAX_HEIGHT = 700;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height *= MAX_WIDTH / width;
+                width = MAX_WIDTH;
+              }
+            } else {
+              if (height > MAX_HEIGHT) {
+                width *= MAX_HEIGHT / height;
+                height = MAX_HEIGHT;
+              }
             }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
+
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext("2d");
+            if (ctx) {
+              ctx.drawImage(img, 0, 0, width, height);
+              resolve(canvas.toDataURL("image/jpeg", 0.5));
+            } else {
+              resolve(dataUrl);
             }
-          }
+          };
+          img.src = dataUrl;
+        });
 
-          canvas.width = width;
-          canvas.height = height;
+        // Upload to API
+        setUploadStatus(`Uploading photo ${i + 1} of ${fileList.length} to Cloud...`);
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ base64Data: compressedBase64 }),
+        });
 
-          const ctx = canvas.getContext("2d");
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, width, height);
-            // Export compressed JPEG base64 (50% quality for optimal size)
-            const dataUrl = canvas.toDataURL("image/jpeg", 0.5);
-            uploadedImages.push(dataUrl);
+        if (!response.ok) {
+          throw new Error(`Upload failed for photo ${i + 1}`);
+        }
 
-            if (uploadedImages.length === files.length) {
-              setImages((prev) => [...prev, ...uploadedImages]);
-              setIsCompressing(false);
-            }
-          }
-        };
-        img.src = event.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-    });
+        const data = await response.json();
+        if (data.url) {
+          newUrls.push(data.url);
+        }
+      }
+
+      setImages((prev) => [...prev, ...newUrls]);
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      alert(err.message || "Failed to upload one or more photos. Please try again.");
+    } finally {
+      setIsCompressing(false);
+      setUploadStatus("");
+    }
   };
 
   const handleRemoveImage = (indexToRemove: number) => {
@@ -615,7 +652,7 @@ export default function DropPinPage() {
                   <label className="form-label">Project Photographs (1-4 images)</label>
                   {isCompressing ? (
                     <div className="upload-btn disabled">
-                      Processing Images...
+                      {uploadStatus || "Processing Images..."}
                     </div>
                   ) : (
                     <div className="upload-buttons-container">
