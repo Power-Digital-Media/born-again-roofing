@@ -8,6 +8,8 @@ interface Pin {
   id: string;
   location: string;
   service: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 interface IndividualProjectMapProps {
@@ -68,11 +70,16 @@ export default function IndividualProjectMap({ pin, onEnlarge }: IndividualProje
   useEffect(() => {
     if (!isVisible || !containerRef.current || mapRef.current) return;
 
-    const baseCoords = cityCoords[pin.location] || [32.2988, -90.1848];
-    const seed = parseInt(pin.id, 10) || 1;
-    const latJitter = Math.sin(seed) * 0.016;
-    const lngJitter = Math.cos(seed) * 0.016;
-    const pinCoords: [number, number] = [baseCoords[0] + latJitter, baseCoords[1] + lngJitter];
+    let pinCoords: [number, number];
+    if (pin.latitude && pin.longitude) {
+      pinCoords = [pin.latitude, pin.longitude];
+    } else {
+      const baseCoords = cityCoords[pin.location] || [32.2988, -90.1848];
+      const seed = parseInt(pin.id, 10) || 1;
+      const latJitter = Math.sin(seed) * 0.016;
+      const lngJitter = Math.cos(seed) * 0.016;
+      pinCoords = [baseCoords[0] + latJitter, baseCoords[1] + lngJitter];
+    }
 
     const map = L.map(containerRef.current, {
       center: pinCoords,

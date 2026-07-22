@@ -1,17 +1,47 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import pinsData from "@/data/pins.json";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import ContactForm from "@/components/ContactForm";
 
+interface PinType {
+  id: string;
+  location: string;
+  service: string;
+  author: string;
+  date: string;
+  description: string;
+  detailedExplanation: string;
+  images: string[];
+  title?: string;
+  latitude?: number;
+  longitude?: number;
+  aeoAnswers?: { question: string; answer: string }[];
+}
+
 function PinDetailContent() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const [pins, setPins] = useState<PinType[]>(pinsData as PinType[]);
 
-  const pin = pinsData.find((p) => p.id === id);
+  useEffect(() => {
+    fetch("/api/pins")
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Failed to fetch live pins");
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setPins(data as PinType[]);
+        }
+      })
+      .catch((err) => console.error("Error loading pin detail:", err));
+  }, []);
+
+  const pin = pins.find((p) => p.id === id);
 
   // Initialize activeImage state once pin is found
   const [activeImageState, setActiveImageState] = useState<string | null>(null);

@@ -12,6 +12,8 @@ interface Pin {
   service: string;
   description: string;
   images: string[];
+  latitude?: number;
+  longitude?: number;
 }
 
 interface InteractiveMapProps {
@@ -125,13 +127,17 @@ export default function InteractiveMap({ pins }: InteractiveMapProps) {
     const bounds: L.LatLngExpression[] = [];
 
     pins.forEach((pin) => {
-      const baseCoords = cityCoords[pin.location] || [32.2988, -90.1848]; // default Jackson
-      
-      // Stable deterministic jitter using sine/cosine based on id
-      const seed = parseInt(pin.id, 10) || 1;
-      const latJitter = Math.sin(seed) * 0.016;
-      const lngJitter = Math.cos(seed) * 0.016;
-      const pinCoords: [number, number] = [baseCoords[0] + latJitter, baseCoords[1] + lngJitter];
+      let pinCoords: [number, number];
+      if (pin.latitude && pin.longitude) {
+        pinCoords = [pin.latitude, pin.longitude];
+      } else {
+        const baseCoords = cityCoords[pin.location] || [32.2988, -90.1848]; // default Jackson
+        // Stable deterministic jitter using sine/cosine based on id
+        const seed = parseInt(pin.id, 10) || 1;
+        const latJitter = Math.sin(seed) * 0.016;
+        const lngJitter = Math.cos(seed) * 0.016;
+        pinCoords = [baseCoords[0] + latJitter, baseCoords[1] + lngJitter];
+      }
 
       bounds.push(pinCoords);
 

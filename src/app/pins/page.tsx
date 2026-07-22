@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import pinsData from "@/data/pins.json";
@@ -40,26 +40,45 @@ interface PinType {
   detailedExplanation: string;
   images: string[];
   title?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export default function PinsPage() {
+  const [pins, setPins] = useState<PinType[]>(pinsData as PinType[]);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedService, setSelectedService] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeMapPin, setActiveMapPin] = useState<PinType | null>(null);
+  const [visibleCount, setVisibleCount] = useState(12);
+
+  // Silent dynamic hydration to fetch new pins dropped from field
+  useEffect(() => {
+    fetch("/api/pins")
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Failed to fetch live pins");
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setPins(data);
+        }
+      })
+      .catch((err) => console.error("Error fetching dynamic pins:", err));
+  }, []);
 
   const locationsList = useMemo(() => {
-    const locs = pinsData.map((pin) => pin.location);
+    const locs = pins.map((pin) => pin.location);
     return Array.from(new Set(locs)).sort();
-  }, []);
+  }, [pins]);
 
   const servicesList = useMemo(() => {
-    const svcs = pinsData.map((pin) => pin.service);
+    const svcs = pins.map((pin) => pin.service);
     return Array.from(new Set(svcs)).sort();
-  }, []);
+  }, [pins]);
 
   const filteredPins = useMemo(() => {
-    return pinsData.filter((pin) => {
+    return pins.filter((pin) => {
       const matchLocation = selectedLocation ? pin.location === selectedLocation : true;
       const matchService = selectedService ? pin.service === selectedService : true;
       const matchSearch = searchQuery
@@ -69,7 +88,15 @@ export default function PinsPage() {
         : true;
       return matchLocation && matchService && matchSearch;
     });
+  }, [pins, selectedLocation, selectedService, searchQuery]);
+
+  useEffect(() => {
+    setVisibleCount(12);
   }, [selectedLocation, selectedService, searchQuery]);
+
+  const paginatedPins = useMemo(() => {
+    return filteredPins.slice(0, visibleCount);
+  }, [filteredPins, visibleCount]);
 
   return (
     <>
@@ -162,71 +189,85 @@ export default function PinsPage() {
               <p>Try adjusting your filters or search terms.</p>
             </div>
           ) : (
-            <div className="pins-grid-2col animate-fade-in">
-              {filteredPins.map((pin) => (
-                <div key={pin.id} className="double-bezel-wrapper">
-                  <div className="double-bezel-inner pin-feed-card">
-                    
-                    {/* Header */}
-                    <div className="pin-feed-header">
-                      <div className="pin-feed-author">
-                        <h4>{pin.author}</h4>
-                        <span className="pin-feed-date">{pin.date}</span>
-                      </div>
-                      <span className="pin-service-tag">
-                        {pin.service.length > 15 ? pin.service.substring(0, 15) : pin.service}
-                      </span>
-                    </div>
-
-                    {/* Job Description (Italicized) */}
-                    <p className="pin-feed-desc">
-                      {"\""}{pin.description}{"\""}
-                    </p>
-
-                    {/* Media Row (Map on Left, Photo on Right) */}
-                    <div className="pin-feed-media-row">
+            <div className="animate-fade-in">
+              <div className="pins-grid-2col">
+                {paginatedPins.map((pin) => (
+                  <div key={pin.id} className="double-bezel-wrapper">
+                    <div className="double-bezel-inner pin-feed-card">
                       
-                      {/* Satellite Project Map */}
-                      <div className="local-job-map" style={{ padding: 0, border: "none", overflow: "hidden" }}>
-                        <IndividualProjectMap pin={pin} onEnlarge={() => setActiveMapPin(pin)} />
+                      {/* Header */}
+                      <div className="pin-feed-header">
+                        <div className="pin-feed-author">
+                          <h4>{pin.author}</h4>
+                          <span className="pin-feed-date">{pin.date}</span>
+                        </div>
+                        <span className="pin-service-tag">
+                          {pin.service.length > 15 ? pin.service.substring(0, 15) : pin.service}
+                        </span>
                       </div>
 
-                      {/* Photo Column */}
-                      <div className="pin-feed-photo-col">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={pin.images[0]}
-                          alt={pin.title || pin.service}
-                          className="pin-feed-main-img"
-                        />
-                        {/* Secondary Preview Thumbnails */}
-                        {pin.images.length > 1 && (
-                          <div className="pin-feed-thumbs-row">
-                            {pin.images.slice(1, 4).map((img, idx) => (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                key={idx}
-                                src={img}
-                                alt="thumbnail"
-                                className="pin-feed-thumb"
-                              />
-                            ))}
-                          </div>
-                        )}
+                      {/* Job Description (Italicized) */}
+                      <p className="pin-feed-desc">
+                        {"\""}{pin.description}{"\""}
+                      </p>
+
+                      {/* Media Row (Map on Left, Photo on Right) */}
+                      <div className="pin-feed-media-row">
+                        
+                        {/* Satellite Project Map */}
+                        <div className="local-job-map" style={{ padding: 0, border: "none", overflow: "hidden" }}>
+                          <IndividualProjectMap pin={pin} onEnlarge={() => setActiveMapPin(pin)} />
+                        </div>
+
+                        {/* Photo Column */}
+                        <div className="pin-feed-photo-col">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={pin.images[0]}
+                            alt={pin.title || pin.service}
+                            className="pin-feed-main-img"
+                          />
+                          {/* Secondary Preview Thumbnails */}
+                          {pin.images.length > 1 && (
+                            <div className="pin-feed-thumbs-row">
+                              {pin.images.slice(1, 4).map((img, idx) => (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                  key={idx}
+                                  src={img}
+                                  alt="thumbnail"
+                                  className="pin-feed-thumb"
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                      </div>
+
+                      {/* View Details Button */}
+                      <div className="pin-feed-footer-btn">
+                        <Link href={`/pin-page/?id=${pin.id}`} className="btn btn-outline pin-btn">
+                          View Full Details
+                        </Link>
                       </div>
 
                     </div>
-
-                    {/* View Details Button */}
-                    <div className="pin-feed-footer-btn">
-                      <Link href={`/pin-page/?id=${pin.id}`} className="btn btn-outline pin-btn">
-                        View Full Details
-                      </Link>
-                    </div>
-
                   </div>
+                ))}
+              </div>
+
+              {filteredPins.length > visibleCount && (
+                <div style={{ display: "flex", justifyContent: "center", marginTop: "3.5rem" }}>
+                  <button
+                    onClick={() => setVisibleCount((prev) => prev + 12)}
+                    className="btn btn-outline"
+                    style={{ padding: "0.9rem 2.2rem", fontSize: "0.9rem", fontWeight: 700 }}
+                  >
+                    Load More Projects
+                  </button>
                 </div>
-              ))}
+              )}
             </div>
           )}
 
