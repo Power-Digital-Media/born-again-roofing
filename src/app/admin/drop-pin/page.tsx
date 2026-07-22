@@ -34,7 +34,8 @@ const authorList = [
   "Eddie Buchanan",
   "Charlie Buchanan",
   "David Heard",
-  "Daniel Lickness"
+  "Daniel Lickness",
+  "David Dilmore"
 ];
 
 const serviceList = [
