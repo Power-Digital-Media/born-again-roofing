@@ -5,7 +5,7 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /_next/
-Disallow: /pin-page/
+Disallow: /admin/
 
 # Sitemaps
 Sitemap: https://www.bornagainroofing.com/sitemap.xml

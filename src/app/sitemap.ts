@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import pinsData from '@/data/pins.json';
 
 const BASE_URL = 'https://www.bornagainroofing.com';
 
@@ -147,6 +148,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${BASE_URL}/${page}/`,
       lastModified: now,
       priority: 0.5,
+    })),
+
+    // Dynamic case study project detail pages (priority 0.6)
+    ...pinsData.map((pin) => ({
+      url: `${BASE_URL}/pin-page/?id=${pin.id}`,
+      lastModified: now,
+      priority: 0.6,
     })),
   ];
 }
