@@ -218,10 +218,10 @@ export default function DropPinPage() {
       reader.onload = (event) => {
         const img = new Image();
         img.onload = () => {
-          // Compress image to 800px width/height maximum
+          // Compress image to 700px width/height maximum
           const canvas = document.createElement("canvas");
-          const MAX_WIDTH = 800;
-          const MAX_HEIGHT = 800;
+          const MAX_WIDTH = 700;
+          const MAX_HEIGHT = 700;
           let width = img.width;
           let height = img.height;
 
@@ -243,8 +243,8 @@ export default function DropPinPage() {
           const ctx = canvas.getContext("2d");
           if (ctx) {
             ctx.drawImage(img, 0, 0, width, height);
-            // Export compressed JPEG base64 (70% quality)
-            const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+            // Export compressed JPEG base64 (50% quality for optimal size)
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.5);
             uploadedImages.push(dataUrl);
 
             if (uploadedImages.length === files.length) {

@@ -214,9 +214,11 @@ export async function addPin(pin: Omit<PinType, "id">): Promise<PinType | null> 
       } else {
         const errText = await res.text();
         console.error("Firebase Firestore write error:", errText);
+        return null; // Fail fast if Firebase is configured but write fails
       }
     } catch (err) {
       console.error("Failed to write to Firebase Firestore:", err);
+      return null; // Fail fast on connection exception
     }
   }
 
