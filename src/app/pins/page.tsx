@@ -52,9 +52,8 @@ export default function PinsPage() {
   const [activeMapPin, setActiveMapPin] = useState<PinType | null>(null);
   const [visibleCount, setVisibleCount] = useState(12);
 
-  // Silent dynamic hydration to fetch new pins dropped from field
   useEffect(() => {
-    fetch("/api/pins")
+    fetch(`/api/pins?t=${Date.now()}`)
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error("Failed to fetch live pins");
