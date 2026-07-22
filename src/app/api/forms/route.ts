@@ -37,6 +37,38 @@ export async function POST(request: NextRequest) {
       ? `${addressStreet}, ${addressCity}, ${addressState} ${addressZip}`.trim()
       : "";
 
+    // ── Formspree Backup Integration ──
+    const formspreeFormId = process.env.FORMSPREE_FORM_ID;
+    if (formspreeFormId) {
+      try {
+        await fetch(`https://formspree.io/f/${formspreeFormId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            date,
+            timeSlot,
+            service,
+            message,
+            address: fullAddress,
+            damageSeverity,
+            insuranceCompany,
+            scheduleType,
+            form_source: _form_source,
+            page_url
+          })
+        });
+        console.log("[forms] Backed up lead successfully to Formspree!");
+      } catch (err) {
+        console.error("[forms] Failed to send to Formspree backup:", err);
+      }
+    }
+
     // Parse first/last name
     const nameParts = name.trim().split(/\s+/);
     const firstName = nameParts[0] || "";
