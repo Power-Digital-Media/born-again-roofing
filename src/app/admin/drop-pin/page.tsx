@@ -248,7 +248,7 @@ export default function DropPinPage() {
       <div className="login-backdrop">
         <div className="double-bezel-wrapper login-card">
           <div className="double-bezel-inner login-inner">
-            <h2 className="title">Roofer Portal</h2>
+            <h2 className="title">PDM PinDrop</h2>
             <p className="subtitle">Enter passcode to drop job pins</p>
             <form onSubmit={handleLogin} className="form">
               <input
@@ -334,8 +334,8 @@ export default function DropPinPage() {
       <div className="container">
         
         <div className="portal-header">
-          <span className="eyebrow">Power Digital</span>
-          <h1>Drop Job Pin</h1>
+          <span className="eyebrow">Power Digital Media</span>
+          <h1>PDM PinDrop</h1>
           <p className="subtitle">Submit recent project photographs and details from the field</p>
         </div>
 
