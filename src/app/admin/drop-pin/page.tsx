@@ -579,9 +579,8 @@ export default function DropPinPage() {
                     <button
                       type="button"
                       onClick={geocodeAddress}
-                      className="btn btn-outline"
+                      className="convert-btn"
                       disabled={isGeocoding}
-                      style={{ padding: "0.5rem 1rem", fontSize: "0.8rem", whiteSpace: "nowrap" }}
                     >
                       {isGeocoding ? "Searching..." : "🔍 Convert"}
                     </button>
@@ -613,20 +612,39 @@ export default function DropPinPage() {
                 {/* Photo Upload and Capture */}
                 <div className="form-group">
                   <label className="form-label">Project Photographs (1-4 images)</label>
-                  <div className="upload-wrapper">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      className="upload-input"
-                      id="photo-upload"
-                      onChange={handleImageUpload}
-                      disabled={isCompressing}
-                    />
-                    <label htmlFor="photo-upload" className="upload-label">
-                      {isCompressing ? "Processing Images..." : "📸 Select Photos / Capture"}
-                    </label>
-                  </div>
+                  {isCompressing ? (
+                    <div className="upload-btn disabled">
+                      Processing Images...
+                    </div>
+                  ) : (
+                    <div className="upload-buttons-container">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        className="upload-hidden-input"
+                        id="photo-capture"
+                        onChange={handleImageUpload}
+                        disabled={isCompressing}
+                      />
+                      <label htmlFor="photo-capture" className="upload-btn primary-upload-btn">
+                        📸 Take Live Photo
+                      </label>
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="upload-hidden-input"
+                        id="photo-gallery"
+                        onChange={handleImageUpload}
+                        disabled={isCompressing}
+                      />
+                      <label htmlFor="photo-gallery" className="upload-btn outline-upload-btn">
+                        📁 Select from Gallery
+                      </label>
+                    </div>
+                  )}
 
                   {images.length > 0 && (
                     <div className="preview-grid">
@@ -782,37 +800,83 @@ export default function DropPinPage() {
           font-weight: 600;
           outline: none;
         }
-        .upload-wrapper {
-          position: relative;
-          width: 100%;
-        }
-        .upload-input {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          opacity: 0;
+        .convert-btn {
+          background: var(--secondary);
+          color: #0f172a;
+          border: 1px solid var(--secondary);
+          border-radius: 8px;
+          padding: 0.75rem 1.25rem;
+          font-weight: 700;
+          font-size: 0.85rem;
           cursor: pointer;
+          transition: all 0.2s ease-in-out;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          white-space: nowrap;
         }
-        .upload-label {
+        .convert-btn:hover {
+          background: #ffffff;
+          border-color: #ffffff;
+          color: #0f172a;
+          box-shadow: 0 4px 12px rgba(226, 176, 71, 0.25);
+        }
+        .convert-btn:disabled {
+          background: rgba(255, 255, 255, 0.05);
+          border-color: var(--border);
+          color: var(--text-muted);
+          cursor: not-allowed;
+        }
+        
+        .upload-hidden-input {
+          display: none;
+        }
+        .upload-buttons-container {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+          width: 100%;
+        }
+        .upload-btn {
           display: flex;
           align-items: center;
           justify-content: center;
+          gap: 0.5rem;
           width: 100%;
-          padding: 1.25rem;
-          background: rgba(226, 176, 71, 0.03);
-          border: 2px dashed rgba(226, 176, 71, 0.25);
+          padding: 0.9rem;
           border-radius: 8px;
-          color: var(--secondary);
           font-weight: 700;
           font-size: 0.9rem;
           text-align: center;
-          transition: all 0.2s;
+          transition: all 0.2s ease-in-out;
           cursor: pointer;
         }
-        .upload-label:hover {
-          background: rgba(226, 176, 71, 0.06);
+        .upload-btn.disabled {
+          background: rgba(255, 255, 255, 0.05) !important;
+          border-color: var(--border) !important;
+          color: var(--text-muted) !important;
+          cursor: not-allowed !important;
+        }
+        .primary-upload-btn {
+          background: var(--secondary);
+          color: #0f172a;
+          border: 1px solid var(--secondary);
+        }
+        .primary-upload-btn:hover {
+          background: #ffffff;
+          border-color: #ffffff;
+          color: #0f172a;
+          box-shadow: 0 4px 12px rgba(226, 176, 71, 0.25);
+        }
+        .outline-upload-btn {
+          background: rgba(255, 255, 255, 0.01);
+          color: #ffffff;
+          border: 2px dashed rgba(226, 176, 71, 0.25);
+        }
+        .outline-upload-btn:hover {
+          background: rgba(226, 176, 71, 0.05);
           border-color: var(--secondary);
+          color: var(--secondary);
         }
         .preview-grid {
           display: grid;
