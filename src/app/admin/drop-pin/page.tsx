@@ -33,7 +33,8 @@ const authorList = [
   "Christopher Heard",
   "Eddie Buchanan",
   "Charlie Buchanan",
-  "David Heard"
+  "David Heard",
+  "Daniel Lickness"
 ];
 
 const serviceList = [
