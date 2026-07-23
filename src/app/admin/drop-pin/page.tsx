@@ -67,7 +67,10 @@ export default function DropPinPage() {
   const [location, setLocation] = useState("");
   const [service, setService] = useState("");
   const [customService, setCustomService] = useState("");
-  const [addressSearch, setAddressSearch] = useState("");
+  const [streetAddress, setStreetAddress] = useState("");
+  const [cityInput, setCityInput] = useState("");
+  const [stateInput, setStateInput] = useState("MS");
+  const [zipCode, setZipCode] = useState("");
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [description, setDescription] = useState("");
   const [latitude, setLatitude] = useState<number | "">("");
@@ -77,15 +80,24 @@ export default function DropPinPage() {
   const [uploadStatus, setUploadStatus] = useState("");
 
   const geocodeAddress = async () => {
-    if (!addressSearch.trim()) {
-      alert("Please enter an address to search.");
+    if (!streetAddress.trim()) {
+      alert("Please enter a street address.");
       return;
     }
 
     setIsGeocoding(true);
     try {
+      const parts = [
+        streetAddress.trim(),
+        cityInput.trim(),
+        stateInput.trim(),
+        zipCode.trim()
+      ].filter(Boolean);
+      
+      const searchString = parts.join(", ");
+
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressSearch)}`
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchString)}`
       );
       if (response.ok) {
         const results = await response.json();
@@ -122,8 +134,9 @@ export default function DropPinPage() {
               setLocation(closestCity);
             }
           }
+          alert(`Success! Found coordinates: ${lat.toFixed(4)}, ${lon.toFixed(4)}. Location updated to: ${matchedCity || "nearest match"}.`);
         } else {
-          alert("Could not find coordinates for that address. Please enter coordinates manually.");
+          alert("Could not find coordinates for that address. Please check the spelling or enter coordinates manually.");
         }
       } else {
         alert("Address lookup failed. Please enter coordinates manually.");
@@ -346,7 +359,10 @@ export default function DropPinPage() {
         setLongitude("");
         setService("");
         setCustomService("");
-        setAddressSearch("");
+        setStreetAddress("");
+        setCityInput("");
+        setStateInput("MS");
+        setZipCode("");
       } else {
         const errorData = await response.json();
         setSubmitError(errorData.error || "Failed to drop pin. Try again.");
@@ -607,26 +623,66 @@ export default function DropPinPage() {
 
                 {/* Address Lookup Helper */}
                 <div className="form-group" style={{ background: "rgba(255,255,255,0.01)", border: "1px solid var(--border)", borderRadius: "8px", padding: "1.25rem" }}>
-                  <label className="form-label" style={{ fontSize: "0.75rem", color: "var(--secondary)" }}>Convert Address to Coords (Optional)</label>
-                  <div style={{ display: "flex", gap: "10px", marginTop: "4px" }}>
+                  <label className="form-label" style={{ fontSize: "0.75rem", color: "var(--secondary)", marginBottom: "0.5rem" }}>Convert Address to Coords (Optional)</label>
+                  
+                  {/* Street Address */}
+                  <div style={{ marginBottom: "0.75rem" }}>
+                    <label style={{ fontSize: "0.7rem", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>Street Address</label>
                     <input
                       type="text"
-                      placeholder="e.g. 100 State St, Jackson, MS"
-                      value={addressSearch}
-                      onChange={(e) => setAddressSearch(e.target.value)}
+                      placeholder="e.g. 150 Highland Dr"
+                      value={streetAddress}
+                      onChange={(e) => setStreetAddress(e.target.value)}
                       className="form-input"
-                      style={{ flexGrow: 1 }}
                     />
-                    <button
-                      type="button"
-                      onClick={geocodeAddress}
-                      className="convert-btn"
-                      disabled={isGeocoding}
-                    >
-                      {isGeocoding ? "Searching..." : "🔍 Convert"}
-                    </button>
                   </div>
-                  <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", margin: "6px 0 0 0" }}>
+
+                  {/* City, State, Zip Row */}
+                  <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "1rem" }}>
+                    <div style={{ flex: "2 1 120px" }}>
+                      <label style={{ fontSize: "0.7rem", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>City</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Brandon"
+                        value={cityInput}
+                        onChange={(e) => setCityInput(e.target.value)}
+                        className="form-input"
+                      />
+                    </div>
+                    <div style={{ flex: "1 1 60px" }}>
+                      <label style={{ fontSize: "0.7rem", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>State</label>
+                      <input
+                        type="text"
+                        placeholder="MS"
+                        value={stateInput}
+                        onChange={(e) => setStateInput(e.target.value)}
+                        className="form-input"
+                      />
+                    </div>
+                    <div style={{ flex: "1.5 1 80px" }}>
+                      <label style={{ fontSize: "0.7rem", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>Zip Code</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 39042"
+                        value={zipCode}
+                        onChange={(e) => setZipCode(e.target.value)}
+                        className="form-input"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Convert Button */}
+                  <button
+                    type="button"
+                    onClick={geocodeAddress}
+                    className="convert-btn"
+                    disabled={isGeocoding}
+                    style={{ width: "100%", justifyContent: "center", height: "42px" }}
+                  >
+                    {isGeocoding ? "Searching Coordinates..." : "🔍 Convert to Coordinates"}
+                  </button>
+
+                  <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", margin: "8px 0 0 0", lineHeight: "1.4" }}>
                     If you are in the office, enter the job address and click Convert to automatically update coordinates and matching city.
                   </p>
                 </div>
