@@ -469,14 +469,14 @@ export default function DropPinPage() {
                 </p>
                 <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
                   <a
-                    href="sms:?body=Hi! This is Damien from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: https://www.google.com/search?q=Born+Again+Home+Remodeling+and+Roofing+Pearl+MS%23lrd=0x86282f761bf6d3d3:0x649d334d1a5ca7d3,3,,,,"
+                    href="sms:?body=Hi! This is Damien from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: https://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1"
                     className="btn btn-outline"
                     style={{ flex: "1 1 120px", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", padding: "8px 12px", background: "rgba(226, 176, 71, 0.05)" }}
                   >
                     💬 Send SMS
                   </a>
                   <a
-                    href="mailto:?subject=Review for Born Again Roofing&body=Hi there,%0D%0A%0D%0AThis is Damien from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0Ahttps://www.google.com/search?q=Born+Again+Home+Remodeling+and+Roofing+Pearl+MS%23lrd=0x86282f761bf6d3d3:0x649d334d1a5ca7d3,3,,,,%0D%0A%0D%0AThank you!"
+                    href="mailto:?subject=Review for Born Again Roofing&body=Hi there,%0D%0A%0D%0AThis is Damien from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0Ahttps://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1%0D%0A%0D%0AThank you!"
                     className="btn btn-outline"
                     style={{ flex: "1 1 120px", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", padding: "8px 12px", background: "rgba(226, 176, 71, 0.05)" }}
                   >
