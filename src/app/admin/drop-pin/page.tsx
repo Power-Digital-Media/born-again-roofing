@@ -32,7 +32,6 @@ const authorList = [
   "Damien Johnston",
   "Christopher Heard",
   "Eddie Buchanan",
-  "Charlie Buchanan",
   "Robert Christoforo",
   "Daniel Lickness",
   "David Dilmore"
