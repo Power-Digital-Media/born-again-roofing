@@ -39,11 +39,43 @@ export default function ServicePinsCarousel({ services, limit = 8 }: ServicePins
   const deckRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  const filteredPins = useMemo(() => {
+  const defaultFiltered = useMemo(() => {
     return pinsData
       .filter((pin) => services.some((svc) => pin.service.toLowerCase().includes(svc.toLowerCase())))
       .slice(0, limit);
   }, [services, limit]);
+
+  const [filteredPins, setFilteredPins] = useState<PinType[]>(defaultFiltered);
+
+  useEffect(() => {
+    fetch("/api/pins/")
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Failed to fetch live pins");
+      })
+      .then((data: any[]) => {
+        if (Array.isArray(data)) {
+          const matched = data.filter((pin) =>
+            services.some((svc) => pin.service.toLowerCase().includes(svc.toLowerCase()))
+          );
+          
+          // Sort matched pins so that large ID numbers (recent timestamps) appear first
+          const sorted = matched.sort((a, b) => {
+            const numA = Number(a.id) || 0;
+            const numB = Number(b.id) || 0;
+            return numB - numA;
+          });
+          
+          const formattedMatched = sorted.map(pin => ({
+            ...pin,
+            detailedExplanation: pin.detailedExplanation || ""
+          })) as PinType[];
+          
+          setFilteredPins(formattedMatched.slice(0, limit));
+        }
+      })
+      .catch((err) => console.error("Error loading dynamic service pins:", err));
+  }, [services, limit, defaultFiltered]);
 
   // Triple the list to allow infinite scrolling in both directions
   const tripledPins = useMemo(() => {

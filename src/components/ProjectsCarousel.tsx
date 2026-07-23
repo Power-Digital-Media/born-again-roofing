@@ -45,13 +45,50 @@ export default function ProjectsCarousel() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Load the 8 specific showcase projects in order
-  const featuredPins = useMemo(() => {
+  // Load the 8 specific showcase projects in order as a default/fallback
+  const defaultFeatured = useMemo(() => {
     const ids = ["10", "9", "1", "4", "5", "6", "7", "8"];
     return ids
       .map((id) => pinsData.find((pin) => pin.id === id))
       .filter((pin): pin is PinType => pin !== undefined);
   }, []);
+
+  const [featuredPins, setFeaturedPins] = useState<PinType[]>(defaultFeatured);
+
+  useEffect(() => {
+    fetch("/api/pins/")
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Failed to fetch live pins");
+      })
+      .then((data: any[]) => {
+        if (Array.isArray(data)) {
+          // Filter database pins (which have long numerical timestamp IDs)
+          const dbPins = data
+            .filter((pin) => (Number(pin.id) || 0) > 1000000)
+            .sort((a, b) => Number(b.id) - Number(a.id));
+          
+          // Cast database pins to match PinType (adding title parameter if missing)
+          const formattedDbPins = dbPins.map(pin => ({
+            ...pin,
+            title: pin.title || `${pin.service} in ${pin.location}`,
+            detailedExplanation: pin.detailedExplanation || "",
+            aeoAnswers: pin.aeoAnswers || []
+          })) as PinType[];
+          
+          const combined = [...formattedDbPins, ...defaultFeatured];
+          const seen = new Set();
+          const unique = combined.filter((p) => {
+            const dup = seen.has(p.id);
+            seen.add(p.id);
+            return !dup;
+          });
+          
+          setFeaturedPins(unique.slice(0, 12));
+        }
+      })
+      .catch((err) => console.error("Error loading dynamic carousel pins:", err));
+  }, [defaultFeatured]);
 
   // Triple the list to allow infinite scrolling in both directions (desktop only)
   const tripledPins = useMemo(() => {
