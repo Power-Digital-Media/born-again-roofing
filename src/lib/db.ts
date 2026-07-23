@@ -100,6 +100,8 @@ export async function getPins(): Promise<PinType[]> {
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
   const clientId = process.env.PDM_CLIENT_ID || "born-again-roofing";
 
+  let merged: PinType[] = [];
+
   // 1. Try Firebase Firestore REST API (using runQuery to filter by clientId)
   if (firebaseProjectId) {
     try {
@@ -136,14 +138,7 @@ export async function getPins(): Promise<PinType[]> {
           .filter((r: any) => r.document)
           .map((r: any) => parseFirestoreDocument(r));
         
-        // Merge with local static pins
-        const merged = [...dbPins, ...pinsData] as PinType[];
-        const seen = new Set();
-        return merged.filter((p) => {
-          const duplicate = seen.has(p.id);
-          seen.add(p.id);
-          return !duplicate;
-        });
+        merged = [...dbPins, ...pinsData] as PinType[];
       } else {
         console.error("Firebase Firestore runQuery error status:", res.status);
       }
@@ -152,8 +147,8 @@ export async function getPins(): Promise<PinType[]> {
     }
   }
   
-  // 2. Try Supabase REST API (fallback filtering by clientId)
-  if (supabaseUrl && supabaseKey) {
+  // 2. Try Supabase REST API (fallback filtering by clientId if no Firebase results)
+  if (merged.length === 0 && supabaseUrl && supabaseKey) {
     try {
       const res = await fetch(`${supabaseUrl}/rest/v1/pins?select=*&clientId=eq.${clientId}&order=id.desc`, {
         headers: {
@@ -165,20 +160,31 @@ export async function getPins(): Promise<PinType[]> {
       });
       if (res.ok) {
         const dbPins = await res.json();
-        const merged = [...dbPins, ...pinsData] as PinType[];
-        const seen = new Set();
-        return merged.filter((p) => {
-          const duplicate = seen.has(p.id);
-          seen.add(p.id);
-          return !duplicate;
-        });
+        merged = [...dbPins, ...pinsData] as PinType[];
       }
     } catch (err) {
       console.error("Failed to fetch from Supabase:", err);
     }
   }
   
-  return inMemoryPins;
+  // 3. Fallback to local memory if database calls did not yield pins
+  if (merged.length === 0) {
+    merged = inMemoryPins;
+  }
+
+  // Deduplicate and sort by ID descending (newest first)
+  const seen = new Set();
+  const unique = merged.filter((p) => {
+    const duplicate = seen.has(p.id);
+    seen.add(p.id);
+    return !duplicate;
+  });
+
+  return unique.sort((a, b) => {
+    const numA = Number(a.id) || 0;
+    const numB = Number(b.id) || 0;
+    return numB - numA;
+  });
 }
 
 export async function addPin(pin: Omit<PinType, "id">): Promise<PinType | null> {

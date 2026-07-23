@@ -53,7 +53,7 @@ export default function PinsPage() {
   const [visibleCount, setVisibleCount] = useState(12);
 
   useEffect(() => {
-    fetch(`/api/pins?t=${Date.now()}`)
+    fetch(`/api/pins/?t=${Date.now()}`)
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error("Failed to fetch live pins");
