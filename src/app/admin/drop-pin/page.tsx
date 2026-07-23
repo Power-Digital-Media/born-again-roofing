@@ -97,7 +97,7 @@ export default function DropPinPage() {
       const searchString = parts.join(", ");
 
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchString)}`
+        `/api/geocode/?q=${encodeURIComponent(searchString)}`
       );
       if (response.ok) {
         const results = await response.json();
