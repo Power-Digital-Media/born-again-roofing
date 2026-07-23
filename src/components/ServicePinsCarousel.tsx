@@ -48,7 +48,7 @@ export default function ServicePinsCarousel({ services, limit = 8 }: ServicePins
   const [filteredPins, setFilteredPins] = useState<PinType[]>(defaultFiltered);
 
   useEffect(() => {
-    fetch("/api/pins/")
+    fetch(`/api/pins/?t=${Date.now()}`)
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error("Failed to fetch live pins");

@@ -56,7 +56,7 @@ export default function ProjectsCarousel() {
   const [featuredPins, setFeaturedPins] = useState<PinType[]>(defaultFeatured);
 
   useEffect(() => {
-    fetch("/api/pins/")
+    fetch(`/api/pins/?t=${Date.now()}`)
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error("Failed to fetch live pins");
