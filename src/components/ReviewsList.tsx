@@ -156,7 +156,7 @@ export default function ReviewsList() {
                     based on 130+ Google reviews
                   </div>
                   <a
-                    href="https://www.google.com/search?q=Born+Again+Home+Remodeling+and+Roofing+Pearl+MS"
+                    href="https://www.google.com/search?q=Born+Again+Home+Remodeling+and+Roofing+Pearl+MS#lrd=0x86282f761bf6d3d3:0x649d334d1a5ca7d3,1,,,,"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-secondary btn-island"

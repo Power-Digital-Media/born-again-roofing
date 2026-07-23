@@ -46,7 +46,7 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
       "latitude": 32.1610,
       "longitude": -90.1309
     },
-    "hasMap": "https://www.google.com/maps?cid=YOUR_GOOGLE_CID",
+    "hasMap": "https://www.google.com/maps?cid=7250007381384144851",
     "openingHoursSpecification": [
       {
         "@type": "OpeningHoursSpecification",
