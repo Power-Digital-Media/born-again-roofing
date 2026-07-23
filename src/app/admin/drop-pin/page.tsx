@@ -722,8 +722,8 @@ export default function DropPinPage() {
           </div>
 
           {/* Quick Review Requester */}
-          <div className="double-bezel-wrapper review-card" style={{ marginTop: "2rem" }}>
-            <div className="double-bezel-inner review-inner" style={{ padding: "1.5rem", textAlign: "left" }}>
+          <div className="double-bezel-wrapper" style={{ maxWidth: "580px", margin: "2rem auto 0", height: "auto" }}>
+            <div className="double-bezel-inner" style={{ padding: "1.5rem", textAlign: "left", height: "auto" }}>
               <h3 style={{ color: "#ffffff", fontSize: "1.05rem", fontWeight: "800", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span>⚡</span> Direct Review Requester
               </h3>
