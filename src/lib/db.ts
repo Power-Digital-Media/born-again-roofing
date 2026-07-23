@@ -95,7 +95,7 @@ function toFirestoreDocument(pin: PinType): any {
 }
 
 export async function getPins(): Promise<PinType[]> {
-  const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
+  const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || "pdm-pindrop-central";
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
   const clientId = process.env.PDM_CLIENT_ID || "born-again-roofing";
@@ -188,7 +188,7 @@ export async function getPins(): Promise<PinType[]> {
 }
 
 export async function addPin(pin: Omit<PinType, "id">): Promise<PinType | null> {
-  const firebaseProjectId = process.env.FIREBASE_PROJECT_ID;
+  const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || "pdm-pindrop-central";
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
   const clientId = process.env.PDM_CLIENT_ID || "born-again-roofing";
