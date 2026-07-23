@@ -498,53 +498,6 @@ export default function DropPinPage() {
           </div>
         ) : (
           <>
-            {/* Quick Review Requester */}
-            <div className="double-bezel-wrapper review-card" style={{ marginBottom: "2rem" }}>
-              <div className="double-bezel-inner review-inner" style={{ padding: "1.5rem", textAlign: "left" }}>
-                <h3 style={{ color: "#ffffff", fontSize: "1.05rem", fontWeight: "800", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "8px" }}>
-                  <span>⚡</span> Direct Review Requester
-                </h3>
-                <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "0 0 1.25rem 0", lineHeight: "1.5" }}>
-                  Send a review request immediately to your customer (no pin drop required):
-                </p>
-                
-                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
-                  <div style={{ flex: "1 1 200px" }}>
-                    <select
-                      className="form-input"
-                      value={quickReviewAuthor}
-                      onChange={(e) => setQuickReviewAuthor(e.target.value)}
-                      style={{ margin: 0, width: "100%", height: "42px", background: "rgba(255, 255, 255, 0.02)" }}
-                    >
-                      <option value="">Select Your Name...</option>
-                      {authorList.map((auth) => (
-                        <option key={auth} value={auth}>{auth}</option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  <div style={{ display: "flex", gap: "10px", flex: "1 1 250px" }}>
-                    <a
-                      href={quickReviewAuthor ? `sms:?body=Hi! This is ${quickReviewAuthor.split(" ")[0]} from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: https://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1` : "#"}
-                      onClick={(e) => { if (!quickReviewAuthor) { e.preventDefault(); alert("Please select a technician name first!"); } }}
-                      className="btn btn-outline"
-                      style={{ flex: "1", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", height: "42px", background: quickReviewAuthor ? "rgba(226, 176, 71, 0.08)" : "rgba(255, 255, 255, 0.02)", opacity: quickReviewAuthor ? 1 : 0.5 }}
-                    >
-                      💬 Text Customer
-                    </a>
-                    <a
-                      href={quickReviewAuthor ? `mailto:?subject=Review for Born Again Roofing&body=Hi there,%0D%0A%0D%0AThis is ${quickReviewAuthor.split(" ")[0]} from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0Ahttps://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1%0D%0A%0D%0AThank you!` : "#"}
-                      onClick={(e) => { if (!quickReviewAuthor) { e.preventDefault(); alert("Please select a technician name first!"); } }}
-                      className="btn btn-outline"
-                      style={{ flex: "1", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", height: "42px", background: quickReviewAuthor ? "rgba(226, 176, 71, 0.08)" : "rgba(255, 255, 255, 0.02)", opacity: quickReviewAuthor ? 1 : 0.5 }}
-                    >
-                      ✉️ Email Customer
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div className="double-bezel-wrapper form-card">
             <div className="double-bezel-inner form-inner">
               <form onSubmit={handleSubmit} className="portal-form">
@@ -767,8 +720,55 @@ export default function DropPinPage() {
               </form>
             </div>
           </div>
-          </>
-        )}
+
+          {/* Quick Review Requester */}
+          <div className="double-bezel-wrapper review-card" style={{ marginTop: "2rem" }}>
+            <div className="double-bezel-inner review-inner" style={{ padding: "1.5rem", textAlign: "left" }}>
+              <h3 style={{ color: "#ffffff", fontSize: "1.05rem", fontWeight: "800", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "8px" }}>
+                <span>⚡</span> Direct Review Requester
+              </h3>
+              <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "0 0 1.25rem 0", lineHeight: "1.5" }}>
+                Send a review request immediately to your customer (no pin drop required):
+              </p>
+              
+              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
+                <div style={{ flex: "1 1 200px" }}>
+                  <select
+                    className="form-input"
+                    value={quickReviewAuthor}
+                    onChange={(e) => setQuickReviewAuthor(e.target.value)}
+                    style={{ margin: 0, width: "100%", height: "42px", background: "rgba(255, 255, 255, 0.02)" }}
+                  >
+                    <option value="">Select Your Name...</option>
+                    {authorList.map((auth) => (
+                      <option key={auth} value={auth}>{auth}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div style={{ display: "flex", gap: "10px", flex: "1 1 250px" }}>
+                  <a
+                    href={quickReviewAuthor ? `sms:?body=Hi! This is ${quickReviewAuthor.split(" ")[0]} from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: https://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1` : "#"}
+                     onClick={(e) => { if (!quickReviewAuthor) { e.preventDefault(); alert("Please select a technician name first!"); } }}
+                     className="btn btn-outline"
+                     style={{ flex: "1", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", height: "42px", background: quickReviewAuthor ? "rgba(226, 176, 71, 0.08)" : "rgba(255, 255, 255, 0.02)", opacity: quickReviewAuthor ? 1 : 0.5 }}
+                   >
+                     💬 Text Customer
+                   </a>
+                   <a
+                     href={quickReviewAuthor ? `mailto:?subject=Review for Born Again Roofing&body=Hi there,%0D%0A%0D%0AThis is ${quickReviewAuthor.split(" ")[0]} from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0Ahttps://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1%0D%0A%0D%0AThank you!` : "#"}
+                     onClick={(e) => { if (!quickReviewAuthor) { e.preventDefault(); alert("Please select a technician name first!"); } }}
+                     className="btn btn-outline"
+                     style={{ flex: "1", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", height: "42px", background: quickReviewAuthor ? "rgba(226, 176, 71, 0.08)" : "rgba(255, 255, 255, 0.02)", opacity: quickReviewAuthor ? 1 : 0.5 }}
+                   >
+                     ✉️ Email Customer
+                   </a>
+                 </div>
+               </div>
+             </div>
+           </div>
+           </>
+         )}
 
       </div>
 
