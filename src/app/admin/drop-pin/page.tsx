@@ -33,7 +33,7 @@ const authorList = [
   "Christopher Heard",
   "Eddie Buchanan",
   "Charlie Buchanan",
-  "David Heard",
+  "Robert Christoforo",
   "Daniel Lickness",
   "David Dilmore"
 ];
