@@ -216,6 +216,15 @@ export async function addPin(pin: Omit<PinType, "id">): Promise<PinType | null> 
       );
       if (res.ok) {
         console.log(`Successfully wrote new pin to Firebase Firestore under clientId: ${clientId}`);
+        
+        // Trigger Google My Business Local Post Sync in background
+        try {
+          const { publishPinToGmb } = await import("./google-gmb");
+          publishPinToGmb(newPin).catch((err) => console.error("[GMB] Background publish error:", err));
+        } catch (gmbErr) {
+          console.error("[GMB] Trigger failed:", gmbErr);
+        }
+
         return newPin;
       } else {
         const errText = await res.text();
