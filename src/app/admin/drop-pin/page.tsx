@@ -1019,7 +1019,7 @@ export default function DropPinPage() {
                             if (!transpondConfigured) {
                               setShowSocialWarningModal(true);
                             } else {
-                              window.open("https://app.transpond.io/cp/company/integrations", "_blank");
+                              window.open("https://www.facebook.com/v15.0/dialog/oauth?client_id=3446478465675846&redirect_uri=https%3A%2F%2Fweb.mpzmail.com%2Fcp%2Fcompany%2Fintegrations%2FoAuth%2Fresponse%2F77&state=&scope=pages_show_list%2Cleads_retrieval%2Cpages_read_engagement%2Cpages_manage_posts%2Cinstagram_basic%2Cinstagram_content_publish%2Cbusiness_management%2Cread_insights%2Cinstagram_manage_insights%2Cpages_manage_metadata%2Cpages_messaging", "_blank");
                             }
                           }}
                           className="btn btn-outline"
