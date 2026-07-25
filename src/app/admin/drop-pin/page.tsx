@@ -161,11 +161,22 @@ export default function DropPinPage() {
     setDate(today.toLocaleDateString("en-US", options));
   }, []);
 
-  // Check authentication on load
+  // Check authentication and URL params on load
   useEffect(() => {
     const cachedAuth = sessionStorage.getItem("roofer_pin_auth");
     if (cachedAuth === "true") {
       setIsAuthenticated(true);
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const googleSync = urlParams.get("google_sync");
+    const errorMsg = urlParams.get("message");
+    if (googleSync === "success") {
+      alert("🎉 Success! Your Google Business Profile is now connected and synced with PinDrop!");
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (googleSync === "error") {
+      alert(`❌ Google Auth Failed: ${errorMsg || "Unknown Error"}`);
+      window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
 
@@ -830,7 +841,7 @@ export default function DropPinPage() {
                  <span>🌐</span> Google Business Profile Sync
                </h3>
                <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "0 0 1.25rem 0", lineHeight: "1.5" }}>
-                 Automatically push newly dropped project pins and job site photos straight to your company's Google Maps Business Profile:
+                  Automatically push newly dropped project pins and job site photos straight to your company's Google Maps Business Profile (see the <span style={{ color: "#e2b047", cursor: "pointer", textDecoration: "underline" }} onClick={() => setShowGoogleModal(true)}>Setup Guide</span>):
                </p>
                
                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255, 255, 255, 0.02)", padding: "12px 16px", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.05)", gap: "12px", flexWrap: "wrap" }}>
@@ -845,7 +856,7 @@ export default function DropPinPage() {
                  
                  <button
                    type="button"
-                   onClick={() => setShowGoogleModal(true)}
+                   onClick={() => window.location.href = "/api/auth/google/login"}
                    className="btn btn-outline"
                    style={{ fontSize: "0.8rem", height: "38px", display: "inline-flex", alignItems: "center", justifyContent: "center", background: "rgba(226, 176, 71, 0.08)", color: "#ffffff", border: "1px solid #e2b047", cursor: "pointer", padding: "0 16px" }}
                  >
