@@ -59,7 +59,15 @@ export async function GET() {
     // D. Fallback to default technicians if Firestore list is empty
     if (technicians.length === 0) {
       if (clientId === "born-again-roofing") {
-        technicians = ["Born Again Roofing", "Charlie", "Dillon", "Kyle", "Mark", "Preston", "Scott"];
+        technicians = [
+          "Chris Smith",
+          "Damien Johnston",
+          "Christopher Heard",
+          "Eddie Buchanan",
+          "Robert Christoforo",
+          "Daniel Lickness",
+          "David Dilmore"
+        ];
       } else {
         technicians = ["Scott", "Technician A", "Technician B"]; // Sample default list for new tenants
       }
