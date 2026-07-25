@@ -76,6 +76,7 @@ export default function DropPinPage() {
   const [transpondSaveStatus, setTranspondSaveStatus] = useState("idle"); // idle, saving, saved, error
   const [showSocialWarningModal, setShowSocialWarningModal] = useState(false);
   const [expandedTab, setExpandedTab] = useState<"google" | "crm" | "social" | "team" | null>(null);
+  const [showAddTechInput, setShowAddTechInput] = useState(false);
   const [tourStep, setTourStep] = useState<number | null>(null);
   const [authorList, setAuthorList] = useState<string[]>([]);
   const [newTechName, setNewTechName] = useState("");
@@ -724,18 +725,70 @@ export default function DropPinPage() {
                 
                 {/* Roofer Name */}
                 <div className="form-group" style={{ border: tourStep === 1 ? "2px solid #e2b047" : "1px solid transparent", borderRadius: "8px", padding: tourStep === 1 ? "8px" : "0", boxShadow: tourStep === 1 ? "0 0 12px rgba(226, 176, 71, 0.4)" : "none", transition: "all 0.3s" }}>
-                  <label className="form-label">Roofer/Technician Name</label>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <label className="form-label">Roofer/Technician Name</label>
+                    {author && (
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteTechnician(author)}
+                        style={{ background: "none", border: "none", color: "#ef4444", fontSize: "0.72rem", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "4px", padding: "0 0 4px 0" }}
+                      >
+                        🗑️ Delete {author}
+                      </button>
+                    )}
+                  </div>
                   <select
                     className="form-input"
                     value={author}
-                    onChange={(e) => setAuthor(e.target.value)}
-                    required
+                    onChange={(e) => {
+                      if (e.target.value === "ADD_NEW_TECH") {
+                        setShowAddTechInput(true);
+                        setAuthor("");
+                      } else {
+                        setAuthor(e.target.value);
+                      }
+                    }}
+                    required={!showAddTechInput}
                   >
                     <option value="">Select Technician</option>
                     {authorList.map((auth) => (
                       <option key={auth} value={auth}>{auth}</option>
                     ))}
+                    <option value="ADD_NEW_TECH" style={{ color: "#e2b047", fontWeight: "bold" }}>+ Add New Technician...</option>
                   </select>
+
+                  {showAddTechInput && (
+                    <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+                      <input
+                        type="text"
+                        placeholder="Technician full name"
+                        value={newTechName}
+                        onChange={(e) => setNewTechName(e.target.value)}
+                        style={{ flex: 1, padding: "6px 10px", fontSize: "0.75rem", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "4px", color: "#fff" }}
+                      />
+                      <button
+                        type="button"
+                        onClick={async (e) => {
+                          await handleAddTechnician(e);
+                          setShowAddTechInput(false);
+                        }}
+                        className="btn btn-outline"
+                        style={{ fontSize: "0.72rem", height: "30px", background: "rgba(226, 176, 71, 0.15)", color: "#e2b047", border: "1px solid #e2b047", cursor: "pointer", borderRadius: "4px" }}
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowAddTechInput(false);
+                          setNewTechName("");
+                        }}
+                        style={{ fontSize: "0.72rem", height: "30px", background: "none", border: "none", color: "#ef4444", cursor: "pointer" }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Job Location */}
@@ -1219,69 +1272,7 @@ export default function DropPinPage() {
                     )}
                   </div>
 
-                  {/* Row 4: Manage Team Members */}
-                  <div style={{ border: "1px solid rgba(255, 255, 255, 0.05)", borderRadius: "8px", overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
-                    <div 
-                      onClick={() => setExpandedTab(expandedTab === "team" ? null : "team")}
-                      style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", background: "rgba(255, 255, 255, 0.02)", userSelect: "none" }}
-                    >
-                      <span style={{ fontSize: "0.85rem", fontWeight: "700", color: "#ffffff", display: "flex", alignItems: "center", gap: "8px" }}>
-                        <span>👥</span> Manage Team Members
-                      </span>
-                      <span style={{ color: "var(--text-muted)", fontSize: "0.7rem", fontWeight: "700", display: "flex", alignItems: "center", gap: "4px" }}>
-                        {authorList.length} Active {expandedTab === "team" ? "▲" : "▼"}
-                      </span>
-                    </div>
-                    
-                    {expandedTab === "team" && (
-                      <div style={{ padding: "16px", borderTop: "1px solid rgba(255,255,255,0.05)", background: "rgba(0,0,0,0.15)" }}>
-                        <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", margin: "0 0 1rem 0", lineHeight: "1.4" }}>
-                          Add or remove employees, sales representatives, and technicians who drop job pins.
-                        </p>
-                        
-                        {/* Add Team Member Form */}
-                        <form onSubmit={handleAddTechnician} style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
-                          <input
-                            type="text"
-                            placeholder="Enter full name"
-                            value={newTechName}
-                            onChange={(e) => setNewTechName(e.target.value)}
-                            style={{ flex: 1, padding: "6px 10px", fontSize: "0.75rem", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "4px", color: "#fff" }}
-                          />
-                          <button
-                            type="submit"
-                            className="btn btn-outline"
-                            style={{ fontSize: "0.72rem", height: "30px", background: "rgba(226, 176, 71, 0.15)", color: "#e2b047", border: "1px solid #e2b047", cursor: "pointer", borderRadius: "4px", padding: "0 12px" }}
-                          >
-                            Add Member
-                          </button>
-                        </form>
-                        
-                        {/* Team List */}
-                        <div style={{ display: "flex", flexDirection: "column", gap: "6px", maxHeight: "150px", overflowY: "auto" }}>
-                          {authorList.map((tech) => (
-                            <div 
-                              key={tech} 
-                              style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.02)", padding: "6px 12px", borderRadius: "4px", border: "1px solid rgba(255,255,255,0.05)" }}
-                            >
-                              <span style={{ fontSize: "0.78rem", color: "#fff" }}>{tech}</span>
-                              <button 
-                                type="button"
-                                onClick={() => handleDeleteTechnician(tech)}
-                                style={{ background: "none", border: "none", color: "#ef4444", fontSize: "0.85rem", cursor: "pointer", padding: "0 4px" }}
-                                title="Remove technician"
-                              >
-                                🗑️
-                              </button>
-                            </div>
-                          ))}
-                          {authorList.length === 0 && (
-                            <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>No team members added yet.</span>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
+
 
                 </div>
               </div>
