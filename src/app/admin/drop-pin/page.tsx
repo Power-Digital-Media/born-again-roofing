@@ -85,6 +85,7 @@ export default function DropPinPage() {
   const [transpondSaveStatus, setTranspondSaveStatus] = useState("idle"); // idle, saving, saved, error
   const [showSocialWarningModal, setShowSocialWarningModal] = useState(false);
   const [expandedTab, setExpandedTab] = useState<"google" | "crm" | "social" | null>(null);
+  const [tourStep, setTourStep] = useState<number | null>(null);
 
   const fetchTranspondSettings = async () => {
     try {
@@ -214,6 +215,10 @@ export default function DropPinPage() {
     if (cachedAuth === "true") {
       setIsAuthenticated(true);
       fetchTranspondSettings();
+      const tourSeen = localStorage.getItem("pindrop_tour_seen");
+      if (!tourSeen) {
+        setTimeout(() => setTourStep(1), 800);
+      }
     }
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -237,9 +242,25 @@ export default function DropPinPage() {
       setIsAuthenticated(true);
       setPasscodeError("");
       fetchTranspondSettings();
+      const tourSeen = localStorage.getItem("pindrop_tour_seen");
+      if (!tourSeen) {
+        setTimeout(() => setTourStep(1), 800);
+      }
     } else {
       setPasscodeError("Incorrect passcode. Please try again.");
     }
+  };
+
+  const handleFinishTour = () => {
+    localStorage.setItem("pindrop_tour_seen", "true");
+    setTourStep(null);
+    setExpandedTab(null);
+  };
+
+  const handleRestartTour = () => {
+    setTourStep(1);
+    setExpandedTab(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const getGPSLocation = () => {
@@ -525,8 +546,17 @@ export default function DropPinPage() {
     <div className="portal-container">
       <div className="container">
         
-        <div className="portal-header">
-          <span className="eyebrow">Power Digital Media</span>
+        <div className="portal-header" style={{ position: "relative" }}>
+          <span className="eyebrow" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span>Power Digital Media</span>
+            <button 
+              type="button"
+              onClick={handleRestartTour}
+              style={{ background: "rgba(226, 176, 71, 0.15)", border: "1px solid #e2b047", color: "#e2b047", padding: "4px 12px", borderRadius: "20px", fontSize: "0.72rem", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "4px", fontWeight: "bold" }}
+            >
+              🎓 Take Tour
+            </button>
+          </span>
           <h1>PDM PinDrop</h1>
           <p className="subtitle">Submit recent project photographs and details from the field</p>
         </div>
@@ -579,7 +609,7 @@ export default function DropPinPage() {
               <form onSubmit={handleSubmit} className="portal-form">
                 
                 {/* Roofer Name */}
-                <div className="form-group">
+                <div className="form-group" style={{ border: tourStep === 1 ? "2px solid #e2b047" : "1px solid transparent", borderRadius: "8px", padding: tourStep === 1 ? "8px" : "0", boxShadow: tourStep === 1 ? "0 0 12px rgba(226, 176, 71, 0.4)" : "none", transition: "all 0.3s" }}>
                   <label className="form-label">Roofer/Technician Name</label>
                   <select
                     className="form-input"
@@ -892,8 +922,7 @@ export default function DropPinPage() {
               
               <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                   
-                  {/* Row 1: Google Business Profile (Maps) */}
-                  <div style={{ border: "1px solid rgba(255, 255, 255, 0.05)", borderRadius: "8px", overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
+                  <div style={{ border: tourStep === 2 ? "2px solid #e2b047" : "1px solid rgba(255, 255, 255, 0.05)", boxShadow: tourStep === 2 ? "0 0 10px rgba(226, 176, 71, 0.3)" : "none", transition: "all 0.3s", borderRadius: "8px", overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
                     <div 
                       onClick={() => setExpandedTab(expandedTab === "google" ? null : "google")}
                       style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", background: "rgba(255, 255, 255, 0.02)", userSelect: "none" }}
@@ -923,8 +952,7 @@ export default function DropPinPage() {
                     )}
                   </div>
 
-                  {/* Row 2: Transpond CRM */}
-                  <div style={{ border: "1px solid rgba(255, 255, 255, 0.05)", borderRadius: "8px", overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
+                  <div style={{ border: tourStep === 3 ? "2px solid #e2b047" : "1px solid rgba(255, 255, 255, 0.05)", boxShadow: tourStep === 3 ? "0 0 10px rgba(226, 176, 71, 0.3)" : "none", transition: "all 0.3s", borderRadius: "8px", overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
                     <div 
                       onClick={() => setExpandedTab(expandedTab === "crm" ? null : "crm")}
                       style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", background: "rgba(255, 255, 255, 0.02)", userSelect: "none" }}
@@ -988,8 +1016,7 @@ export default function DropPinPage() {
                     )}
                   </div>
 
-                  {/* Row 3: Social Media Auto-Post */}
-                  <div style={{ border: "1px solid rgba(255, 255, 255, 0.05)", borderRadius: "8px", overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
+                  <div style={{ border: tourStep === 4 ? "2px solid #e2b047" : "1px solid rgba(255, 255, 255, 0.05)", boxShadow: tourStep === 4 ? "0 0 10px rgba(226, 176, 71, 0.3)" : "none", transition: "all 0.3s", borderRadius: "8px", overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
                     <div 
                       onClick={() => setExpandedTab(expandedTab === "social" ? null : "social")}
                       style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", background: "rgba(255, 255, 255, 0.02)", userSelect: "none" }}
@@ -1218,6 +1245,105 @@ export default function DropPinPage() {
                </div>
              </div>
            )}
+
+            {/* Interactive Tour Overlay */}
+            {tourStep !== null && (
+              <div style={{
+                position: "fixed",
+                bottom: "2rem",
+                right: "2rem",
+                zIndex: 10000,
+                maxWidth: "360px",
+                width: "calc(100% - 4rem)",
+                backgroundColor: "#111827",
+                border: "2px solid #e2b047",
+                borderRadius: "12px",
+                boxShadow: "0 10px 25px rgba(0, 0, 0, 0.5), 0 0 10px rgba(226, 176, 71, 0.2)",
+                padding: "1.25rem",
+                textAlign: "left"
+              }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                  <span style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "1px", color: "#e2b047", fontWeight: "bold" }}>
+                    App Walkthrough ({tourStep}/4)
+                  </span>
+                  <button 
+                    onClick={handleFinishTour}
+                    style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "0.9rem" }}
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                <div style={{ fontSize: "0.82rem", color: "#ffffff", lineHeight: "1.5", marginBottom: "1.25rem" }}>
+                  {tourStep === 1 && (
+                    <div>
+                      <strong>👋 Welcome to PDM PinDrop!</strong><br/><br/>
+                      First, select your name from the <strong>Roofer/Technician</strong> dropdown and select the <strong>Location (City)</strong> to start pinning jobs.
+                    </div>
+                  )}
+                  {tourStep === 2 && (
+                    <div>
+                      <strong>🌐 Step 1: Google Maps Sync</strong><br/><br/>
+                      We have expanded the <strong>Google Maps Sync</strong> section. Click <strong>Connect Maps Profile</strong> to link your business page so all pin drops post updates to maps.
+                    </div>
+                  )}
+                  {tourStep === 3 && (
+                    <div>
+                      <strong>📋 Step 2: Transpond CRM Link</strong><br/><br/>
+                      Here is your <strong>Transpond CRM</strong> manager. Paste your API Key & Group ID to sync customer reviews. If you don&apos;t have a subscription yet, click the Capsule or Transpond signup links.
+                    </div>
+                  )}
+                  {tourStep === 4 && (
+                    <div>
+                      <strong>📱 Step 3: Social Media Auto-Post</strong><br/><br/>
+                      Once CRM keys are saved, this section unlocks. Click <strong>Connect Social Pages</strong> to open the Meta Auth window and link Facebook & Instagram profiles!
+                    </div>
+                  )}
+                </div>
+                
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <button 
+                    onClick={handleFinishTour}
+                    style={{ background: "none", border: "none", color: "var(--text-muted)", fontSize: "0.75rem", cursor: "pointer", padding: 0 }}
+                  >
+                    Skip Tour
+                  </button>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    {tourStep > 1 && (
+                      <button 
+                        onClick={() => {
+                          const prevStep = tourStep - 1;
+                          setTourStep(prevStep);
+                          if (prevStep === 1) setExpandedTab(null);
+                          if (prevStep === 2) setExpandedTab("google");
+                          if (prevStep === 3) setExpandedTab("crm");
+                          if (prevStep === 4) setExpandedTab("social");
+                        }}
+                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "4px 12px", borderRadius: "4px", fontSize: "0.75rem", cursor: "pointer" }}
+                      >
+                        Back
+                      </button>
+                    )}
+                    <button 
+                      onClick={() => {
+                        if (tourStep < 4) {
+                          const nextStep = tourStep + 1;
+                          setTourStep(nextStep);
+                          if (nextStep === 2) setExpandedTab("google");
+                          if (nextStep === 3) setExpandedTab("crm");
+                          if (nextStep === 4) setExpandedTab("social");
+                        } else {
+                          handleFinishTour();
+                        }
+                      }}
+                      style={{ background: "#e2b047", border: "none", color: "#000", padding: "4px 14px", borderRadius: "4px", fontSize: "0.75rem", fontWeight: "bold", cursor: "pointer" }}
+                    >
+                      {tourStep === 4 ? "Finish" : "Next"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
        </div>
 
