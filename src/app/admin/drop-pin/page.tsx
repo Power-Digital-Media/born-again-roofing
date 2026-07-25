@@ -1019,7 +1019,7 @@ export default function DropPinPage() {
                             if (!transpondConfigured) {
                               setShowSocialWarningModal(true);
                             } else {
-                              window.open("https://app.transpond.io/cp/campaigns?campaignType=50", "_blank");
+                              window.open("https://app.transpond.io/cp/integrations", "_blank");
                             }
                           }}
                           className="btn btn-outline"
