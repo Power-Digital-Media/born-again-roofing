@@ -77,6 +77,7 @@ export default function DropPinPage() {
   const [images, setImages] = useState<string[]>([]);
   const [isCompressing, setIsCompressing] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("");
+  const [showGoogleModal, setShowGoogleModal] = useState(false);
 
   const geocodeAddress = async () => {
     if (!streetAddress.trim()) {
@@ -813,8 +814,7 @@ export default function DropPinPage() {
                    <a
                      href={quickReviewAuthor ? `mailto:?subject=Review for Born Again Roofing&body=Hi there,%0D%0A%0D%0AThis is ${quickReviewAuthor.split(" ")[0]} from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0Ahttps://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1%0D%0A%0D%0AThank you!` : "#"}
                      onClick={(e) => { if (!quickReviewAuthor) { e.preventDefault(); alert("Please select a technician name first!"); } }}
-                     className="btn btn-outline"
-                     style={{ flex: "1", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", height: "42px", background: quickReviewAuthor ? "rgba(226, 176, 71, 0.08)" : "rgba(255, 255, 255, 0.02)", opacity: quickReviewAuthor ? 1 : 0.5 }}
+                                         style={{ flex: "1", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", height: "42px", background: quickReviewAuthor ? "rgba(226, 176, 71, 0.08)" : "rgba(255, 255, 255, 0.02)", opacity: quickReviewAuthor ? 1 : 0.5 }}
                    >
                      ✉️ Email Customer
                    </a>
@@ -822,10 +822,151 @@ export default function DropPinPage() {
                </div>
              </div>
            </div>
-           </>
-         )}
 
-      </div>
+           {/* Google Business Profile Sync Panel */}
+           <div className="double-bezel-wrapper" style={{ maxWidth: "580px", margin: "2rem auto 0", height: "auto" }}>
+             <div className="double-bezel-inner" style={{ padding: "1.5rem", textAlign: "left", height: "auto" }}>
+               <h3 style={{ color: "#ffffff", fontSize: "1.05rem", fontWeight: "800", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "8px" }}>
+                 <span>🌐</span> Google Business Profile Sync
+               </h3>
+               <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "0 0 1.25rem 0", lineHeight: "1.5" }}>
+                 Automatically push newly dropped project pins and job site photos straight to your company's Google Maps Business Profile:
+               </p>
+               
+               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255, 255, 255, 0.02)", padding: "12px 16px", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.05)", gap: "12px", flexWrap: "wrap" }}>
+                 <div style={{ flex: "1 1 200px" }}>
+                   <div style={{ fontSize: "0.85rem", fontWeight: "700", color: "#ffffff", display: "flex", alignItems: "center", gap: "6px" }}>
+                     Status: <span style={{ color: "#e1b047", textTransform: "uppercase", fontSize: "0.75rem", background: "rgba(226, 176, 71, 0.15)", padding: "2px 8px", borderRadius: "12px" }}>OAuth Pending</span>
+                   </div>
+                   <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: "4px", lineHeight: "1.4" }}>
+                     Configure your Google API credentials in .env.local to link this device.
+                   </div>
+                 </div>
+                 
+                 <button
+                   type="button"
+                   onClick={() => setShowGoogleModal(true)}
+                   className="btn btn-outline"
+                   style={{ fontSize: "0.8rem", height: "38px", display: "inline-flex", alignItems: "center", justifyContent: "center", background: "rgba(226, 176, 71, 0.08)", color: "#ffffff", border: "1px solid #e2b047", cursor: "pointer", padding: "0 16px" }}
+                 >
+                   🔌 Connect Google Profile
+                 </button>
+               </div>
+             </div>
+           </div>
+           </>
+          )}
+
+          {/* Google Business API Instructions Modal */}
+          {showGoogleModal && (
+            <div style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.85)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 9999,
+              padding: "1.5rem",
+              backdropFilter: "blur(8px)"
+            }}>
+              <div className="double-bezel-wrapper" style={{ maxWidth: "600px", width: "100%", height: "auto", maxHeight: "90vh", overflowY: "auto" }}>
+                <div className="double-bezel-inner" style={{ padding: "2rem", position: "relative" }}>
+                  <button 
+                    onClick={() => setShowGoogleModal(false)}
+                    style={{
+                      position: "absolute",
+                      top: "1.25rem",
+                      right: "1.25rem",
+                      background: "none",
+                      border: "none",
+                      color: "#ffffff",
+                      fontSize: "1.5rem",
+                      cursor: "pointer",
+                      opacity: 0.7,
+                      transition: "opacity 0.2s"
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.opacity = "1"}
+                    onMouseOut={(e) => e.currentTarget.style.opacity = "0.7"}
+                  >
+                    ✕
+                  </button>
+                  
+                  <h3 style={{ color: "#ffffff", fontSize: "1.25rem", fontWeight: "900", marginBottom: "1rem", display: "flex", alignItems: "center", gap: "8px" }}>
+                    🌐 Google My Business Sync Setup
+                  </h3>
+                  
+                  <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: "1.6", marginBottom: "1.5rem" }}>
+                    Follow these steps in your Google Cloud Console to enable automatic posting of check-ins directly to your Google Business Profile (Google Maps card):
+                  </p>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem", fontSize: "0.8rem", color: "#ffffff", lineHeight: "1.6", textAlign: "left" }}>
+                    <div style={{ background: "rgba(255, 255, 255, 0.02)", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <strong style={{ color: "#e2b047", display: "block", marginBottom: "4px" }}>Step 1: Open Google Cloud Console</strong>
+                      Go to <a href="https://console.cloud.google.com" target="_blank" rel="noopener noreferrer" style={{ color: "#e2b047", textDecoration: "underline" }}>console.cloud.google.com</a> and sign in with the Google Account that manages the business maps profile. Create a new project (e.g., "PinDrop SEO").
+                    </div>
+
+                    <div style={{ background: "rgba(255, 255, 255, 0.02)", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <strong style={{ color: "#e2b047", display: "block", marginBottom: "4px" }}>Step 2: Request Access to Business Profile APIs</strong>
+                      Search for and enable the <strong>My Business Account Management API</strong> and <strong>My Business Business Information API</strong>.
+                      <span style={{ display: "block", color: "var(--text-muted)", fontSize: "0.75rem", marginTop: "4px" }}>
+                        *Note: Because this API is restricted to prevent Google Maps spam, Google Cloud requires you to submit a quick request form. It usually takes 2-3 business days to get access approval.
+                      </span>
+                    </div>
+
+                    <div style={{ background: "rgba(255, 255, 255, 0.02)", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <strong style={{ color: "#e2b047", display: "block", marginBottom: "4px" }}>Step 3: Create OAuth Credentials</strong>
+                      Go to <strong>APIs & Services &gt; Credentials</strong>. Create an "OAuth Client ID" (select "Web Application"). 
+                      Add your deployment domains (e.g., `https://bornagainroofing.com` and `http://localhost:3000`) under **Authorized Javascript Origins** and **Authorized Redirect URIs**.
+                    </div>
+
+                    <div style={{ background: "rgba(255, 255, 255, 0.02)", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <strong style={{ color: "#e2b047", display: "block", marginBottom: "4px" }}>Step 4: Save API Credentials to App</strong>
+                      Add your Client ID and Client Secret to the server configuration (`.env.local`):
+                      <pre style={{ margin: "8px 0 0 0", padding: "8px", background: "#0a0f1d", color: "#8ab4f8", fontSize: "0.75rem", overflowX: "auto", borderRadius: "4px" }}>
+                        GOOGLE_CLIENT_ID=your_id_here{"\n"}
+                        GOOGLE_CLIENT_SECRET=your_secret_here
+                      </pre>
+                    </div>
+                  </div>
+
+                  {/* Mock GBP Post Preview Card */}
+                  <div style={{ marginTop: "1.5rem", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "1.5rem" }}>
+                    <h4 style={{ color: "#ffffff", fontSize: "0.9rem", fontWeight: "700", marginBottom: "0.75rem", textAlign: "left" }}>
+                      📸 Google Maps Post Preview (Example):
+                    </h4>
+                    <div style={{ background: "#ffffff", color: "#1f2937", borderRadius: "12px", padding: "16px", textAlign: "left", boxShadow: "0 4px 20px rgba(0,0,0,0.3)", maxWidth: "420px", margin: "0 auto" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+                        <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#0f172a", display: "flex", alignItems: "center", justifyContent: "center", color: "#e2b047", fontWeight: "bold", fontSize: "0.8rem" }}>BA</div>
+                        <div>
+                          <strong style={{ fontSize: "0.85rem", color: "#111827", display: "block" }}>Born Again Home Remodeling & Roofing</strong>
+                          <span style={{ fontSize: "0.7rem", color: "#6b7280" }}>Google Maps Update • Just now</span>
+                        </div>
+                      </div>
+                      <p style={{ fontSize: "0.8rem", color: "#374151", margin: "0 0 12px 0", lineHeight: "1.4" }}>
+                        📍 <strong>Jackson, MS</strong><br/>
+                        Installed a GAF Timberline HDZ architectural roof replacement, replacing old shingle decking with heavy-duty felt underlayment and custom leak barriers...
+                      </p>
+                      <div style={{ width: "100%", height: "180px", borderRadius: "8px", background: "url('/images/remodeling-hero.jpg') center/cover no-repeat" }}></div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setShowGoogleModal(false)}
+                    className="btn btn-outline"
+                    style={{ width: "100%", marginTop: "1.5rem", height: "42px", display: "flex", alignItems: "center", justifyContent: "center" }}
+                  >
+                    Close Setup Instructions
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+       </div>
 
       <style jsx>{`
         .portal-container {
