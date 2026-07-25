@@ -69,7 +69,7 @@ export async function GET() {
           "David Dilmore"
         ];
       } else {
-        technicians = ["Scott", "Technician A", "Technician B"]; // Sample default list for new tenants
+        technicians = [];
       }
     }
 
