@@ -263,6 +263,23 @@ export default function DropPinPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Scroll to active walkthrough elements smoothly when step changes
+  useEffect(() => {
+    if (tourStep === 1) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (tourStep && tourStep >= 2) {
+      setTimeout(() => {
+        // Scroll to integrations card
+        const integrationsCard = document.querySelector(".double-bezel-wrapper[style*='margin: 2rem auto 0']");
+        if (integrationsCard) {
+          integrationsCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        } else {
+          window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+        }
+      }, 150); // Small timeout to allow tab state to expand
+    }
+  }, [tourStep]);
+
   const getGPSLocation = () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser.");
