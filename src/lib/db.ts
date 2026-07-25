@@ -225,6 +225,14 @@ export async function addPin(pin: Omit<PinType, "id">): Promise<PinType | null> 
           console.error("[GMB] Trigger failed:", gmbErr);
         }
 
+        // Trigger Transpond Social Media Post Sync in background
+        try {
+          const { publishPinToTranspondSocial } = await import("./transpond-social");
+          publishPinToTranspondSocial(newPin).catch((err) => console.error("[Transpond Social] Background publish error:", err));
+        } catch (socialErr) {
+          console.error("[Transpond Social] Trigger failed:", socialErr);
+        }
+
         return newPin;
       } else {
         const errText = await res.text();

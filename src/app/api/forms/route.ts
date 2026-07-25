@@ -74,20 +74,43 @@ export async function POST(request: NextRequest) {
     const firstName = nameParts[0] || "";
     const lastName = nameParts.slice(1).join(" ") || "";
 
-    // ── Transpond API Key Check ──
-    const transpondKey = process.env.TRANSPOND_API_KEY;
+    // ── Load CRM Settings ──
+    const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || "pdm-pindrop-central";
+    const clientId = process.env.PDM_CLIENT_ID || "born-again-roofing";
+    
+    let transpondKey = "";
+    let groupId = 0;
+
+    try {
+      const settingsRes = await fetch(
+        `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/settings/${clientId}`
+      );
+      if (settingsRes.ok) {
+        const settingsData = await settingsRes.json();
+        const fields = settingsData.fields || {};
+        transpondKey = fields.transpondApiKey?.stringValue || "";
+        groupId = parseInt(fields.transpondGroupId?.stringValue || "0", 10);
+      }
+    } catch (err) {
+      console.error("[forms] Failed to read Transpond settings from Firestore:", err);
+    }
+
+    // Fallback to environment variables
     if (!transpondKey) {
-      console.warn("[forms] TRANSPOND_API_KEY not set — skipping CRM sync");
+      transpondKey = process.env.TRANSPOND_API_KEY || "";
+      groupId = parseInt(process.env.TRANSPOND_GROUP_ID || "0", 10);
+    }
+
+    if (!transpondKey) {
+      console.warn("[forms] Transpond API Key not set — skipping CRM sync");
       return NextResponse.json(
         { success: true, warning: "CRM credentials not configured yet" },
         { status: 200 }
       );
     }
 
-    // ── Route to correct Transpond group ──
-    const groupId = parseInt(process.env.TRANSPOND_GROUP_ID || "0", 10);
     if (!groupId) {
-      console.warn("[forms] TRANSPOND_GROUP_ID not set — skipping CRM sync");
+      console.warn("[forms] Transpond Group ID not set — skipping CRM sync");
       return NextResponse.json(
         { success: true, warning: "Transpond group not configured" },
         { status: 200 }

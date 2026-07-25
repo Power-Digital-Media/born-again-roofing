@@ -78,6 +78,52 @@ export default function DropPinPage() {
   const [isCompressing, setIsCompressing] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("");
   const [showGoogleModal, setShowGoogleModal] = useState(false);
+  const [transpondApiKey, setTranspondApiKey] = useState("");
+  const [transpondGroupId, setTranspondGroupId] = useState("");
+  const [transpondConfigured, setTranspondConfigured] = useState(false);
+  const [socialConnected, setSocialConnected] = useState(false);
+  const [transpondSaveStatus, setTranspondSaveStatus] = useState("idle"); // idle, saving, saved, error
+  const [showSocialWarningModal, setShowSocialWarningModal] = useState(false);
+
+  const fetchTranspondSettings = async () => {
+    try {
+      const res = await fetch("/api/auth/transpond/settings");
+      if (res.ok) {
+        const data = await res.json();
+        setTranspondConfigured(data.configured || false);
+        setTranspondGroupId(data.transpondGroupId || "");
+        if (data.configured) {
+          setTranspondApiKey(data.transpondApiKey || "");
+        }
+        setSocialConnected(data.socialConnected || false);
+      }
+    } catch (err) {
+      console.error("Failed to load Transpond settings:", err);
+    }
+  };
+
+  const handleSaveTranspondSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setTranspondSaveStatus("saving");
+    try {
+      const res = await fetch("/api/auth/transpond/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ apiKey: transpondApiKey, groupId: transpondGroupId })
+      });
+      if (res.ok) {
+        setTranspondSaveStatus("saved");
+        setTranspondConfigured(true);
+        setTimeout(() => setTranspondSaveStatus("idle"), 3000);
+        fetchTranspondSettings();
+      } else {
+        setTranspondSaveStatus("error");
+      }
+    } catch (err) {
+      setTranspondSaveStatus("error");
+      console.error(err);
+    }
+  };
 
   const geocodeAddress = async () => {
     if (!streetAddress.trim()) {
@@ -166,6 +212,7 @@ export default function DropPinPage() {
     const cachedAuth = sessionStorage.getItem("roofer_pin_auth");
     if (cachedAuth === "true") {
       setIsAuthenticated(true);
+      fetchTranspondSettings();
     }
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -188,6 +235,7 @@ export default function DropPinPage() {
       sessionStorage.setItem("roofer_pin_auth", "true");
       setIsAuthenticated(true);
       setPasscodeError("");
+      fetchTranspondSettings();
     } else {
       setPasscodeError("Incorrect passcode. Please try again.");
     }
@@ -825,48 +873,148 @@ export default function DropPinPage() {
                    <a
                      href={quickReviewAuthor ? `mailto:?subject=Review for Born Again Roofing&body=Hi there,%0D%0A%0D%0AThis is ${quickReviewAuthor.split(" ")[0]} from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0Ahttps://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1%0D%0A%0D%0AThank you!` : "#"}
                      onClick={(e) => { if (!quickReviewAuthor) { e.preventDefault(); alert("Please select a technician name first!"); } }}
-                                         style={{ flex: "1", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", height: "42px", background: quickReviewAuthor ? "rgba(226, 176, 71, 0.08)" : "rgba(255, 255, 255, 0.02)", opacity: quickReviewAuthor ? 1 : 0.5 }}
+                     className="btn btn-outline"
+                     style={{ flex: "1", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", height: "42px", background: quickReviewAuthor ? "rgba(226, 176, 71, 0.08)" : "rgba(255, 255, 255, 0.02)", opacity: quickReviewAuthor ? 1 : 0.5 }}
                    >
                      ✉️ Email Customer
                    </a>
                  </div>
-               </div>
-             </div>
-           </div>
+                </div>
+              </div>
+            </div>
 
-           {/* Google Business Profile Sync Panel */}
-           <div className="double-bezel-wrapper" style={{ maxWidth: "580px", margin: "2rem auto 0", height: "auto" }}>
-             <div className="double-bezel-inner" style={{ padding: "1.5rem", textAlign: "left", height: "auto" }}>
-               <h3 style={{ color: "#ffffff", fontSize: "1.05rem", fontWeight: "800", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "8px" }}>
-                 <span>🌐</span> Google Business Profile Sync
-               </h3>
-               <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "0 0 1.25rem 0", lineHeight: "1.5" }}>
-                  Automatically push newly dropped project pins and job site photos straight to your company's Google Maps Business Profile (see the <span style={{ color: "#e2b047", cursor: "pointer", textDecoration: "underline" }} onClick={() => setShowGoogleModal(true)}>Setup Guide</span>):
-               </p>
-               
-               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255, 255, 255, 0.02)", padding: "12px 16px", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.05)", gap: "12px", flexWrap: "wrap" }}>
-                 <div style={{ flex: "1 1 200px" }}>
-                   <div style={{ fontSize: "0.85rem", fontWeight: "700", color: "#ffffff", display: "flex", alignItems: "center", gap: "6px" }}>
-                     Status: <span style={{ color: "#e1b047", textTransform: "uppercase", fontSize: "0.75rem", background: "rgba(226, 176, 71, 0.15)", padding: "2px 8px", borderRadius: "12px" }}>OAuth Pending</span>
-                   </div>
-                   <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: "4px", lineHeight: "1.4" }}>
-                     Configure your Google API credentials in .env.local to link this device.
-                   </div>
-                 </div>
-                 
-                 <button
-                   type="button"
-                   onClick={() => window.location.href = "/api/auth/google/login"}
-                   className="btn btn-outline"
-                   style={{ fontSize: "0.8rem", height: "38px", display: "inline-flex", alignItems: "center", justifyContent: "center", background: "rgba(226, 176, 71, 0.08)", color: "#ffffff", border: "1px solid #e2b047", cursor: "pointer", padding: "0 16px" }}
-                 >
-                   🔌 Connect Google Profile
-                 </button>
-               </div>
-             </div>
-           </div>
-           </>
-          )}
+            {/* Unified Integrations Hub Grid */}
+            <div style={{ maxWidth: "800px", margin: "2.5rem auto 0" }}>
+              <h3 style={{ color: "#ffffff", fontSize: "1.25rem", fontWeight: "900", textAlign: "left", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: "8px" }}>
+                🔌 Unified Integrations Hub
+              </h3>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.5rem" }}>
+                {/* 1. Google Business Profile Card */}
+                <div className="double-bezel-wrapper" style={{ height: "100%" }}>
+                  <div className="double-bezel-inner" style={{ padding: "1.25rem", textAlign: "left", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <div>
+                      <h4 style={{ color: "#ffffff", fontSize: "0.95rem", fontWeight: "800", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "6px" }}>
+                        <span>🌐</span> Google Maps Sync
+                      </h4>
+                      <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", margin: "0 0 1rem 0", lineHeight: "1.4" }}>
+                        Push check-ins and project photos straight to Google Maps. (<span style={{ color: "#e2b047", cursor: "pointer", textDecoration: "underline" }} onClick={() => setShowGoogleModal(true)}>Guide</span>)
+                      </p>
+                    </div>
+                    
+                    <div style={{ marginTop: "auto" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255, 255, 255, 0.02)", padding: "8px 12px", borderRadius: "6px", border: "1px solid rgba(255, 255, 255, 0.05)", marginBottom: "10px" }}>
+                        <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Status:</span>
+                        <span style={{ color: "#e1b047", textTransform: "uppercase", fontSize: "0.65rem", fontWeight: "700", background: "rgba(226, 176, 71, 0.15)", padding: "2px 6px", borderRadius: "10px" }}>OAuth Pending</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => window.location.href = "/api/auth/google/login"}
+                        className="btn btn-outline"
+                        style={{ width: "100%", fontSize: "0.75rem", height: "36px", display: "inline-flex", alignItems: "center", justifyContent: "center", background: "rgba(226, 176, 71, 0.08)", color: "#ffffff", border: "1px solid #e2b047", cursor: "pointer" }}
+                      >
+                        Connect Maps
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Transpond CRM Card */}
+                <div className="double-bezel-wrapper" style={{ height: "100%" }}>
+                  <div className="double-bezel-inner" style={{ padding: "1.25rem", textAlign: "left", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <div>
+                      <h4 style={{ color: "#ffffff", fontSize: "0.95rem", fontWeight: "800", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "6px" }}>
+                        <span>📋</span> Transpond CRM
+                      </h4>
+                      <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", margin: "0 0 1rem 0", lineHeight: "1.4" }}>
+                        Sync reviews and customer leads into your CRM account.
+                      </p>
+                      
+                      <form onSubmit={handleSaveTranspondSettings} style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "12px" }}>
+                        <input
+                          type="password"
+                          placeholder="Transpond API Key"
+                          value={transpondApiKey === "env_configured" ? "" : transpondApiKey}
+                          disabled={transpondApiKey === "env_configured"}
+                          onChange={(e) => setTranspondApiKey(e.target.value)}
+                          style={{ width: "100%", padding: "6px 10px", fontSize: "0.75rem", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "4px", color: "#fff" }}
+                        />
+                        {transpondApiKey === "env_configured" && (
+                          <div style={{ fontSize: "0.65rem", color: "#4caf50", marginTop: "-4px" }}>Configured in environment file</div>
+                        )}
+                        <input
+                          type="text"
+                          placeholder="Transpond Group ID"
+                          value={transpondGroupId}
+                          onChange={(e) => setTranspondGroupId(e.target.value)}
+                          style={{ width: "100%", padding: "6px 10px", fontSize: "0.75rem", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "4px", color: "#fff" }}
+                        />
+                        <button
+                          type="submit"
+                          className="btn btn-outline"
+                          disabled={transpondSaveStatus === "saving" || transpondApiKey === "env_configured"}
+                          style={{ width: "100%", fontSize: "0.72rem", height: "30px", background: "rgba(255, 255, 255, 0.08)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", cursor: "pointer", borderRadius: "4px" }}
+                        >
+                          {transpondSaveStatus === "saving" ? "Saving..." : transpondSaveStatus === "saved" ? "Saved! ✓" : "Save CRM Keys"}
+                        </button>
+                      </form>
+                    </div>
+
+                    <div style={{ fontSize: "0.65rem", color: "var(--text-muted)", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "8px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                      <span>Don't have accounts?</span>
+                      <a href="https://get.capsulenow.io/w87ng8tquqti" target="_blank" rel="noopener noreferrer" style={{ color: "#e2b047", textDecoration: "underline" }}>Capsule</a>
+                      <span>•</span>
+                      <a href="https://get.capsulenow.io/h70zife95sd6-no30m" target="_blank" rel="noopener noreferrer" style={{ color: "#e2b047", textDecoration: "underline" }}>Transpond</a>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. Social Media Sync Card */}
+                <div className="double-bezel-wrapper" style={{ height: "100%" }}>
+                  <div className="double-bezel-inner" style={{ padding: "1.25rem", textAlign: "left", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <div>
+                      <h4 style={{ color: "#ffffff", fontSize: "0.95rem", fontWeight: "800", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "6px" }}>
+                        <span>📱</span> Social Media Auto-Post
+                      </h4>
+                      <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", margin: "0 0 1rem 0", lineHeight: "1.4" }}>
+                        Auto-post check-ins to Facebook, Instagram & LinkedIn.
+                      </p>
+                    </div>
+
+                    <div style={{ marginTop: "auto" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255, 255, 255, 0.02)", padding: "8px 12px", borderRadius: "6px", border: "1px solid rgba(255, 255, 255, 0.05)", marginBottom: "10px" }}>
+                        <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Sync status:</span>
+                        {socialConnected ? (
+                          <span style={{ color: "#4caf50", textTransform: "uppercase", fontSize: "0.65rem", fontWeight: "700", background: "rgba(76, 175, 80, 0.15)", padding: "2px 6px", borderRadius: "10px" }}>Active Sync</span>
+                        ) : (
+                          <span style={{ color: transpondConfigured ? "#e1b047" : "#f44336", textTransform: "uppercase", fontSize: "0.65rem", fontWeight: "700", background: transpondConfigured ? "rgba(226, 176, 71, 0.15)" : "rgba(244, 67, 54, 0.15)", padding: "2px 6px", borderRadius: "10px" }}>
+                            {transpondConfigured ? "Not Connected" : "Locked"}
+                          </span>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!transpondConfigured) {
+                            setShowSocialWarningModal(true);
+                          } else {
+                            window.open("https://app.transpond.io/cp/campaigns?campaignType=50", "_blank");
+                          }
+                        }}
+                        className="btn btn-outline"
+                        style={{ width: "100%", fontSize: "0.75rem", height: "36px", display: "inline-flex", alignItems: "center", justifyContent: "center", background: "rgba(255, 255, 255, 0.02)", color: "#ffffff", border: "1px solid rgba(255,255,255,0.2)", cursor: "pointer" }}
+                      >
+                        {!transpondConfigured ? "🔒 Unlock Feature" : "🔌 Connect Social Pages"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            </>
+           )}
 
           {/* Google Business API Instructions Modal */}
           {showGoogleModal && (
@@ -976,6 +1124,79 @@ export default function DropPinPage() {
               </div>
             </div>
           )}
+
+           {/* Social Media Subscription Warning Modal */}
+           {showSocialWarningModal && (
+             <div style={{
+               position: "fixed",
+               top: 0,
+               left: 0,
+               width: "100%",
+               height: "100%",
+               backgroundColor: "rgba(0, 0, 0, 0.85)",
+               display: "flex",
+               alignItems: "center",
+               justifyContent: "center",
+               zIndex: 9999,
+               padding: "1.5rem",
+               backdropFilter: "blur(8px)"
+             }}>
+               <div className="double-bezel-wrapper" style={{ maxWidth: "500px", width: "100%", height: "auto" }}>
+                 <div className="double-bezel-inner" style={{ padding: "2rem", position: "relative", textAlign: "left" }}>
+                   <button 
+                     onClick={() => setShowSocialWarningModal(false)}
+                     style={{
+                       position: "absolute",
+                       top: "1.25rem",
+                       right: "1.25rem",
+                       background: "none",
+                       border: "none",
+                       color: "#ffffff",
+                       fontSize: "1.5rem",
+                       cursor: "pointer",
+                       opacity: 0.7
+                     }}
+                   >
+                     ✕
+                   </button>
+                   
+                   <h3 style={{ color: "#ffffff", fontSize: "1.2rem", fontWeight: "900", marginBottom: "1rem", display: "flex", alignItems: "center", gap: "8px" }}>
+                     ⚠️ Subscription Required
+                   </h3>
+                   
+                   <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: "1.6", marginBottom: "1.5rem" }}>
+                     Automating social media posts requires active subscriptions to <strong>Capsule CRM</strong> and <strong>Transpond</strong> (approx. $50.00/mo combined) to handle background automations.
+                   </p>
+
+                   <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "1.5rem" }}>
+                     <a 
+                       href="https://get.capsulenow.io/w87ng8tquqti" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       className="btn btn-outline" 
+                       style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "40px", fontSize: "0.8rem", color: "#e2b047", border: "1px solid #e2b047" }}
+                     >
+                       🚀 Sign up for Capsule CRM
+                     </a>
+                     <a 
+                       href="https://get.capsulenow.io/h70zife95sd6-no30m" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       className="btn btn-outline" 
+                       style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "40px", fontSize: "0.8rem", color: "#e2b047", border: "1px solid #e2b047" }}
+                     >
+                       🚀 Sign up for Transpond Social
+                     </a>
+                   </div>
+
+                   <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", background: "rgba(255,255,255,0.02)", padding: "10px 12px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                     <strong>Already have accounts?</strong><br/>
+                     Copy your API Key and Group ID from your Transpond settings and save them under the **Transpond CRM** card to instantly unlock this feature!
+                   </div>
+                 </div>
+               </div>
+             </div>
+           )}
 
        </div>
 
