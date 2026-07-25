@@ -17,6 +17,10 @@ export async function GET() {
     let transpondApiKey = "";
     let transpondGroupId = "";
     let isFromEnv = false;
+    let technicians: string[] = [];
+    let rooferPasscodeConfigured = false;
+    let companyName = "";
+    let googleReviewUrl = "";
 
     // A. Read from Firestore
     const res = await fetch(firestoreUrl);
@@ -25,11 +29,20 @@ export async function GET() {
       const fields = data.fields || {};
       
       const parseVal = (val: any) => val?.stringValue || "";
+      const parseArrayVal = (val: any): string[] => {
+        if (!val?.arrayValue?.values) return [];
+        return val.arrayValue.values.map((v: any) => v.stringValue || "");
+      };
+
       transpondApiKey = parseVal(fields.transpondApiKey);
       transpondGroupId = parseVal(fields.transpondGroupId);
+      technicians = parseArrayVal(fields.technicians);
+      companyName = parseVal(fields.companyName) || (clientId === "born-again-roofing" ? "Born Again Roofing" : clientId);
+      rooferPasscodeConfigured = !!parseVal(fields.rooferPasscode);
+      googleReviewUrl = parseVal(fields.googleReviewUrl);
     }
 
-    // B. Fallback to process.env if blank
+    // B. Fallback to process.env for Transpond keys if blank
     if (!transpondApiKey) {
       transpondApiKey = process.env.TRANSPOND_API_KEY || "";
       transpondGroupId = process.env.TRANSPOND_GROUP_ID || "";
@@ -38,41 +51,52 @@ export async function GET() {
       }
     }
 
-    if (!transpondApiKey) {
-      return NextResponse.json({
-        configured: false,
-        transpondGroupId: "",
-        socialConnected: false,
-        connectedChannels: []
-      });
+    // C. Fallback to default review URL for Born Again Roofing
+    if (!googleReviewUrl && clientId === "born-again-roofing") {
+      googleReviewUrl = "https://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1";
     }
 
-    // C. Check social connection status via Transpond API
+    // D. Fallback to default technicians if Firestore list is empty
+    if (technicians.length === 0) {
+      if (clientId === "born-again-roofing") {
+        technicians = ["Born Again Roofing", "Charlie", "Dillon", "Kyle", "Mark", "Preston", "Scott"];
+      } else {
+        technicians = ["Scott", "Technician A", "Technician B"]; // Sample default list for new tenants
+      }
+    }
+
+    // E. Check social connection status via Transpond API
     let socialConnected = false;
     let connectedChannels: any[] = [];
-    try {
-      const socialRes = await fetch("https://api.transpond.io/social", {
-        headers: {
-          Authorization: `Bearer ${transpondApiKey}`
+    if (transpondApiKey) {
+      try {
+        const socialRes = await fetch("https://api.transpond.io/social", {
+          headers: {
+            Authorization: `Bearer ${transpondApiKey}`
+          }
+        });
+        if (socialRes.ok) {
+          const channels = await socialRes.json();
+          if (Array.isArray(channels) && channels.length > 0) {
+            socialConnected = true;
+            connectedChannels = channels;
+          }
         }
-      });
-      if (socialRes.ok) {
-        const channels = await socialRes.json();
-        if (Array.isArray(channels) && channels.length > 0) {
-          socialConnected = true;
-          connectedChannels = channels;
-        }
+      } catch (socialErr) {
+        console.error("[Transpond settings API] Failed to check social channels:", socialErr);
       }
-    } catch (socialErr) {
-      console.error("[Transpond settings API] Failed to check social channels:", socialErr);
     }
 
     return NextResponse.json({
-      configured: true,
+      configured: !!transpondApiKey,
       transpondGroupId,
-      transpondApiKey: isFromEnv ? "env_configured" : maskApiKey(transpondApiKey),
+      transpondApiKey: transpondApiKey ? (isFromEnv ? "env_configured" : maskApiKey(transpondApiKey)) : "",
       socialConnected,
-      connectedChannels
+      connectedChannels,
+      technicians,
+      rooferPasscodeConfigured,
+      companyName,
+      googleReviewUrl
     });
 
   } catch (error: any) {
@@ -84,31 +108,59 @@ export async function GET() {
 // 2. POST Save Settings
 export async function POST(request: NextRequest) {
   try {
-    const { apiKey, groupId } = await request.json();
-
-    if (!apiKey || !groupId) {
-      return NextResponse.json({ error: "Both API Key and Group ID are required." }, { status: 400 });
-    }
+    const body = await request.json();
+    const { apiKey, groupId, technicians, rooferPasscode, companyName, googleReviewUrl } = body;
 
     // Read current settings document (so we don't wipe out other fields like Google tokens)
     const getRes = await fetch(firestoreUrl);
     const existingDoc = getRes.ok ? await getRes.json() : { fields: {} };
     const fields = existingDoc.fields || {};
 
-    // Build patch payload
-    const firestoreFields: any = {
-      fields: {
-        ...fields,
-        clientId: { stringValue: clientId },
-        transpondApiKey: { stringValue: apiKey },
-        transpondGroupId: { stringValue: groupId }
-      }
-    };
-
+    const updatedFields: any = { ...fields };
     const updateParams = new URLSearchParams();
+
+    // Always keep clientId updated
+    updatedFields.clientId = { stringValue: clientId };
     updateParams.append("updateMask.fieldPaths", "clientId");
-    updateParams.append("updateMask.fieldPaths", "transpondApiKey");
-    updateParams.append("updateMask.fieldPaths", "transpondGroupId");
+
+    if (apiKey !== undefined && groupId !== undefined) {
+      if (!apiKey || !groupId) {
+        return NextResponse.json({ error: "Both API Key and Group ID are required." }, { status: 400 });
+      }
+      updatedFields.transpondApiKey = { stringValue: apiKey };
+      updatedFields.transpondGroupId = { stringValue: groupId };
+      updateParams.append("updateMask.fieldPaths", "transpondApiKey");
+      updateParams.append("updateMask.fieldPaths", "transpondGroupId");
+    }
+
+    if (technicians !== undefined) {
+      if (!Array.isArray(technicians)) {
+        return NextResponse.json({ error: "Technicians must be an array of strings." }, { status: 400 });
+      }
+      updatedFields.technicians = {
+        arrayValue: {
+          values: technicians.map((tech: string) => ({ stringValue: tech }))
+        }
+      };
+      updateParams.append("updateMask.fieldPaths", "technicians");
+    }
+
+    if (rooferPasscode !== undefined) {
+      updatedFields.rooferPasscode = { stringValue: rooferPasscode };
+      updateParams.append("updateMask.fieldPaths", "rooferPasscode");
+    }
+
+    if (companyName !== undefined) {
+      updatedFields.companyName = { stringValue: companyName };
+      updateParams.append("updateMask.fieldPaths", "companyName");
+    }
+
+    if (googleReviewUrl !== undefined) {
+      updatedFields.googleReviewUrl = { stringValue: googleReviewUrl };
+      updateParams.append("updateMask.fieldPaths", "googleReviewUrl");
+    }
+
+    const firestoreFields = { fields: updatedFields };
 
     const patchRes = await fetch(`${firestoreUrl}?${updateParams.toString()}`, {
       method: "PATCH",
@@ -124,7 +176,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Failed to write to settings database" }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, message: "Transpond settings saved successfully!" });
+    return NextResponse.json({ success: true, message: "Settings saved successfully!" });
 
   } catch (error: any) {
     console.error("[Transpond settings API] POST failed:", error);

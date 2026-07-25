@@ -27,15 +27,6 @@ const cityCoords: Record<string, [number, number]> = {
   "Hattiesburg, MS": [31.3271, -89.2903]
 };
 
-const authorList = [
-  "Chris Smith",
-  "Damien Johnston",
-  "Christopher Heard",
-  "Eddie Buchanan",
-  "Robert Christoforo",
-  "Daniel Lickness",
-  "David Dilmore"
-];
 
 const serviceList = [
   "Residential Roofing",
@@ -84,8 +75,15 @@ export default function DropPinPage() {
   const [socialConnected, setSocialConnected] = useState(false);
   const [transpondSaveStatus, setTranspondSaveStatus] = useState("idle"); // idle, saving, saved, error
   const [showSocialWarningModal, setShowSocialWarningModal] = useState(false);
-  const [expandedTab, setExpandedTab] = useState<"google" | "crm" | "social" | null>(null);
+  const [expandedTab, setExpandedTab] = useState<"google" | "crm" | "social" | "team" | null>(null);
   const [tourStep, setTourStep] = useState<number | null>(null);
+  const [authorList, setAuthorList] = useState<string[]>([]);
+  const [newTechName, setNewTechName] = useState("");
+  const [newRooferPasscode, setNewRooferPasscode] = useState("");
+  const [isUpdatingPasscode, setIsUpdatingPasscode] = useState(false);
+  const [companyName, setCompanyName] = useState("");
+  const [googleReviewUrl, setGoogleReviewUrl] = useState("");
+  const [newReviewUrlInput, setNewReviewUrlInput] = useState("");
 
   const fetchTranspondSettings = async () => {
     try {
@@ -98,6 +96,10 @@ export default function DropPinPage() {
           setTranspondApiKey(data.transpondApiKey || "");
         }
         setSocialConnected(data.socialConnected || false);
+        setAuthorList(data.technicians || []);
+        setCompanyName(data.companyName || "");
+        setGoogleReviewUrl(data.googleReviewUrl || "");
+        setNewReviewUrlInput(data.googleReviewUrl || "");
       }
     } catch (err) {
       console.error("Failed to load Transpond settings:", err);
@@ -124,6 +126,93 @@ export default function DropPinPage() {
     } catch (err) {
       setTranspondSaveStatus("error");
       console.error(err);
+    }
+  };
+
+  const handleAddTechnician = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTechName.trim()) return;
+    const updatedTechs = [...authorList, newTechName.trim()];
+    try {
+      const res = await fetch("/api/auth/transpond/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ technicians: updatedTechs })
+      });
+      if (res.ok) {
+        setNewTechName("");
+        fetchTranspondSettings();
+      } else {
+        alert("Failed to add technician name.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error adding technician.");
+    }
+  };
+
+  const handleDeleteTechnician = async (techName: string) => {
+    if (!confirm(`Are you sure you want to remove ${techName}?`)) return;
+    const updatedTechs = authorList.filter((tech) => tech !== techName);
+    try {
+      const res = await fetch("/api/auth/transpond/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ technicians: updatedTechs })
+      });
+      if (res.ok) {
+        fetchTranspondSettings();
+      } else {
+        alert("Failed to delete technician name.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting technician.");
+    }
+  };
+
+  const handleSavePasscode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newRooferPasscode.trim()) return;
+    setIsUpdatingPasscode(true);
+    try {
+      const res = await fetch("/api/auth/transpond/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rooferPasscode: newRooferPasscode.trim() })
+      });
+      if (res.ok) {
+        setNewRooferPasscode("");
+        alert("Portal passcode updated successfully!");
+        fetchTranspondSettings();
+      } else {
+        alert("Failed to update passcode.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error saving passcode.");
+    } finally {
+      setIsUpdatingPasscode(false);
+    }
+  };
+
+  const handleSaveReviewUrl = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("/api/auth/transpond/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ googleReviewUrl: newReviewUrlInput.trim() })
+      });
+      if (res.ok) {
+        alert("Google Review Link updated successfully!");
+        fetchTranspondSettings();
+      } else {
+        alert("Failed to update Google Review Link.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error saving review link.");
     }
   };
 
@@ -233,21 +322,29 @@ export default function DropPinPage() {
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simple passcode gate (can be configured in env, default to "BornAgain2026")
-    const correctPasscode = process.env.NEXT_PUBLIC_PORTAL_PASSCODE || "BornAgain2026";
-    if (passcode === correctPasscode) {
-      sessionStorage.setItem("roofer_pin_auth", "true");
-      setIsAuthenticated(true);
-      setPasscodeError("");
-      fetchTranspondSettings();
-      const tourSeen = localStorage.getItem("pindrop_tour_seen");
-      if (!tourSeen) {
-        setTimeout(() => setTourStep(1), 800);
+    setPasscodeError("");
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ passcode })
+      });
+      if (res.ok) {
+        sessionStorage.setItem("roofer_pin_auth", "true");
+        setIsAuthenticated(true);
+        fetchTranspondSettings();
+        const tourSeen = localStorage.getItem("pindrop_tour_seen");
+        if (!tourSeen) {
+          setTimeout(() => setTourStep(1), 800);
+        }
+      } else {
+        const data = await res.json();
+        setPasscodeError(data.error || "Incorrect passcode. Please try again.");
       }
-    } else {
-      setPasscodeError("Incorrect passcode. Please try again.");
+    } catch (err) {
+      setPasscodeError("Connection error. Please try again.");
     }
   };
 
@@ -593,14 +690,14 @@ export default function DropPinPage() {
                 </p>
                 <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
                   <a
-                    href={`sms:?body=Hi! This is ${author ? author.split(" ")[0] : "Born Again Roofing"} from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: https://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1`}
+                    href={`sms:?body=Hi! This is ${author ? author.split(" ")[0] : (companyName || "our representative")} from ${companyName || "our company"}. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: ${googleReviewUrl}`}
                     className="btn btn-outline"
                     style={{ flex: "1 1 120px", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", padding: "8px 12px", background: "rgba(226, 176, 71, 0.05)" }}
                   >
                     💬 Send SMS
                   </a>
                   <a
-                    href={`mailto:?subject=Review for Born Again Roofing&body=Hi there,%0D%0A%0D%0AThis is ${author ? author.split(" ")[0] : "Born Again Roofing"} from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0Ahttps://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1%0D%0A%0D%0AThank you!`}
+                    href={`mailto:?subject=Review for ${companyName || "our company"}&body=Hi there,%0D%0A%0D%0AThis is ${author ? author.split(" ")[0] : (companyName || "our representative")} from ${companyName || "our company"}. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0A${googleReviewUrl}%0D%0A%0D%0AThank you!`}
                     className="btn btn-outline"
                     style={{ flex: "1 1 120px", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", padding: "8px 12px", background: "rgba(226, 176, 71, 0.05)" }}
                   >
@@ -910,18 +1007,24 @@ export default function DropPinPage() {
                 </div>
                 <div style={{ display: "flex", gap: "10px", flex: "1 1 250px" }}>
                   <a
-                    href={quickReviewAuthor ? `sms:?body=Hi! This is ${quickReviewAuthor.split(" ")[0]} from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: https://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1` : "#"}
-                    onClick={(e) => { if (!quickReviewAuthor) { e.preventDefault(); alert("Please select a technician name first!"); } }}
+                    href={quickReviewAuthor ? `sms:?body=Hi! This is ${quickReviewAuthor.split(" ")[0]} from ${companyName || "our company"}. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: ${googleReviewUrl}` : "#"}
+                    onClick={(e) => { 
+                      if (!quickReviewAuthor) { e.preventDefault(); alert("Please select a technician name first!"); }
+                      else if (!googleReviewUrl) { e.preventDefault(); alert("Please configure your Google Review Link in the settings accordion below first!"); }
+                    }}
                     className="btn btn-outline"
-                    style={{ flex: "1", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", height: "42px", background: quickReviewAuthor ? "rgba(226, 176, 71, 0.08)" : "rgba(255, 255, 255, 0.02)", opacity: quickReviewAuthor ? 1 : 0.5 }}
+                    style={{ flex: "1", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", height: "42px", background: (quickReviewAuthor && googleReviewUrl) ? "rgba(226, 176, 71, 0.08)" : "rgba(255, 255, 255, 0.02)", opacity: (quickReviewAuthor && googleReviewUrl) ? 1 : 0.5 }}
                   >
                     💬 Text Customer
                   </a>
                   <a
-                    href={quickReviewAuthor ? `mailto:?subject=Review for Born Again Roofing&body=Hi there,%0D%0A%0D%0AThis is ${quickReviewAuthor.split(" ")[0]} from Born Again Roofing. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0Ahttps://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1%0D%0A%0D%0AThank you!` : "#"}
-                    onClick={(e) => { if (!quickReviewAuthor) { e.preventDefault(); alert("Please select a technician name first!"); } }}
+                    href={quickReviewAuthor ? `mailto:?subject=Review for ${companyName || "our company"}&body=Hi there,%0D%0A%0D%0AThis is ${quickReviewAuthor.split(" ")[0]} from ${companyName || "our company"}. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0A${googleReviewUrl}%0D%0A%0D%0AThank you!` : "#"}
+                    onClick={(e) => { 
+                      if (!quickReviewAuthor) { e.preventDefault(); alert("Please select a technician name first!"); }
+                      else if (!googleReviewUrl) { e.preventDefault(); alert("Please configure your Google Review Link in the settings accordion below first!"); }
+                    }}
                     className="btn btn-outline"
-                    style={{ flex: "1", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", height: "42px", background: quickReviewAuthor ? "rgba(226, 176, 71, 0.08)" : "rgba(255, 255, 255, 0.02)", opacity: quickReviewAuthor ? 1 : 0.5 }}
+                    style={{ flex: "1", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", height: "42px", background: (quickReviewAuthor && googleReviewUrl) ? "rgba(226, 176, 71, 0.08)" : "rgba(255, 255, 255, 0.02)", opacity: (quickReviewAuthor && googleReviewUrl) ? 1 : 0.5 }}
                   >
                     ✉️ Email Customer
                   </a>
@@ -965,6 +1068,26 @@ export default function DropPinPage() {
                         >
                           Connect Maps Profile
                         </button>
+
+                        <div style={{ marginTop: "16px", paddingTop: "12px", borderTop: "1px dashed rgba(255,255,255,0.1)" }}>
+                          <h5 style={{ color: "#ffffff", fontSize: "0.78rem", fontWeight: "700", marginBottom: "8px" }}>⭐ Google Review Link</h5>
+                          <form onSubmit={handleSaveReviewUrl} style={{ display: "flex", gap: "8px" }}>
+                            <input
+                              type="text"
+                              placeholder="Paste Google Review Link"
+                              value={newReviewUrlInput}
+                              onChange={(e) => setNewReviewUrlInput(e.target.value)}
+                              style={{ flex: 1, padding: "6px 10px", fontSize: "0.75rem", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "4px", color: "#fff" }}
+                            />
+                            <button
+                              type="submit"
+                              className="btn btn-outline"
+                              style={{ fontSize: "0.72rem", height: "30px", background: "rgba(226, 176, 71, 0.15)", color: "#e2b047", border: "1px solid #e2b047", cursor: "pointer", borderRadius: "4px", padding: "0 12px" }}
+                            >
+                              Save Link
+                            </button>
+                          </form>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -1023,7 +1146,28 @@ export default function DropPinPage() {
                           </button>
                         </form>
 
-                        <div style={{ fontSize: "0.65rem", color: "var(--text-muted)", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "8px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                        <div style={{ marginTop: "16px", paddingTop: "12px", borderTop: "1px dashed rgba(255,255,255,0.1)" }}>
+                          <h5 style={{ color: "#ffffff", fontSize: "0.78rem", fontWeight: "700", marginBottom: "8px" }}>🔒 Update Field Passcode</h5>
+                          <form onSubmit={handleSavePasscode} style={{ display: "flex", gap: "8px" }}>
+                            <input
+                              type="password"
+                              placeholder="New Field Passcode"
+                              value={newRooferPasscode}
+                              onChange={(e) => setNewRooferPasscode(e.target.value)}
+                              style={{ flex: 1, padding: "6px 10px", fontSize: "0.75rem", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "4px", color: "#fff" }}
+                            />
+                            <button
+                              type="submit"
+                              className="btn btn-outline"
+                              disabled={isUpdatingPasscode}
+                              style={{ fontSize: "0.72rem", height: "30px", background: "rgba(226, 176, 71, 0.15)", color: "#e2b047", border: "1px solid #e2b047", cursor: "pointer", borderRadius: "4px", padding: "0 12px" }}
+                            >
+                              {isUpdatingPasscode ? "Saving..." : "Save"}
+                            </button>
+                          </form>
+                        </div>
+
+                        <div style={{ fontSize: "0.65rem", color: "var(--text-muted)", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "12px", marginTop: "12px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
                           <span>Don't have accounts?</span>
                           <a href="https://get.capsulenow.io/w87ng8tquqti" target="_blank" rel="noopener noreferrer" style={{ color: "#e2b047", textDecoration: "underline" }}>Capsule</a>
                           <span>•</span>
@@ -1071,6 +1215,70 @@ export default function DropPinPage() {
                         >
                           {!transpondConfigured ? "🔒 Unlock Feature" : "🔌 Connect Social Pages"}
                         </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Row 4: Manage Team Members */}
+                  <div style={{ border: "1px solid rgba(255, 255, 255, 0.05)", borderRadius: "8px", overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
+                    <div 
+                      onClick={() => setExpandedTab(expandedTab === "team" ? null : "team")}
+                      style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", background: "rgba(255, 255, 255, 0.02)", userSelect: "none" }}
+                    >
+                      <span style={{ fontSize: "0.85rem", fontWeight: "700", color: "#ffffff", display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span>👥</span> Manage Team Members
+                      </span>
+                      <span style={{ color: "var(--text-muted)", fontSize: "0.7rem", fontWeight: "700", display: "flex", alignItems: "center", gap: "4px" }}>
+                        {authorList.length} Active {expandedTab === "team" ? "▲" : "▼"}
+                      </span>
+                    </div>
+                    
+                    {expandedTab === "team" && (
+                      <div style={{ padding: "16px", borderTop: "1px solid rgba(255,255,255,0.05)", background: "rgba(0,0,0,0.15)" }}>
+                        <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", margin: "0 0 1rem 0", lineHeight: "1.4" }}>
+                          Add or remove employees, sales representatives, and technicians who drop job pins.
+                        </p>
+                        
+                        {/* Add Team Member Form */}
+                        <form onSubmit={handleAddTechnician} style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
+                          <input
+                            type="text"
+                            placeholder="Enter full name"
+                            value={newTechName}
+                            onChange={(e) => setNewTechName(e.target.value)}
+                            style={{ flex: 1, padding: "6px 10px", fontSize: "0.75rem", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "4px", color: "#fff" }}
+                          />
+                          <button
+                            type="submit"
+                            className="btn btn-outline"
+                            style={{ fontSize: "0.72rem", height: "30px", background: "rgba(226, 176, 71, 0.15)", color: "#e2b047", border: "1px solid #e2b047", cursor: "pointer", borderRadius: "4px", padding: "0 12px" }}
+                          >
+                            Add Member
+                          </button>
+                        </form>
+                        
+                        {/* Team List */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: "6px", maxHeight: "150px", overflowY: "auto" }}>
+                          {authorList.map((tech) => (
+                            <div 
+                              key={tech} 
+                              style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.02)", padding: "6px 12px", borderRadius: "4px", border: "1px solid rgba(255,255,255,0.05)" }}
+                            >
+                              <span style={{ fontSize: "0.78rem", color: "#fff" }}>{tech}</span>
+                              <button 
+                                type="button"
+                                onClick={() => handleDeleteTechnician(tech)}
+                                style={{ background: "none", border: "none", color: "#ef4444", fontSize: "0.85rem", cursor: "pointer", padding: "0 4px" }}
+                                title="Remove technician"
+                              >
+                                🗑️
+                              </button>
+                            </div>
+                          ))}
+                          {authorList.length === 0 && (
+                            <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>No team members added yet.</span>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
