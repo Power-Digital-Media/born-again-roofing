@@ -21,6 +21,7 @@ export async function GET() {
     let rooferPasscodeConfigured = false;
     let companyName = "";
     let googleReviewUrl = "";
+    let googleConnected = false;
 
     // A. Read from Firestore
     const res = await fetch(firestoreUrl);
@@ -40,6 +41,7 @@ export async function GET() {
       companyName = parseVal(fields.companyName) || (clientId === "born-again-roofing" ? "Born Again Roofing" : clientId);
       rooferPasscodeConfigured = !!parseVal(fields.rooferPasscode);
       googleReviewUrl = parseVal(fields.googleReviewUrl);
+      googleConnected = !!parseVal(fields.googleRefreshToken);
     }
 
     // B. Fallback to process.env for Transpond keys if blank
@@ -104,7 +106,8 @@ export async function GET() {
       technicians,
       rooferPasscodeConfigured,
       companyName,
-      googleReviewUrl
+      googleReviewUrl,
+      googleConnected
     });
 
   } catch (error: any) {

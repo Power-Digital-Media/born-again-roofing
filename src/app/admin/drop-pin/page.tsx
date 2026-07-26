@@ -73,6 +73,7 @@ export default function DropPinPage() {
   const [transpondGroupId, setTranspondGroupId] = useState("");
   const [transpondConfigured, setTranspondConfigured] = useState(false);
   const [socialConnected, setSocialConnected] = useState(false);
+  const [googleConnected, setGoogleConnected] = useState(false);
   const [transpondSaveStatus, setTranspondSaveStatus] = useState("idle"); // idle, saving, saved, error
   const [showSocialWarningModal, setShowSocialWarningModal] = useState(false);
   const [expandedTab, setExpandedTab] = useState<"google" | "crm" | "social" | "team" | null>(null);
@@ -97,6 +98,7 @@ export default function DropPinPage() {
           setTranspondApiKey(data.transpondApiKey || "");
         }
         setSocialConnected(data.socialConnected || false);
+        setGoogleConnected(data.googleConnected || false);
         setAuthorList(data.technicians || []);
         setCompanyName(data.companyName || "");
         setGoogleReviewUrl(data.googleReviewUrl || "");
@@ -1103,8 +1105,8 @@ export default function DropPinPage() {
                       <span style={{ fontSize: "0.85rem", fontWeight: "700", color: "#ffffff", display: "flex", alignItems: "center", gap: "8px" }}>
                         <span>🌐</span> Google Maps Sync
                       </span>
-                      <span style={{ color: "#e1b047", fontSize: "0.7rem", fontWeight: "700", display: "flex", alignItems: "center", gap: "4px" }}>
-                        ⚠️ Pending {expandedTab === "google" ? "▲" : "▼"}
+                      <span style={{ color: googleConnected ? "#10b981" : "#e1b047", fontSize: "0.7rem", fontWeight: "700", display: "flex", alignItems: "center", gap: "4px" }}>
+                        {googleConnected ? "✓ Connected" : "⚠️ Pending"} {expandedTab === "google" ? "▲" : "▼"}
                       </span>
                     </div>
                     
@@ -1115,11 +1117,11 @@ export default function DropPinPage() {
                         </p>
                         <button
                           type="button"
-                          onClick={() => window.location.href = "/api/auth/google/login"}
+                          onClick={() => window.location.href = "/api/auth/google/login?clientId=born-again-roofing"}
                           className="btn btn-outline"
                           style={{ width: "100%", fontSize: "0.75rem", height: "36px", display: "inline-flex", alignItems: "center", justifyContent: "center", background: "rgba(226, 176, 71, 0.08)", color: "#ffffff", border: "1px solid #e2b047", cursor: "pointer" }}
                         >
-                          Connect Maps Profile
+                          {googleConnected ? "🔄 Re-connect Maps Profile" : "Connect Maps Profile"}
                         </button>
 
                         <div style={{ marginTop: "16px", paddingTop: "12px", borderTop: "1px dashed rgba(255,255,255,0.1)" }}>
