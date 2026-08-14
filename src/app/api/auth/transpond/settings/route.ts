@@ -55,7 +55,7 @@ export async function GET() {
 
     // C. Fallback to default review URL for Born Again Roofing
     if (!googleReviewUrl && clientId === "born-again-roofing") {
-      googleReviewUrl = "https://www.google.com/search?q=Born+Again+Roofing+and+Remodeling#lrd=0x86282f761bf6d3d3:0x649d334d1a5ca7d3,3,,";
+      googleReviewUrl = "https://search.google.com/local/writereview?placeid=ChIJ09P2G3YvKIYR06dcGk0znWQ";
     }
 
     // D. Fallback to default technicians if Firestore list is empty
