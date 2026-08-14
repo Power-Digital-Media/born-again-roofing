@@ -53,9 +53,11 @@ export async function GET() {
       }
     }
 
-    // C. Fallback to default review URL for Born Again Roofing
-    if (!googleReviewUrl && clientId === "born-again-roofing") {
-      googleReviewUrl = "https://search.google.com/local/writereview?placeid=ChIJ09P2G3YvKIYR06dcGk0znWQ";
+    // C. Fallback/Override to default review URL for Born Again Roofing if empty or using old search link
+    if (clientId === "born-again-roofing") {
+      if (!googleReviewUrl || googleReviewUrl.includes("google.com/search")) {
+        googleReviewUrl = "https://search.google.com/local/writereview?placeid=ChIJ09P2G3YvKIYR06dcGk0znWQ";
+      }
     }
 
     // D. Fallback to default technicians if Firestore list is empty
