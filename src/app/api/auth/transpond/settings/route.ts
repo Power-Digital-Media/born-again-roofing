@@ -55,7 +55,7 @@ export async function GET() {
 
     // C. Fallback to default review URL for Born Again Roofing
     if (!googleReviewUrl && clientId === "born-again-roofing") {
-      googleReviewUrl = "https://www.google.com/search?q=born+again+home+remodeling+%2526+roofing+llc+reviews%26si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1mGq965vvL5yy0cgzep4hRkEQKP86yBX2zhylnOY7040elAm-9TyalvSv6GomnjpdQNRyBOhsVaf0SwuCo--wnnU9D-g6Fg0FFkjJYScJIC_3vQ-q7DGrhPkEJdlJ2eT1qut3k%253D%26ictx=1%26stq=1%26cs=1%23ebo=1";
+      googleReviewUrl = "https://www.google.com/search?q=Born+Again+Roofing+and+Remodeling#lrd=0x86282f761bf6d3d3:0x649d334d1a5ca7d3,3,,";
     }
 
     // D. Fallback to default technicians if Firestore list is empty

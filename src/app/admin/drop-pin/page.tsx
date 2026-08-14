@@ -693,14 +693,18 @@ export default function DropPinPage() {
                 </p>
                 <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
                   <a
-                    href={`sms:?body=Hi! This is ${author ? author.split(" ")[0] : (companyName || "our representative")} from ${companyName || "our company"}. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: ${googleReviewUrl}`}
+                    href={`sms:?body=${encodeURIComponent(
+                      `Hi! This is ${author ? author.split(" ")[0] : (companyName || "our representative")} from ${companyName || "our company"}. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: ${googleReviewUrl}`
+                    )}`}
                     className="btn btn-outline"
                     style={{ flex: "1 1 120px", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", padding: "8px 12px", background: "rgba(226, 176, 71, 0.05)" }}
                   >
                     💬 Send SMS
                   </a>
                   <a
-                    href={`mailto:?subject=Review for ${companyName || "our company"}&body=Hi there,%0D%0A%0D%0AThis is ${author ? author.split(" ")[0] : (companyName || "our representative")} from ${companyName || "our company"}. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0A${googleReviewUrl}%0D%0A%0D%0AThank you!`}
+                    href={`mailto:?subject=${encodeURIComponent(`Review for ${companyName || "our company"}`)}&body=${encodeURIComponent(
+                      `Hi there,\n\nThis is ${author ? author.split(" ")[0] : (companyName || "our representative")} from ${companyName || "our company"}. It was a pleasure working on your home. Would you mind leaving us a quick Google review?\n\nYou can leave it here:\n${googleReviewUrl}\n\nThank you!`
+                    )}`}
                     className="btn btn-outline"
                     style={{ flex: "1 1 120px", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.8rem", padding: "8px 12px", background: "rgba(226, 176, 71, 0.05)" }}
                   >
@@ -1062,7 +1066,9 @@ export default function DropPinPage() {
                 </div>
                 <div style={{ display: "flex", gap: "10px", flex: "1 1 250px" }}>
                   <a
-                    href={quickReviewAuthor ? `sms:?body=Hi! This is ${quickReviewAuthor.split(" ")[0]} from ${companyName || "our company"}. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: ${googleReviewUrl}` : "#"}
+                    href={quickReviewAuthor ? `sms:?body=${encodeURIComponent(
+                      `Hi! This is ${quickReviewAuthor.split(" ")[0]} from ${companyName || "our company"}. It was a pleasure working on your home. Would you mind leaving us a quick Google review? You can leave it here: ${googleReviewUrl}`
+                    )}` : "#"}
                     onClick={(e) => { 
                       if (!quickReviewAuthor) { e.preventDefault(); alert("Please select a technician name first!"); }
                       else if (!googleReviewUrl) { e.preventDefault(); alert("Please configure your Google Review Link in the settings accordion below first!"); }
@@ -1073,7 +1079,9 @@ export default function DropPinPage() {
                     💬 Text Customer
                   </a>
                   <a
-                    href={quickReviewAuthor ? `mailto:?subject=Review for ${companyName || "our company"}&body=Hi there,%0D%0A%0D%0AThis is ${quickReviewAuthor.split(" ")[0]} from ${companyName || "our company"}. It was a pleasure working on your home. Would you mind leaving us a quick Google review?%0D%0A%0D%0AYou can leave it here:%0D%0A${googleReviewUrl}%0D%0A%0D%0AThank you!` : "#"}
+                    href={quickReviewAuthor ? `mailto:?subject=${encodeURIComponent(`Review for ${companyName || "our company"}`)}&body=${encodeURIComponent(
+                      `Hi there,\n\nThis is ${quickReviewAuthor.split(" ")[0]} from ${companyName || "our company"}. It was a pleasure working on your home. Would you mind leaving us a quick Google review?\n\nYou can leave it here:\n${googleReviewUrl}\n\nThank you!`
+                    )}` : "#"}
                     onClick={(e) => { 
                       if (!quickReviewAuthor) { e.preventDefault(); alert("Please select a technician name first!"); }
                       else if (!googleReviewUrl) { e.preventDefault(); alert("Please configure your Google Review Link in the settings accordion below first!"); }
