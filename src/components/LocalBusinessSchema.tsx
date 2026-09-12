@@ -181,24 +181,38 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
     }
   };
 
+  // WebPage Schema with Speakable Specification for Voice Search, AEO, and Google Assistant
+  const webpageSchema: Record<string, unknown> = {
+    "@type": "WebPage",
+    "@id": `${currentUrl}#webpage`,
+    "url": currentUrl,
+    "name": pageTitle || (path === "/" ? "Born Again Home Remodeling and Roofing | Jackson MS" : "Born Again Roofing Service Page"),
+    "description": pageDescription || baseDescription,
+    "isPartOf": {
+      "@id": "https://www.bornagainroofing.com/#website"
+    },
+    "about": {
+      "@id": "https://www.bornagainroofing.com/#roofingcontractor"
+    },
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": [
+        "h1",
+        ".hero-subtext",
+        ".service-hero-inner p",
+        ".faq-question-text",
+        ".faq-answer-text",
+        ".scripture-text",
+        ".aeo-lead",
+        ".speakable"
+      ]
+    }
+  };
+
   // Build the @graph array
-  const graphItems: Record<string, unknown>[] = [businessSchema, websiteSchema];
+  const graphItems: Record<string, unknown>[] = [businessSchema, websiteSchema, webpageSchema];
 
   if (path && path !== "/") {
-    graphItems.push({
-      "@type": "WebPage",
-      "@id": `${currentUrl}#webpage`,
-      "url": currentUrl,
-      "name": pageTitle || "Born Again Roofing Service Page",
-      "description": pageDescription || baseDescription,
-      "isPartOf": {
-        "@id": "https://www.bornagainroofing.com/#website"
-      },
-      "about": {
-        "@id": "https://www.bornagainroofing.com/#roofingcontractor"
-      }
-    });
-
     // Add BreadcrumbList for subpages
     const pathParts = path.split("/").filter(Boolean);
     const breadcrumbItems = [
