@@ -105,6 +105,8 @@ export default function Footer() {
           <div className="footer-legal">
             <Link href="/privacy-policy">Privacy Policy</Link>
             <Link href="/terms-and-conditions">Terms and Conditions</Link>
+            <span className="footer-separator">•</span>
+            <span className="footer-credit">Designed &amp; Engineered by <a href="https://powerdigitalmedia.org" target="_blank" rel="noopener noreferrer" className="credit-link">Power Digital Media</a></span>
           </div>
         </div>
       </div>
