@@ -8,7 +8,7 @@ interface SchemaProps {
 
 export default function LocalBusinessSchema({ pageTitle, pageDescription, path = "" }: SchemaProps) {
   const currentUrl = `https://www.bornagainroofing.com${path}`;
-  const baseDescription = "At Born Again Home Remodeling and Roofing, we combine faith, integrity, and craftsmanship to deliver premium roofing and remodeling solutions in Jackson, MS, and surrounding Metro areas.";
+  const baseDescription = "Born Again Home Remodeling & Roofing LLC provides roof repair, roof replacement, storm damage repair, roof inspections, and metal roofing in Jackson and Central Mississippi, along with home remodeling services.";
 
   const businessSchema = {
     "@type": ["RoofingContractor", "HomeAndConstructionBusiness", "GeneralContractor"],
@@ -80,26 +80,6 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
       { "@type": "City", "name": "Vicksburg" },
       { "@type": "City", "name": "Yazoo City" }
     ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "5.0",
-      "reviewCount": "130",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
-    "review": [
-      {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "Happy Customer" },
-        "datePublished": "2025-01-15",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5",
-          "bestRating": "5"
-        },
-        "reviewBody": "Born Again Roofing did an amazing job on our roof replacement. Professional, on time, and great quality work. Highly recommend!"
-      }
-    ],
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": "Roofing and Remodeling Services",
@@ -153,14 +133,7 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
       "Insurance Claims Assistance", "Roof Inspections"
     ],
     "slogan": "Where Faith, Craftsmanship, and Care Come Together",
-    "foundingDate": "2020",
-    "numberOfEmployees": {
-      "@type": "QuantitativeValue",
-      "minValue": 5,
-      "maxValue": 15
-    },
-    "isicV4": "4391",
-    "naics": "238160"
+    "foundingDate": "2020"
   };
 
   const websiteSchema = {
@@ -186,7 +159,7 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
     "@type": "WebPage",
     "@id": `${currentUrl}#webpage`,
     "url": currentUrl,
-    "name": pageTitle || (path === "/" ? "Born Again Home Remodeling and Roofing | Jackson MS" : "Born Again Roofing Service Page"),
+    "name": pageTitle || (path === "/" ? "Roofing Contractors in Jackson, MS | Born Again Roofing" : "Born Again Roofing Service Page"),
     "description": pageDescription || baseDescription,
     "isPartOf": {
       "@id": "https://www.bornagainroofing.com/#website"
@@ -211,36 +184,6 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
 
   // Build the @graph array
   const graphItems: Record<string, unknown>[] = [businessSchema, websiteSchema, webpageSchema];
-
-  if (path && path !== "/") {
-    // Add BreadcrumbList for subpages
-    const pathParts = path.split("/").filter(Boolean);
-    const breadcrumbItems = [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://www.bornagainroofing.com/"
-      }
-    ];
-
-    let builtPath = "";
-    pathParts.forEach((part, index) => {
-      builtPath += `/${part}`;
-      breadcrumbItems.push({
-        "@type": "ListItem",
-        "position": index + 2,
-        "name": part.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" "),
-        "item": `https://www.bornagainroofing.com${builtPath}/`
-      });
-    });
-
-    graphItems.push({
-      "@type": "BreadcrumbList",
-      "@id": `${currentUrl}#breadcrumb`,
-      "itemListElement": breadcrumbItems
-    });
-  }
 
   const fullSchema = {
     "@context": "https://schema.org",

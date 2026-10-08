@@ -1,6 +1,9 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import Link from "next/link";
+import pinsData from "@/data/pins.json";
+import { cityRoofing } from "@/data/cityRoofing";
 import ContactForm from "@/components/ContactForm";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import FAQSchema from "@/components/FAQSchema";
@@ -123,8 +126,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!page) return {};
   
   return {
-    title: page.title,
-    description: page.description,
+    title: cityRoofing[slug]?.title ?? page.title,
+    description: cityRoofing[slug]?.description ?? page.description,
     alternates: {
       canonical: `/areas-we-service/${slug}/`
     }
@@ -139,9 +142,13 @@ export default async function LocationSubpage({ params }: PageProps) {
     notFound();
   }
 
+  const projectAnswer = cityRoofing[slug]
+    ? `Recent roofing projects in our ${page.cityName} project log include: ` + cityRoofing[slug].projects.filter((pr) => pinsData.some((pn) => pn.id === pr.id)).map((pr) => pr.summary).join(" ")
+    : "";
+
   return (
     <>
-      <LocalBusinessSchema pageTitle={page.title} pageDescription={page.description} path={`/areas-we-service/${slug}/`} />
+      <LocalBusinessSchema pageTitle={cityRoofing[slug]?.title ?? page.title} pageDescription={cityRoofing[slug]?.description ?? page.description} path={`/areas-we-service/${slug}/`} />
 
       {/* Hero */}
       <section className="section" style={{ background: "linear-gradient(rgba(15, 34, 64, 0.95), rgba(15, 34, 64, 0.95))", color: "#ffffff", padding: "5rem 0 4rem" }}>
@@ -149,7 +156,7 @@ export default async function LocationSubpage({ params }: PageProps) {
           <span style={{ color: "var(--secondary)", fontWeight: 700, textTransform: "uppercase", fontSize: "0.85rem", letterSpacing: "0.15em" }}>
             Born Again Roofing & Remodeling
           </span>
-          <h1 style={{ color: "#ffffff", fontSize: "2.5rem", margin: "0.5rem 0 1rem" }}>Services in {page.cityName}</h1>
+          <h1 style={{ color: "#ffffff", fontSize: "2.5rem", margin: "0.5rem 0 1rem" }}>{cityRoofing[slug]?.h1 ?? `Services in ${page.cityName}`}</h1>
           <p style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "1.1rem", maxWidth: "600px", margin: "0 auto" }}>
             Dedicated local craftsmanship serving families and property owners in {page.cityName}.
           </p>
@@ -162,11 +169,39 @@ export default async function LocationSubpage({ params }: PageProps) {
           <div>
             <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1rem" }}>Your Trusted Local Contractor</h2>
             <p style={{ marginBottom: "1.5rem", fontSize: "1.05rem", lineHeight: "1.6" }}>
-              At Born Again Home Remodeling and Roofing, we are committed to serving the residents of <strong>{page.cityName}</strong> with high-quality exterior and interior residential upgrades. Whether you need a GAF architectural shingle roof replacement, storm damage inspections, kitchen cabinet replacements, or custom tile bathroom installations, our crew delivers durable solutions backed by warranties.
+              At Born Again Home Remodeling and Roofing, we are committed to serving the residents of <strong>{page.cityName}</strong> with high-quality exterior and interior residential upgrades. Whether you need a GAF architectural shingle roof replacement, storm damage inspection, kitchen cabinet replacement, or custom tile bathroom installation, our crew focuses on durable, well-finished work. GAF warranty options are available on eligible roofing installations.
             </p>
+            {cityRoofing[slug] && (
+              <div style={{ marginBottom: "2rem" }}>
+                <h2 style={{ color: "var(--primary)", fontSize: "1.4rem", marginBottom: "0.75rem" }}>Roofing in {page.cityName}</h2>
+                <p style={{ marginBottom: "1rem", fontSize: "1.05rem", lineHeight: "1.6" }}>
+                  {cityRoofing[slug].area} Every roofing estimate starts with a look at your roof, so we can recommend repair or replacement based on its actual condition.
+                </p>
+                <h3 style={{ color: "var(--primary)", fontSize: "1.15rem", margin: "0 0 0.5rem" }}>Recent roofing work in {page.cityName}</h3>
+                <ul style={{ paddingLeft: "1.25rem", marginBottom: "1rem" }}>
+                  {cityRoofing[slug].projects.map((project) => {
+                    const pin = pinsData.find((pn) => pn.id === project.id);
+                    if (!pin) return null;
+                    return (
+                      <li key={project.id} style={{ marginBottom: "0.5rem", lineHeight: 1.6 }}>
+                        <strong>{pin.date}:</strong> {project.summary}{" "}
+                        <Link href={`/pin-page/?id=${project.id}`} className="service-link">View project</Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <ul style={{ listStyle: "none", padding: 0, display: "flex", flexWrap: "wrap", gap: "0.5rem 1.5rem", margin: 0 }}>
+                  <li><Link href="/residential-roofing/roof-repair/" className="service-link">Roof repair</Link></li>
+                  <li><Link href="/residential-roofing/roof-installation/" className="service-link">Roof replacement</Link></li>
+                  <li><Link href="/storm-damage-roof-repair/" className="service-link">Storm damage repair</Link></li>
+                  <li><Link href="/residential-roofing/roof-inspections/" className="service-link">Roof inspections</Link></li>
+                  <li><Link href="/metal-roofing-repair-and-installation/" className="service-link">Metal roofing</Link></li>
+                </ul>
+              </div>
+            )}
             
             <p style={{ marginBottom: "2.5rem" }}>
-              We operate with high integrity, fair transparent pricing, and clean work sites. We understand local municipal permitting requirements in Hinds, Madison, Rankin, and Copiah counties, ensuring your project is fully compliant and structurally secure.
+              We operate with high integrity, fair transparent pricing, and clean work sites. We serve homeowners across Hinds, Madison, Rankin, and Copiah counties.
             </p>
 
             {/* AEO GEO FAQ Blocks */}
@@ -182,10 +217,17 @@ export default async function LocationSubpage({ params }: PageProps) {
                 </p>
               </div>
 
+              {cityRoofing[slug] && (
+                <div className="qa-block">
+                  <h4 className="qa-question">What roofing work has Born Again done in {page.cityName}?</h4>
+                  <p className="qa-answer">{projectAnswer}</p>
+                </div>
+              )}
+
               <div className="qa-block">
                 <h4 className="qa-question">How does local weather affect roofing materials in {page.cityName}?</h4>
                 <p className="qa-answer">
-                  Central Mississippi weather can bring intense UV sun heat, severe wind storms, and seasonal hail. We recommend GAF architectural shingles or standing seam metal panels, which are highly reflective and rated to withstand winds up to 130 mph, protecting your property in <strong>{page.cityName}</strong> from storm leaks and heat decay.
+                  Central Mississippi weather can bring intense UV sun heat, severe wind storms, and seasonal hail. We recommend GAF architectural shingles or standing seam metal panels, and we can explain how each handles Mississippi weather when we inspect your roof in <strong>{page.cityName}</strong>.
                 </p>
               </div>
             </div>
@@ -197,13 +239,14 @@ export default async function LocationSubpage({ params }: PageProps) {
       </section>
 
       <FAQSchema faqs={[
+        ...(cityRoofing[slug] ? [{ question: `What roofing work has Born Again done in ${page.cityName}?`, answer: projectAnswer }] : []),
         {
           question: `Do you offer free roofing and remodeling estimates in ${page.cityName}?`,
           answer: `Yes, Born Again Roofing provides completely free, no-obligation written estimates for all roofing, siding, and remodeling projects in ${page.cityName}. Our inspector will visit your property, assess the required work, and provide a clear, itemized quote.`
         },
         {
           question: `How does local weather affect roofing materials in ${page.cityName}?`,
-          answer: `Central Mississippi weather can bring intense UV sun heat, severe wind storms, and seasonal hail. We recommend GAF architectural shingles or standing seam metal panels, which are highly reflective and rated to withstand winds up to 130 mph, protecting your property in ${page.cityName} from storm leaks and heat decay.`
+          answer: `Central Mississippi weather can bring intense UV sun heat, severe wind storms, and seasonal hail. We recommend GAF architectural shingles or standing seam metal panels, and we can explain how each handles Mississippi weather when we inspect your roof in ${page.cityName}.`
         }
       ]} />
     </>

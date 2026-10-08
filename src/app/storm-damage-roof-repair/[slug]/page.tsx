@@ -5,6 +5,8 @@ import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import TrustedBrands from "@/components/TrustedBrands";
 import EmergencyCTA from "@/components/EmergencyCTA";
 import FAQSchema from "@/components/FAQSchema";
+import RoofingGuideSection from "@/components/RoofingGuideSection";
+import { roofingGuides } from "@/data/roofingGuides";
 
 interface SubpageDetail {
   title: string;
@@ -29,7 +31,7 @@ const subpages: Record<string, SubpageDetail> = {
       },
       {
         q: "How soon can you install a permanent roof replacement after emergency tarping?",
-        a: "Once the weather clears and your insurance adjuster completes their inspection, we can typically schedule and complete a full roof replacement within 3 to 7 days."
+        a: "Once the weather clears and your insurance adjuster completes their inspection, we will schedule the permanent repair or replacement as soon as conditions and materials allow."
       }
     ]
   },
@@ -38,7 +40,7 @@ const subpages: Record<string, SubpageDetail> = {
     description: "Comprehensive Roof Patching and Leak Repair Services in Jackson, MS. From storm damage to aging materials, leaks can come from many sources. Call (601) 573-6178.",
     heading: "Roof Patches & Leak Repair",
     subheading: "Targeted Repair Solutions to Stop Water Penetration",
-    bodyText: "From minor seam breaks to shingles decay, roof leaks can originate from plumbing vents, chimney flashings, valleys, or skylights. Our leak specialists use advanced tracking methods to locate the source of water intrusion and apply durable patches, rubber collars, and replacement shingles to guarantee a water-tight seal.",
+    bodyText: "From minor seam breaks to shingles decay, roof leaks can originate from plumbing vents, chimney flashings, valleys, or skylights. Our leak specialists use advanced tracking methods to locate the source of water intrusion and apply durable patches, rubber collars, and replacement shingles to seal the entry point.",
     faqs: [
       {
         q: "How do you identify the source of a hidden roof leak?",
@@ -55,7 +57,7 @@ const subpages: Record<string, SubpageDetail> = {
     description: "Restore Your Roof with Expert Hail Damage Repair in Jackson, MS. Hailstorms can strike without warning. Call (601) 573-6178 today.",
     heading: "Hail Damage Roof Repair",
     subheading: "Identifying and Restoring Soft Spots and Cracks Caused by Hail",
-    bodyText: "Hailstorms leave hidden damage across your roof by bruising asphalt shingles, fracturing fiberglass mats, and washing away protective stone granules. This accelerates shingle decay and leads to leaks over time. We provide expert inspection reports to document hail strikes and complete necessary repairs to restore your roof's warranty and safety.",
+    bodyText: "Hailstorms leave hidden damage across your roof by bruising asphalt shingles, fracturing fiberglass mats, and washing away protective stone granules. This accelerates shingle decay and leads to leaks over time. We provide expert inspection reports to document hail strikes and complete necessary repairs to restore your roof's protection.",
     faqs: [
       {
         q: "How does hail damage affect my shingles?",
@@ -76,7 +78,7 @@ const subpages: Record<string, SubpageDetail> = {
     faqs: [
       {
         q: "What wind speeds can standard roofing shingles withstand?",
-        a: "Standard 3-tab shingles are rated for winds up to 60-70 mph. GAF architectural shingles installed by Born Again Roofing are rated for winds up to 110-130 mph with proper high-wind installation."
+        a: "Wind ratings vary by shingle product and installation method. GAF publishes wind ratings and warranty terms for each of its shingle lines, and architectural shingles generally carry higher ratings than standard 3-tab shingles. Ask us which GAF options fit your roof when we inspect it."
       },
       {
         q: "What should I do if I find shingles in my yard after high winds?",
@@ -117,8 +119,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!page) return {};
   
   return {
-    title: page.title,
-    description: page.description,
+    title: roofingGuides[slug]?.title ?? page.title,
+    description: roofingGuides[slug]?.description ?? page.description,
     alternates: {
       canonical: `/storm-damage-roof-repair/${slug}/`
     }
@@ -172,7 +174,7 @@ export default async function StormDamageSubpage({ params }: PageProps) {
 
   return (
     <>
-      <LocalBusinessSchema pageTitle={page.title} pageDescription={page.description} path={`/storm-damage-roof-repair/${slug}/`} />
+      <LocalBusinessSchema pageTitle={roofingGuides[slug]?.title ?? page.title} pageDescription={roofingGuides[slug]?.description ?? page.description} path={`/storm-damage-roof-repair/${slug}/`} />
 
       {/* Hero */}
       <section className="service-hero">
@@ -180,7 +182,7 @@ export default async function StormDamageSubpage({ params }: PageProps) {
           <span className="eyebrow">
             Storm Damage Specialty
           </span>
-          <h1>{page.heading}</h1>
+          <h1>{roofingGuides[slug]?.heading ?? page.heading}</h1>
           <p className="hero-subtext">{page.subheading}</p>
           <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
             <p
@@ -207,6 +209,8 @@ export default async function StormDamageSubpage({ params }: PageProps) {
                 Our team operates with high integrity. We provide clear, accurate inspection assessments so you can make informed decisions. We use top GAF materials to ensure your repaired or replaced roof resists future Mississippi storms.
               </p>
             </div>
+
+            {roofingGuides[slug] && <RoofingGuideSection guide={roofingGuides[slug]} />}
 
             {/* Dynamic Local Case Studies Bento Grid */}
             <ServiceBentoGrid services={mappedCategories} overrideImages={overrideBentoImages} />

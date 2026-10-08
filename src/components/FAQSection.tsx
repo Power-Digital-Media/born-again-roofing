@@ -22,7 +22,7 @@ const faqs: FAQItem[] = [
   },
   {
     question: "Do you offer warranties on your residential roofing installations?",
-    answer: "Yes, at Born Again Home Remodeling and Roofing, we offer comprehensive warranties. As installers of GAF roofing materials, we provide GAF system warranties covering up to 50 years on shingles. We also stand behind our craftsmanship with a dedicated workmanship warranty on all installations and repairs, giving homeowners complete peace of mind."
+    answer: "Yes. Three different warranties can apply to a roof. GAF provides a manufacturer warranty on its shingles, and as a GAF certified contractor we can offer GAF system warranties on eligible installations, with coverage of up to 50 years on qualifying shingle systems. Born Again also provides its own workmanship warranty covering our installation work. Coverage and duration depend on the products installed and the applicable warranty terms, so not every roof qualifies for the longest option. We explain which options apply to your roof in your written estimate."
   }
 ];
 

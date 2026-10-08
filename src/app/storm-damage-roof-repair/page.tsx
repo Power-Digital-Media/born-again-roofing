@@ -11,8 +11,8 @@ import TrustedBrands from "@/components/TrustedBrands";
 import EmergencyCTA from "@/components/EmergencyCTA";
 
 export const metadata: Metadata = {
-  title: "Storm Damage Roof Repair in Jackson, MS | Born Again Home Remodeling and Roofing",
-  description: "Born Again Home Remodeling and Roofing offers storm damage roof repair in Jackson, MS. Call (601) 573-6178 for fast, reliable service.",
+  title: "Storm Damage Roof Repair in Jackson, MS",
+  description: "Wind, hail, and storm damage roof repair, emergency tarping, and leak repair for Jackson-area homes. Call (601) 573-6178 or request a roofing estimate.",
   alternates: {
     canonical: "/storm-damage-roof-repair/"
   }
@@ -27,9 +27,9 @@ export default function StormDamagePage() {
       <section className="service-hero" style={{ backgroundImage: "url('/images/wp_storm-damage-home-roof-1.png')" }}>
         <div className="container service-hero-inner scroll-reveal">
           <span className="eyebrow">Emergency Response</span>
-          <h1>Storm Damage Roof Repair</h1>
+          <h1>Storm Damage Roof Repair in Jackson, MS</h1>
           <p className="hero-subtext">
-            Fast, professional emergency response for wind, hail, and storm damage. We secure your home and handle your insurance adjusters directly.
+            Fast, professional emergency response for wind, hail, and storm damage. We can secure your home and walk your insurance adjuster through the damage on site.
           </p>
 
           <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>

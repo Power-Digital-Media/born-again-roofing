@@ -21,7 +21,7 @@ export default function HeroCTAs() {
         className="btn btn-secondary btn-island hero-cta-desktop"
         onClick={openDrawer}
       >
-        Get A Free Estimate
+        Request a Roofing Estimate
         <span className="btn-icon-wrapper">
           <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -34,7 +34,7 @@ export default function HeroCTAs() {
         className="btn btn-secondary btn-island hero-cta-mobile"
         onClick={openDrawer}
       >
-        Request Free Estimate
+        Request a Roofing Estimate
         <span className="btn-icon-wrapper">
           <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>

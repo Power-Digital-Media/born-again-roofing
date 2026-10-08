@@ -10,8 +10,8 @@ import TrustedBrands from "@/components/TrustedBrands";
 import ServiceCTA from "@/components/ServiceCTA";
 
 export const metadata: Metadata = {
-  title: "Residential Roofing in Jackson, MS | Born Again Home Remodeling and Roofing",
-  description: "Complete Residential Roofing Services in Jackson, MS. From small repairs to major projects, our skilled team is ready to help. Call (601) 573-6178.",
+  title: "Residential Roofing in Jackson, MS",
+  description: "Roof repair, roof replacement, inspections, and asphalt shingle roofing for Jackson-area homes. Request an estimate or call (601) 573-6178.",
   alternates: {
     canonical: "/residential-roofing/"
   }
@@ -26,7 +26,7 @@ export default function ResidentialRoofingPage() {
       <section className="service-hero" style={{ backgroundImage: "url('/images/wp_roofing-c.jpg')" }}>
         <div className="container service-hero-inner scroll-reveal">
           <span className="eyebrow">Our Services</span>
-          <h1>Residential Roofing Services</h1>
+          <h1>Residential Roofing in Jackson, MS</h1>
           <p className="hero-subtext">
             {"No matter your roofing needs, our skilled team is ready to help. From small leak repairs to major custom architectural shingle installations, we protect your family's investment."}
           </p>
@@ -148,7 +148,7 @@ export default function ResidentialRoofingPage() {
                 </div>
                 <h3>Roof Installation</h3>
                 <p>
-                  Build with confidence using our top-rated GAF architectural shingle installation options with lifetime warranties and wind resistance.
+                  Build with confidence using our top-rated GAF architectural shingle installation options with GAF warranty options (coverage depends on the products installed and the applicable warranty terms) and wind resistance.
                 </p>
               </div>
               <Link href="/residential-roofing/roof-installation" className="specialty-card-link">

@@ -7,6 +7,20 @@ import ReviewsCarousel from "@/components/ReviewsCarousel";
 import FAQSection from "@/components/FAQSection";
 import FAQSchema from "@/components/FAQSchema";
 import HeroCTAs from "@/components/HeroCTAs";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: { absolute: "Roofing Contractors in Jackson, MS | Born Again Roofing" },
+  description:
+    "Roof repair, replacement, storm damage repair, inspections, and metal roofing in Jackson and Central Mississippi. Request an estimate or call (601) 573-6178.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Roofing Contractors in Jackson, MS | Born Again Roofing",
+    description:
+      "Roof repair, replacement, storm damage repair, inspections, and metal roofing across Central Mississippi. Born Again Home Remodeling & Roofing LLC.",
+    url: "https://www.bornagainroofing.com/",
+  },
+};
 
 const homepageFaqs = [
   {
@@ -23,7 +37,7 @@ const homepageFaqs = [
   },
   {
     question: "Do you offer warranties on your residential roofing installations?",
-    answer: "Yes, at Born Again Home Remodeling and Roofing, we offer comprehensive warranties. As installers of GAF roofing materials, we provide GAF system warranties covering up to 50 years on shingles. We also stand behind our craftsmanship with a dedicated workmanship warranty on all installations and repairs, giving homeowners complete peace of mind."
+    answer: "Yes. Three different warranties can apply to a roof. GAF provides a manufacturer warranty on its shingles, and as a GAF certified contractor we can offer GAF system warranties on eligible installations, with coverage of up to 50 years on qualifying shingle systems. Born Again also provides its own workmanship warranty covering our installation work. Coverage and duration depend on the products installed and the applicable warranty terms, so not every roof qualifies for the longest option. We explain which options apply to your roof in your written estimate."
   }
 ];
 
@@ -49,15 +63,15 @@ export default function Home() {
           <div className="hero-content scroll-reveal">
             <span className="eyebrow">{"Where Faith, Craftsmanship, and Care Come Together"}</span>
             <h1 className="hero-title">
-              Remodeling & <br />
-              <span className="italic-descender">Roofing Solutions</span> <br />
+              Roofing <br />
+              <span className="italic-descender">Contractors</span> <br />
               in Jackson, MS
             </h1>
             <p className="hero-subtext hero-subtext-full">
-              As a local, Christian-owned roofing company, Born Again Home Remodeling and Roofing is built on honesty, integrity, and service. We deliver premium roofing and home remodeling solutions across Jackson, Mississippi and the surrounding communities.
+              Residential roof repair, replacement, storm damage services, metal roofing, and commercial roofing solutions across Central Mississippi. Born Again Home Remodeling &amp; Roofing is a local, Christian-owned company built on honesty, integrity, and service.
             </p>
             <p className="hero-subtext hero-subtext-short">
-              Premium roofing and remodeling built on faith, integrity, and expert craftsmanship — serving Jackson, MS and surrounding communities.
+              Residential roof repair, replacement, storm damage services, metal roofing, and commercial roofing solutions across Central Mississippi.
             </p>
             <HeroCTAs />
 
@@ -83,7 +97,7 @@ export default function Home() {
               <div className="badge-details">
                 <span className="badge-eyebrow">ELITE ROOFING STATUS</span>
                 <h3>GAF Certified Contractor</h3>
-                <p>Equipped with industry-leading materials & lifetime warranties to protect your home for 50+ years.</p>
+                <p>GAF warranty options on eligible installations, with system coverage up to 50 years on qualifying shingle systems. Coverage depends on the products installed and GAF&apos;s terms.</p>
               </div>
             </div>
             
@@ -132,7 +146,7 @@ export default function Home() {
             </div>
             <div>
               <h4 style={{ fontSize: "1.05rem", fontWeight: "800", color: "#ffffff", margin: 0 }}>GAF Certified Materials</h4>
-              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", margin: "2px 0 0 0" }}>Lifetime shingle warranties</p>
+              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", margin: "2px 0 0 0" }}>Lifetime shingle warranty options</p>
             </div>
           </div>
 
@@ -159,12 +173,22 @@ export default function Home() {
         <div className="container">
           
           <div className="services-header reveal-on-scroll">
-            <span className="eyebrow">Expert Capabilities</span>
-            <h2>Our Core Services</h2>
+            <span className="eyebrow">Roofing Services</span>
+            <h2>Roof Repair, Replacement &amp; Storm Damage Services</h2>
             <p>
-              We provide comprehensive exterior and interior home services designed to protect your home and increase its value.
+              Choose the roofing service that matches your situation. Every roofing estimate starts with an on-site look at your roof.
             </p>
+            <nav aria-label="Roofing service pages">
+              <ul style={{ listStyle: "none", padding: 0, margin: "1.5rem 0 0", display: "flex", flexWrap: "wrap", gap: "0.75rem 1.5rem", justifyContent: "center" }}>
+                <li><Link href="/residential-roofing/roof-repair/" className="service-link">Roof Repair</Link></li>
+                <li><Link href="/residential-roofing/roof-installation/" className="service-link">Roof Replacement &amp; Installation</Link></li>
+                <li><Link href="/storm-damage-roof-repair/" className="service-link">Storm Damage Repair</Link></li>
+                <li><Link href="/residential-roofing/roof-inspections/" className="service-link">Roof Inspections</Link></li>
+                <li><Link href="/metal-roofing-repair-and-installation/" className="service-link">Metal Roofing</Link></li>
+              </ul>
+            </nav>
           </div>
+
 
           <div className="bento-grid">
             
@@ -212,7 +236,7 @@ export default function Home() {
             </div>
 
             {/* Service 3 - Standard 1/3 card (Metal Roofing) */}
-            <div className="double-bezel-wrapper bento-col-4 reveal-on-scroll">
+            <div className="double-bezel-wrapper bento-col-12 reveal-on-scroll">
               <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/wp_metal-roof-standing-seam-1.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -232,9 +256,31 @@ export default function Home() {
               </div>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Projects Carousel (Loaded dynamically below the fold for LCP optimization) */}
+      <ProjectsCarousel />
+
+      {/* Home Remodeling Services (secondary to roofing) */}
+      <section className="section services-section">
+        <div className="container">
+
+          <div className="services-header reveal-on-scroll">
+            <span className="eyebrow">Also From Born Again</span>
+            <h2>Home Remodeling Services</h2>
+            <p>
+              Alongside roofing, our crews handle kitchen and bath remodels, painting, and whole-house projects for Jackson-area homeowners.
+            </p>
+          </div>
+
+          <div className="bento-grid">
+
             {/* Service 4 - Wide split bento card (Kitchen Remodel Image) */}
             <div className="double-bezel-wrapper bento-col-8 reveal-on-scroll">
               <div className="double-bezel-inner bento-split-card">
+
                 <div className="bento-split-content">
                   <div className="specialty-icon-wrapper">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -302,9 +348,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Featured Projects Carousel (Loaded dynamically below the fold for LCP optimization) */}
-      <ProjectsCarousel />
 
       {/* Why Choose Us Section */}
       <section className="section section-alt" style={{ borderBottom: "1px solid var(--border)" }}>

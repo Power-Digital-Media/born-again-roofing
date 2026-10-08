@@ -11,8 +11,8 @@ import TrustedBrands from "@/components/TrustedBrands";
 import ServiceCTA from "@/components/ServiceCTA";
 
 export const metadata: Metadata = {
-  title: "Metal Roofing Repair and Installation in Jackson, MS | Born Again Home Remodeling and Roofing",
-  description: "Strength and Style with Expert Metal Roofing in Jackson, MS. When it comes to long-lasting protection, metal roofing stands out. Call (601) 573-6178.",
+  title: "Metal Roofing in Jackson, MS",
+  description: "Standing seam metal roof installation and metal roof repair for homes in Jackson and Central Mississippi. Request an estimate or call (601) 573-6178.",
   alternates: {
     canonical: "/metal-roofing-repair-and-installation/"
   }
@@ -27,9 +27,9 @@ export default function MetalRoofingPage() {
       <section className="service-hero" style={{ backgroundImage: "url('/images/wp_metal-roof-standing-seam-1.png')" }}>
         <div className="container service-hero-inner scroll-reveal">
           <span className="eyebrow">GAF Certified Quality</span>
-          <h1>Metal Roofing Systems</h1>
+          <h1>Metal Roofing in Jackson, MS</h1>
           <p className="hero-subtext">
-            Invest in lifetime durability and modern aesthetics. Premium standing seam and metal shingle installations in Central Mississippi.
+            Standing seam and metal shingle installations and repairs for homes in Central Mississippi.
           </p>
 
           <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>

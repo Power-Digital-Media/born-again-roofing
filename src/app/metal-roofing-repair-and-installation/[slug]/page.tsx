@@ -5,6 +5,8 @@ import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import TrustedBrands from "@/components/TrustedBrands";
 import ServiceCTA from "@/components/ServiceCTA";
 import FAQSchema from "@/components/FAQSchema";
+import RoofingGuideSection from "@/components/RoofingGuideSection";
+import { roofingGuides } from "@/data/roofingGuides";
 
 interface SubpageDetail {
   title: string;
@@ -20,16 +22,16 @@ const subpages: Record<string, SubpageDetail> = {
     title: "Standing Seam Metal Roof Installation in Jackson, MS | Born Again Home Remodeling and Roofing",
     description: "Expert standing seam metal roof installation in Jackson, MS by Born Again Home Remodeling and Roofing. Call (601) 573-6178 today.",
     heading: "Standing Seam Metal Roof Installation",
-    subheading: "Premium Concealed Fastener Metal Panels for Lifetime Security",
+    subheading: "Concealed-Fastener Metal Panels for Jackson-Area Homes",
     bodyText: "Standing seam metal roofing features interlocking metal panels that run from the ridge down to the eaves. The seams are joined by raised interlocking joints (standing seams) containing concealed fasteners. Because the screws are hidden beneath the metal panels, they are protected from weather exposure, eliminating the most common cause of leaks in traditional metal roofs.",
     faqs: [
       {
         q: "What are the benefits of standing seam over exposed fastener metal roofs?",
-        a: "Standing seam metal roofs completely hide the mounting screws under the seams. Exposed fastener roofs have thousands of exposed screws and rubber washers that can dry rot, back out, or leak over time, whereas standing seam represents a lifetime, virtually leak-free system."
+        a: "Standing seam metal roofs completely hide the mounting screws under the seams. Exposed fastener roofs have thousands of exposed screws and rubber washers that can dry rot, back out, or leak over time, whereas standing seam hides the fasteners under the seams, removing a common leak point."
       },
       {
         q: "What is the cost comparison between standing seam and shingles?",
-        a: "Standing seam metal roofs have a higher initial cost than asphalt shingles (typically 2 to 3 times more). However, because they last 50+ years and lower cooling bills, they offer a superior return on investment over time."
+        a: "Standing seam metal roofs have a higher initial cost than asphalt shingles. Metal is generally considered long-lasting, but the right choice depends on your budget and how long you plan to own the home. We can compare options during an estimate."
       }
     ]
   }
@@ -49,8 +51,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!page) return {};
   
   return {
-    title: page.title,
-    description: page.description,
+    title: roofingGuides[slug]?.title ?? page.title,
+    description: roofingGuides[slug]?.description ?? page.description,
     alternates: {
       canonical: `/metal-roofing-repair-and-installation/${slug}/`
     }
@@ -80,7 +82,7 @@ export default async function MetalSubpage({ params }: PageProps) {
 
   return (
     <>
-      <LocalBusinessSchema pageTitle={page.title} pageDescription={page.description} path={`/metal-roofing-repair-and-installation/${slug}/`} />
+      <LocalBusinessSchema pageTitle={roofingGuides[slug]?.title ?? page.title} pageDescription={roofingGuides[slug]?.description ?? page.description} path={`/metal-roofing-repair-and-installation/${slug}/`} />
 
       {/* Hero */}
       <section className="service-hero">
@@ -88,7 +90,7 @@ export default async function MetalSubpage({ params }: PageProps) {
           <span className="eyebrow">
             Metal Roofing Specialty
           </span>
-          <h1>{page.heading}</h1>
+          <h1>{roofingGuides[slug]?.heading ?? page.heading}</h1>
           <p className="hero-subtext">{page.subheading}</p>
           <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
             <p
@@ -115,6 +117,8 @@ export default async function MetalSubpage({ params }: PageProps) {
                 Our expert technicians are trained in the specialized installation of standing seam metal roofing, using correct clip systems that allow panels to expand and contract naturally as temperatures change.
               </p>
             </div>
+
+            {roofingGuides[slug] && <RoofingGuideSection guide={roofingGuides[slug]} />}
 
             {/* Dynamic Local Case Studies Bento Grid */}
             <ServiceBentoGrid services={mappedCategories} overrideImages={overrideBentoImages} />

@@ -5,6 +5,8 @@ import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import TrustedBrands from "@/components/TrustedBrands";
 import ServiceCTA from "@/components/ServiceCTA";
 import FAQSchema from "@/components/FAQSchema";
+import RoofingGuideSection from "@/components/RoofingGuideSection";
+import { roofingGuides } from "@/data/roofingGuides";
 
 interface SubpageDetail {
   title: string;
@@ -25,7 +27,7 @@ const subpages: Record<string, SubpageDetail> = {
     faqs: [
       {
         q: "How much does a typical roof repair cost in Jackson, MS?",
-        a: "The cost of a roof repair depends on the size of the area, shingles materials, and location. Minor repairs (such as sealing flashing or replacing a few shingles) range from $250 to $600. Major leak repairs or wood repairs may cost more."
+        a: "The cost of a roof repair depends on the size of the area, shingles materials, and location. Minor repairs, such as sealing flashing or replacing a few shingles, generally cost less than larger leak or decking repairs. We provide a written estimate after looking at your roof."
       },
       {
         q: "Do you offer emergency roof repair services?",
@@ -38,15 +40,15 @@ const subpages: Record<string, SubpageDetail> = {
     description: "Build with Confidence Through Expert Roof Installation in Jackson, MS. A new GAF architectural roof is a top investment. Call (601) 573-6178.",
     heading: "Roof Installation in Jackson, MS",
     subheading: "Premium Quality Architectural Roofing Systems Built to Last",
-    bodyText: "A new roof is one of the most important investments you can make for your home. We install state-of-the-art GAF architectural roofing systems that combine high-end aesthetic appeal with extreme durability. Our installation crew operates with clean prep, proper ventilation, and complete site cleanup, ensuring your project is done right the first time.",
+    bodyText: "A new roof is one of the most important investments you can make for your home. As a GAF certified contractor, we install GAF architectural roofing systems that combine appearance with durability. Our installation crew operates with clean prep, proper ventilation, and complete site cleanup, ensuring your project is done right the first time.",
     faqs: [
       {
         q: "What is the lifespan of a newly installed asphalt shingle roof?",
-        a: "A professional architectural shingle roof installation typically lasts 25 to 30 years, depending on attic ventilation, storm exposure, and shingle quality."
+        a: "The lifespan of an asphalt shingle roof depends on the product, attic ventilation, storm exposure, and installation quality. Ask us about the manufacturer's stated service life for any shingle we propose."
       },
       {
         q: "Are your roof installers licensed and insured?",
-        a: "Yes, Born Again Home Remodeling and Roofing is fully licensed, bonded, and insured in the state of Mississippi, providing complete peace of mind."
+        a: "Contact us at (601) 573-6178 and we can answer questions about our licensing and insurance before you hire us."
       }
     ]
   },
@@ -55,11 +57,11 @@ const subpages: Record<string, SubpageDetail> = {
     description: "Born Again Home Remodeling and Roofing offers asphalt shingle roof repair and replacement in Jackson, MS. Call (601) 573-6178 today.",
     heading: "Asphalt Shingle Roof Repair & Replacement",
     subheading: "Traditional and Architectural Shingle Services in Central Mississippi",
-    bodyText: "Asphalt shingles are the most widely used roofing material in Jackson, MS, due to their versatility and budget-friendly cost. Whether you have minor shingle blow-offs from high winds or need a complete tear-off and replacement, we offer GAF shingle systems in various colors and styles, backed by lifetime system warranties.",
+    bodyText: "Asphalt shingles are the most widely used roofing material in Jackson, MS, due to their versatility and budget-friendly cost. Whether you have minor shingle blow-offs from high winds or need a complete tear-off and replacement, we offer GAF shingle systems in various colors and styles. GAF manufacturer and system warranty options are available on eligible installations; coverage depends on the products installed and the applicable GAF warranty terms.",
     faqs: [
       {
         q: "What are architectural shingles compared to standard 3-tab shingles?",
-        a: "Architectural shingles (laminated shingles) are thicker, consist of multiple layers, and provide a dimensional look. They offer higher wind ratings (up to 130 mph) and double the lifespan of traditional 3-tab shingles."
+        a: "Architectural shingles (laminated shingles) are thicker, consist of multiple layers, and provide a dimensional look. They generally offer higher wind ratings and a longer service life than traditional 3-tab shingles, depending on the product."
       },
       {
         q: "How can I tell if my asphalt shingles need to be replaced?",
@@ -117,8 +119,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!page) return {};
   
   return {
-    title: page.title,
-    description: page.description,
+    title: roofingGuides[slug]?.title ?? page.title,
+    description: roofingGuides[slug]?.description ?? page.description,
     alternates: {
       canonical: `/residential-roofing/${slug}/`
     }
@@ -172,15 +174,15 @@ export default async function ResidentialSubpage({ params }: PageProps) {
 
   return (
     <>
-      <LocalBusinessSchema pageTitle={page.title} pageDescription={page.description} path={`/residential-roofing/${slug}/`} />
+      <LocalBusinessSchema pageTitle={roofingGuides[slug]?.title ?? page.title} pageDescription={roofingGuides[slug]?.description ?? page.description} path={`/residential-roofing/${slug}/`} />
 
       {/* Hero */}
       <section className="service-hero">
         <div className="container service-hero-inner scroll-reveal">
           <span className="eyebrow">
-            Residential Roofing Specialty
+            {roofingGuides[slug]?.eyebrow ?? "Residential Roofing Specialty"}
           </span>
-          <h1>{page.heading}</h1>
+          <h1>{roofingGuides[slug]?.heading ?? page.heading}</h1>
           <p className="hero-subtext">{page.subheading}</p>
           <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
             <p
@@ -207,6 +209,8 @@ export default async function ResidentialSubpage({ params }: PageProps) {
                 {"We believe in doing things right. We don't cut corners, we use the highest grade materials from trusted manufacturers, and we back all our work with warranties you can rely on."}
               </p>
             </div>
+
+            {roofingGuides[slug] && <RoofingGuideSection guide={roofingGuides[slug]} />}
 
             {/* Dynamic Local Case Studies Bento Grid */}
             <ServiceBentoGrid services={mappedCategories} overrideImages={overrideBentoImages} />

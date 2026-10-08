@@ -185,7 +185,7 @@ export default function ReviewsList() {
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--secondary)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
-                      <span><strong style={{ color: "#ffffff" }}>GAF Certified Materials</strong> — lifetime shingle warranties</span>
+                      <span><strong style={{ color: "#ffffff" }}>GAF Certified Materials</strong> — lifetime shingle warranty options</span>
                     </span>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "0.9rem", color: "var(--text-muted)" }}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--secondary)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
