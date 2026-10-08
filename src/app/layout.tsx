@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Geist } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -8,6 +8,8 @@ import MobileBottomBar from "@/components/MobileBottomBar";
 import ScrollRevealInit from "@/components/ScrollRevealInit";
 import FormDrawer from "@/components/FormDrawer";
 import FloatingCTA from "@/components/FloatingCTA";
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -41,6 +43,9 @@ export const metadata: Metadata = {
     ]
   },
   manifest: "/site.webmanifest",
+  verification: {
+    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION,
+  },
   robots: {
     index: true,
     follow: true,
@@ -84,19 +89,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plusJakartaSans.variable} ${geist.variable}`}>
       <head>
-        {/* GA4 Script Integration */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-XXXXXXXXXX');
-          `}
-        </Script>
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${GA_ID}');`}
+            </Script>
+          </>
+        )}
       </head>
       <body style={{ fontFamily: "var(--font-geist), sans-serif", margin: 0, padding: 0 }}>
         <Header />
@@ -112,3 +115,4 @@ export default function RootLayout({
     </html>
   );
 }
+

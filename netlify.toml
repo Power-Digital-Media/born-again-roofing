@@ -5,3 +5,4 @@
 [build.environment]
   NODE_VERSION = "20"
   NPM_FLAGS = "--legacy-peer-deps"
+  NEXT_PUBLIC_GA_MEASUREMENT_ID = "G-CY1Y3Y7YFR"
