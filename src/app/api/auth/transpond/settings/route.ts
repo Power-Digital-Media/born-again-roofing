@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireSession } from "@/lib/pindrop-auth";
 
 const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || "pdm-pindrop-central";
 const clientId = process.env.PDM_CLIENT_ID || "born-again-roofing";
@@ -12,7 +13,9 @@ function maskApiKey(key: string): string {
 }
 
 // 1. GET Settings & Social Connection Status
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const denied = requireSession(request);
+  if (denied) return denied;
   try {
     let transpondApiKey = "";
     let transpondGroupId = "";
@@ -120,6 +123,8 @@ export async function GET() {
 
 // 2. POST Save Settings
 export async function POST(request: NextRequest) {
+  const denied = requireSession(request);
+  if (denied) return denied;
   try {
     const body = await request.json();
     const { apiKey, groupId, technicians, rooferPasscode, companyName, googleReviewUrl } = body;

@@ -87,9 +87,35 @@ export default function DropPinPage() {
   const [googleReviewUrl, setGoogleReviewUrl] = useState("");
   const [newReviewUrlInput, setNewReviewUrlInput] = useState("");
 
+  // Signed session token issued by /api/auth/login (stored per device, 90 days).
+  const authHeaders = (json = true): Record<string, string> => {
+    const headers: Record<string, string> = json ? { "Content-Type": "application/json" } : {};
+    try {
+      const raw = localStorage.getItem("roofer_pin_token");
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved.token && saved.expiresAt > Date.now()) {
+          headers["Authorization"] = `Bearer ${saved.token}`;
+        }
+      }
+    } catch {}
+    return headers;
+  };
+
+  // If the server says the session is no longer valid, return to the passcode screen.
+  const handleSessionExpired = () => {
+    localStorage.removeItem("roofer_pin_token");
+    sessionStorage.removeItem("roofer_pin_auth");
+    setIsAuthenticated(false);
+  };
+
   const fetchTranspondSettings = async () => {
     try {
-      const res = await fetch("/api/auth/transpond/settings");
+      const res = await fetch("/api/auth/transpond/settings", { headers: authHeaders(false) });
+      if (res.status === 401) {
+        handleSessionExpired();
+        return;
+      }
       if (res.ok) {
         const data = await res.json();
         setTranspondConfigured(data.configured || false);
@@ -115,7 +141,7 @@ export default function DropPinPage() {
     try {
       const res = await fetch("/api/auth/transpond/settings", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify({ apiKey: transpondApiKey, groupId: transpondGroupId })
       });
       if (res.ok) {
@@ -139,7 +165,7 @@ export default function DropPinPage() {
     try {
       const res = await fetch("/api/auth/transpond/settings", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify({ technicians: updatedTechs })
       });
       if (res.ok) {
@@ -160,7 +186,7 @@ export default function DropPinPage() {
     try {
       const res = await fetch("/api/auth/transpond/settings", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify({ technicians: updatedTechs })
       });
       if (res.ok) {
@@ -181,7 +207,7 @@ export default function DropPinPage() {
     try {
       const res = await fetch("/api/auth/transpond/settings", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify({ rooferPasscode: newRooferPasscode.trim() })
       });
       if (res.ok) {
@@ -204,7 +230,7 @@ export default function DropPinPage() {
     try {
       const res = await fetch("/api/auth/transpond/settings", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify({ googleReviewUrl: newReviewUrlInput.trim() })
       });
       if (res.ok) {
@@ -304,7 +330,12 @@ export default function DropPinPage() {
   // Check authentication and URL params on load
   useEffect(() => {
     const cachedAuth = sessionStorage.getItem("roofer_pin_auth");
-    if (cachedAuth === "true") {
+    let hasValidToken = false;
+    try {
+      const saved = JSON.parse(localStorage.getItem("roofer_pin_token") || "null");
+      hasValidToken = !!(saved && saved.token && saved.expiresAt > Date.now());
+    } catch {}
+    if (cachedAuth === "true" || hasValidToken) {
       setIsAuthenticated(true);
       fetchTranspondSettings();
       const tourSeen = localStorage.getItem("pindrop_tour_seen");
@@ -335,6 +366,13 @@ export default function DropPinPage() {
         body: JSON.stringify({ passcode })
       });
       if (res.ok) {
+        const loginData = await res.json().catch(() => ({}));
+        if (loginData.token) {
+          localStorage.setItem(
+            "roofer_pin_token",
+            JSON.stringify({ token: loginData.token, expiresAt: loginData.expiresAt })
+          );
+        }
         sessionStorage.setItem("roofer_pin_auth", "true");
         setIsAuthenticated(true);
         fetchTranspondSettings();
@@ -484,11 +522,14 @@ export default function DropPinPage() {
         setUploadStatus(`Uploading photo ${i + 1} of ${fileList.length} to Cloud...`);
         const response = await fetch("/api/upload", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: authHeaders(),
           body: JSON.stringify({ base64Data: compressedBase64 }),
         });
+
+        if (response.status === 401) {
+          handleSessionExpired();
+          throw new Error("Your session expired. Please sign in again.");
+        }
 
         if (!response.ok) {
           throw new Error(`Upload failed for photo ${i + 1}`);
@@ -541,11 +582,13 @@ export default function DropPinPage() {
     try {
       const response = await fetch("/api/pins/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: authHeaders(),
         body: JSON.stringify(payload)
       });
+
+      if (response.status === 401) {
+        handleSessionExpired();
+      }
 
       if (response.ok) {
         setSubmitSuccess(true);

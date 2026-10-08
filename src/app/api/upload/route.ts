@@ -1,14 +1,36 @@
 import { NextResponse } from "next/server";
+import { requireSession, rateLimited, clientIp } from "@/lib/pindrop-auth";
 
 export const dynamic = "force-dynamic";
 
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024; // client compresses to well under this
+
+// Identify the real image type from the file's leading bytes (never trust the client's claim).
+function sniffImageType(buf: Buffer): string | null {
+  if (buf.length > 3 && buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return "image/jpeg";
+  if (buf.length > 8 && buf.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return "image/png";
+  if (buf.length > 12 && buf.subarray(0, 4).toString("ascii") === "RIFF" && buf.subarray(8, 12).toString("ascii") === "WEBP") return "image/webp";
+  return null;
+}
+
 export async function POST(request: Request) {
   try {
+    const denied = requireSession(request);
+    if (denied) return denied;
+    if (rateLimited(`upload:${clientIp(request)}`, 120, 10 * 60 * 1000)) {
+      return NextResponse.json({ error: "Too many uploads. Please wait a few minutes." }, { status: 429 });
+    }
+
     const body = await request.json();
     const { base64Data } = body;
 
     if (!base64Data || typeof base64Data !== "string") {
       return NextResponse.json({ error: "Missing base64Data" }, { status: 400 });
+    }
+
+    // Reject oversized payloads before decoding (base64 is ~4/3 of the binary size)
+    if (base64Data.length > Math.ceil((MAX_UPLOAD_BYTES * 4) / 3) + 100) {
+      return NextResponse.json({ error: "Image is too large" }, { status: 413 });
     }
 
     // Parse base64 data url format (e.g. "data:image/jpeg;base64,...")
@@ -17,9 +39,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid base64 image data format" }, { status: 400 });
     }
 
-    const contentType = matches[1];
     const base64Content = matches[2];
     const buffer = Buffer.from(base64Content, "base64");
+
+    const contentType = sniffImageType(buffer);
+    if (!contentType || buffer.length > MAX_UPLOAD_BYTES) {
+      return NextResponse.json({ error: "Only JPEG, PNG or WebP images up to 5MB are allowed" }, { status: 400 });
+    }
 
     const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || "pdm-pindrop-central";
     // Suffix bucket name based on firebase standard
