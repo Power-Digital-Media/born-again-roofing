@@ -13,25 +13,25 @@ interface ReviewItem {
 
 const featuredReviews: ReviewItem[] = [
   {
+    name: "Dianne W.",
+    location: "Jackson, MS",
+    rating: 5,
+    service: "GAF Shingle Replacement",
+    text: "We had our old shingles replaced with GAF Timberline HDZ architectural shingles. Honest assessment, neat cleanup, and excellent GAF system warranty. Best contractor experience we've had!"
+  },
+  {
     name: "Sarah K.",
     location: "Pearl, MS",
     rating: 5,
-    service: "GAF Silicone Coating",
+    service: "GAF Silicone Roof System",
     text: "Installed GAF silicone roof system on our flat metal roof. Outstanding leak sealing and workmanship!"
   },
   {
-    name: "Thomas D.",
-    location: "Canton, MS",
+    name: "Matthew S.",
+    location: "Clinton, MS",
     rating: 5,
-    service: "Bathroom Remodeling",
-    text: "Entire bathroom demo, subfloor repair, and reinstall. The crew worked with absolute integrity."
-  },
-  {
-    name: "Janice M.",
-    location: "Madison, MS",
-    rating: 5,
-    service: "Window Installation",
-    text: "Professionally installed 4 large windows that look fabulous. Great carpentry trim work!"
+    service: "Storm Damage Repair",
+    text: "Had emergency leak repair and shingle replacements after severe wind damage. They helped meet with our insurance adjuster. True lifesavers who operate with complete honesty."
   }
 ];
 

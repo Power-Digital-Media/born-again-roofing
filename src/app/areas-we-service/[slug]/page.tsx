@@ -196,6 +196,7 @@ export default async function LocationSubpage({ params }: PageProps) {
                   <li><Link href="/storm-damage-roof-repair/" className="service-link">Storm damage repair</Link></li>
                   <li><Link href="/residential-roofing/roof-inspections/" className="service-link">Roof inspections</Link></li>
                   <li><Link href="/metal-roofing-repair-and-installation/" className="service-link">Metal roofing</Link></li>
+              <li><Link href="/commercial-roofing/" className="service-link">Commercial roofing</Link></li>
                 </ul>
               </div>
             )}

@@ -41,6 +41,7 @@ export default function Header() {
             <div className="dropdown-menu">
               <Link href="/residential-roofing">Residential Roofing</Link>
               <Link href="/metal-roofing-repair-and-installation">Metal Roofing</Link>
+              <Link href="/commercial-roofing">Commercial Roofing</Link>
               <Link href="/storm-damage-roof-repair">Storm Damage Repair</Link>
               <div className="dropdown-divider" />
               <Link href="/bathroom-remodeling">Bathroom Remodeling</Link>
@@ -112,6 +113,7 @@ export default function Header() {
           <div className={`mobile-nav-accordion-panel ${servicesOpen ? "expanded" : ""}`}>
             <Link href="/residential-roofing" className="mobile-nav-sublink" onClick={closeMenu}>Residential Roofing</Link>
             <Link href="/metal-roofing-repair-and-installation" className="mobile-nav-sublink" onClick={closeMenu}>Metal Roofing</Link>
+            <Link href="/commercial-roofing" className="mobile-nav-sublink" onClick={closeMenu}>Commercial Roofing</Link>
             <Link href="/storm-damage-roof-repair" className="mobile-nav-sublink" onClick={closeMenu}>Storm Damage Repair</Link>
             <Link href="/bathroom-remodeling" className="mobile-nav-sublink" onClick={closeMenu}>Bathroom Remodeling</Link>
             <Link href="/kitchen-remodeling" className="mobile-nav-sublink" onClick={closeMenu}>Kitchen Remodeling</Link>

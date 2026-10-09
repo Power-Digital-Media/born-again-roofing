@@ -63,6 +63,7 @@ const stormPages = [
 ];
 
 const metalPages = [
+  { name: "Commercial Roofing", path: "/commercial-roofing" },
   { name: "Metal Roofing Index", path: "/metal-roofing-repair-and-installation" },
   { name: "Standing Seam Installation", path: "/metal-roofing-repair-and-installation/standing-seam-metal-roof-installation" }
 ];

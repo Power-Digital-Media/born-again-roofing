@@ -91,6 +91,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'residential-roofing',
     'storm-damage-roof-repair',
     'metal-roofing-repair-and-installation',
+    'commercial-roofing',
   ];
 
   return [

@@ -95,7 +95,7 @@ export default function Home() {
                 <span className="badge-icon">🎖️</span>
               </div>
               <div className="badge-details">
-                <span className="badge-eyebrow">ELITE ROOFING STATUS</span>
+                <span className="badge-eyebrow">Manufacturer Certification</span>
                 <h3>GAF Certified Contractor</h3>
                 <p>GAF warranty options on eligible installations, with system coverage up to 50 years on qualifying shingle systems. Coverage depends on the products installed and GAF&apos;s terms.</p>
               </div>
@@ -185,6 +185,7 @@ export default function Home() {
                 <li><Link href="/storm-damage-roof-repair/" className="service-link">Storm Damage Repair</Link></li>
                 <li><Link href="/residential-roofing/roof-inspections/" className="service-link">Roof Inspections</Link></li>
                 <li><Link href="/metal-roofing-repair-and-installation/" className="service-link">Metal Roofing</Link></li>
+                <li><Link href="/commercial-roofing/" className="service-link">Commercial Roofing</Link></li>
               </ul>
             </nav>
           </div>
@@ -236,7 +237,7 @@ export default function Home() {
             </div>
 
             {/* Service 3 - Standard 1/3 card (Metal Roofing) */}
-            <div className="double-bezel-wrapper bento-col-12 reveal-on-scroll">
+            <div className="double-bezel-wrapper bento-col-6 reveal-on-scroll">
               <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/wp_metal-roof-standing-seam-1.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -251,6 +252,26 @@ export default function Home() {
                   Durable standing seam metal roofing, repair, and installations for long-lasting protection.
                 </p>
                 <Link href="/metal-roofing-repair-and-installation" className="service-link" style={{ color: "var(--secondary)", marginTop: "auto" }}>
+                  Learn More <span className="arrow">↗</span>
+                </Link>
+              </div>
+            </div>
+
+
+            {/* Service 4 - Commercial Roofing */}
+            <div className="double-bezel-wrapper bento-col-6 reveal-on-scroll">
+              <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/job_295508.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
+                <div className="specialty-icon-wrapper">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="4" y="3" width="16" height="18" rx="1" />
+                    <path d="M9 21v-4h6v4M8 7h2M14 7h2M8 11h2M14 11h2" />
+                  </svg>
+                </div>
+                <h3 style={{ color: "#ffffff" }}>Commercial Roofing</h3>
+                <p className="service-desc" style={{ color: "#94a3b8" }}>
+                  Flat roof systems, silicone roof restoration, metal roof replacement, and storm damage inspections for commercial buildings.
+                </p>
+                <Link href="/commercial-roofing/" className="service-link" style={{ color: "var(--secondary)", marginTop: "auto" }}>
                   Learn More <span className="arrow">↗</span>
                 </Link>
               </div>

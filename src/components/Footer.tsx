@@ -46,6 +46,7 @@ export default function Footer() {
             <ul className="footer-links">
               <li><Link href="/residential-roofing">Residential Roofing</Link></li>
               <li><Link href="/metal-roofing-repair-and-installation">Metal Roofing Systems</Link></li>
+              <li><Link href="/commercial-roofing">Commercial Roofing</Link></li>
               <li><Link href="/storm-damage-roof-repair">Storm Damage Repair</Link></li>
               <li><Link href="/bathroom-remodeling">Bathroom Remodeling</Link></li>
               <li><Link href="/kitchen-remodeling">Kitchen Remodeling</Link></li>

@@ -2269,7 +2269,7 @@ a {
 }
 
 .reviewer-name {
-  color: var(--primary);
+  color: #ffffff;
   font-size: 1.15rem;
   font-weight: 800;
   margin-bottom: 2px;
@@ -4059,5 +4059,22 @@ a {
   }
 }
 
-
-
+/* Readability: the brand royal blue (#2E3191) is too dark to read as text on the dark theme.
+   Headings that used it as a text color now render in white; backgrounds and accents are unchanged. */
+.service-cta-heading,
+.credential-item h4,
+.credential-badge h4,
+.owner-story-text h3,
+.editorial-value-content h3,
+.diff-card h3,
+.empty-state-card h2,
+.service-faqs h3,
+.project-gallery-title,
+.answer-engine-section h2,
+.ae-qa-question,
+h1[style*="var(--primary)"],
+h2[style*="var(--primary)"],
+h3[style*="var(--primary)"],
+h4[style*="var(--primary)"] {
+  color: #ffffff !important;
+}
