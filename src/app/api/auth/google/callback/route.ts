@@ -7,7 +7,10 @@ const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || "pdm-pindrop-centra
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
-  const clientId = searchParams.get("state") || "born-again-roofing";
+  // Tenant comes from this deployment's environment; "state" is only a CSRF nonce.
+  const clientId = process.env.PDM_CLIENT_ID || "born-again-roofing";
+  const state = searchParams.get("state");
+  const nonceCookie = request.cookies.get("gmb_oauth_state")?.value;
   const error = searchParams.get("error");
   const errorDescription = searchParams.get("error_description");
 
@@ -17,6 +20,10 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     return errorRedirect(errorDescription || error);
+  }
+
+  if (!state || !nonceCookie || state !== nonceCookie) {
+    return errorRedirect("Security check failed. Please start the Google connection again.");
   }
 
   if (!code) {

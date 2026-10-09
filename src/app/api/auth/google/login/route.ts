@@ -4,8 +4,9 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const clientId = searchParams.get("clientId") || "born-again-roofing";
+    // The tenant is fixed by this deployment's environment (PDM_CLIENT_ID), never by a URL parameter.
+    // Random nonce stored in an httpOnly cookie and echoed back via "state" to block forged callbacks.
+    const nonce = crypto.randomUUID();
 
     const googleClientId = process.env.GOOGLE_CLIENT_ID;
     if (!googleClientId) {
@@ -23,9 +24,17 @@ export async function GET(request: NextRequest) {
     oauthUrl.searchParams.append("scope", "https://www.googleapis.com/auth/business.manage openid email profile");
     oauthUrl.searchParams.append("access_type", "offline");
     oauthUrl.searchParams.append("prompt", "consent");
-    oauthUrl.searchParams.append("state", clientId);
+    oauthUrl.searchParams.append("state", nonce);
 
-    return NextResponse.redirect(oauthUrl.toString());
+    const response = NextResponse.redirect(oauthUrl.toString());
+    response.cookies.set("gmb_oauth_state", nonce, {
+      httpOnly: true,
+      secure: protocol === "https",
+      sameSite: "lax",
+      maxAge: 600,
+      path: "/api/auth/google",
+    });
+    return response;
   } catch (error: any) {
     console.error("[Google OAuth Login] Initiating failed:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
