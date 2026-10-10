@@ -7,18 +7,6 @@ const BASE_URL = 'https://www.bornagainroofing.com';
 // Read-only: uses the same tenant-scoped getPins() source as /api/pins and the project pages.
 export const dynamic = 'force-dynamic';
 
-// Project dates are the recorded job dates (e.g. "Jul 27, 2026"). They are used as lastmod only when
-// they parse to a plausible past date; otherwise lastmod is omitted rather than guessed.
-function recordedDate(value: string | undefined): Date | undefined {
-  if (!value) return undefined;
-  const t = Date.parse(value);
-  if (Number.isNaN(t)) return undefined;
-  const d = new Date(t);
-  const normalized = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 12));
-  const now = Date.now();
-  return normalized.getTime() <= now + 86_400_000 && normalized.getFullYear() >= 2015 ? normalized : undefined;
-}
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const pins = await getPins();
 
@@ -160,13 +148,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
 
     // Project detail pages: historical snapshot + live Firestore projects (priority 0.6)
-    ...pins.map((pin) => {
-      const lastModified = recordedDate(pin.date);
-      return {
-        url: `${BASE_URL}/pin-page/?id=${pin.id}`,
-        ...(lastModified ? { lastModified } : {}),
-        priority: 0.6,
-      };
-    }),
+    // lastmod is intentionally omitted: the recorded job date is not a page publication/modification time,
+    // and getPins() exposes no reliable page timestamp.
+    ...pins.map((pin) => ({
+      url: `${BASE_URL}/pin-page/?id=${pin.id}`,
+      priority: 0.6,
+    })),
   ];
 }
