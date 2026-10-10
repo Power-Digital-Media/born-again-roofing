@@ -1,10 +1,26 @@
 import { MetadataRoute } from 'next';
-import pinsData from '@/data/pins.json';
+import { getPins } from '@/lib/db';
 
 const BASE_URL = 'https://www.bornagainroofing.com';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+// Rendered on request so newly submitted (Firestore-only) projects appear without a redeploy.
+// Read-only: uses the same tenant-scoped getPins() source as /api/pins and the project pages.
+export const dynamic = 'force-dynamic';
+
+// Project dates are the recorded job dates (e.g. "Jul 27, 2026"). They are used as lastmod only when
+// they parse to a plausible past date; otherwise lastmod is omitted rather than guessed.
+function recordedDate(value: string | undefined): Date | undefined {
+  if (!value) return undefined;
+  const t = Date.parse(value);
+  if (Number.isNaN(t)) return undefined;
+  const d = new Date(t);
+  const normalized = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 12));
+  const now = Date.now();
+  return normalized.getTime() <= now + 86_400_000 && normalized.getFullYear() >= 2015 ? normalized : undefined;
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const pins = await getPins();
 
   // Dynamic [service] pages
   const servicePages = [
@@ -98,64 +114,59 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Homepage
     {
       url: `${BASE_URL}/`,
-      lastModified: now,
       priority: 1.0,
     },
 
     // Service index pages
     ...serviceIndexPages.map((page) => ({
       url: `${BASE_URL}/${page}/`,
-      lastModified: now,
       priority: 0.9,
     })),
 
     // Dynamic [service] pages
     ...servicePages.map((service) => ({
       url: `${BASE_URL}/${service}/`,
-      lastModified: now,
       priority: 0.8,
     })),
 
     // Residential roofing sub-services
     ...residentialSubServices.map((sub) => ({
       url: `${BASE_URL}/residential-roofing/${sub}/`,
-      lastModified: now,
       priority: 0.8,
     })),
 
     // Storm damage sub-services
     ...stormDamageSubServices.map((sub) => ({
       url: `${BASE_URL}/storm-damage-roof-repair/${sub}/`,
-      lastModified: now,
       priority: 0.8,
     })),
 
     // Metal roofing sub-services
     ...metalRoofingSubServices.map((sub) => ({
       url: `${BASE_URL}/metal-roofing-repair-and-installation/${sub}/`,
-      lastModified: now,
       priority: 0.8,
     })),
 
     // Area pages
     ...areaPages.map((area) => ({
       url: `${BASE_URL}/areas-we-service/${area}/`,
-      lastModified: now,
       priority: 0.7,
     })),
 
     // Static pages
     ...staticPages.map((page) => ({
       url: `${BASE_URL}/${page}/`,
-      lastModified: now,
       priority: 0.5,
     })),
 
-    // Dynamic case study project detail pages (priority 0.6)
-    ...pinsData.map((pin) => ({
-      url: `${BASE_URL}/pin-page/?id=${pin.id}`,
-      lastModified: now,
-      priority: 0.6,
-    })),
+    // Project detail pages: historical snapshot + live Firestore projects (priority 0.6)
+    ...pins.map((pin) => {
+      const lastModified = recordedDate(pin.date);
+      return {
+        url: `${BASE_URL}/pin-page/?id=${pin.id}`,
+        ...(lastModified ? { lastModified } : {}),
+        priority: 0.6,
+      };
+    }),
   ];
 }
