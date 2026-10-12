@@ -12,9 +12,7 @@ export interface GmbLocation {
   title: string;
 }
 
-function settingsUrl(clientId: string, firebaseProjectId: string): string {
-  return `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/settings/${clientId}`;
-}
+import { getClientSettings, patchClientSettings } from "./firestore-admin";
 
 // 1. Helper to fetch GMB auth settings from Firestore.
 // The Google connect flow (/api/auth/google/callback) stores googleAccessToken / googleRefreshToken /
@@ -22,23 +20,26 @@ function settingsUrl(clientId: string, firebaseProjectId: string): string {
 // whichever flow connected the account is honored.
 async function getGoogleAuthSettings(clientId: string, firebaseProjectId: string): Promise<GoogleTokens | null> {
   try {
-    const res = await fetch(settingsUrl(clientId, firebaseProjectId));
+    const res = await getClientSettings(clientId, firebaseProjectId);
     if (!res.ok) {
-      console.log(`[GMB] No Google OAuth credentials found in settings/${clientId} or failed to fetch.`);
+      console.log(`[GMB] No Google OAuth credentials found in settings/${clientId} or failed to fetch (HTTP ${res.status}).`);
       return null;
     }
-    const data = await res.json();
-    const fields = data.fields || {};
+    const fields = res.fields || {};
 
-    const parseValue = (val: any) => {
-      if (!val) return "";
-      return val.stringValue || (val.doubleValue ? Number(val.doubleValue) : "");
+    const parseValue = (val: unknown): string => {
+      if (!val || typeof val !== "object") return "";
+      const v = val as { stringValue?: string; integerValue?: string | number; doubleValue?: number };
+      if (v.stringValue) return v.stringValue;
+      if (v.integerValue !== undefined) return String(v.integerValue);
+      if (v.doubleValue !== undefined) return String(v.doubleValue);
+      return "";
     };
 
     const accessToken = parseValue(fields.googleAccessToken) || parseValue(fields.accessToken);
     const refreshToken = parseValue(fields.googleRefreshToken) || parseValue(fields.refreshToken);
     const expiryTime = Number(parseValue(fields.googleTokenExpiry) || parseValue(fields.expiryTime)) || 0;
-    const locationName = parseValue(fields.googleLocationName) || process.env.GMB_LOCATION_NAME || "";
+    const locationName = parseValue(fields.googleLocationName) || parseValue(fields.gmbLocationName) || process.env.GMB_LOCATION_NAME || "";
 
     if (!refreshToken) {
       return null;
@@ -54,23 +55,16 @@ async function getGoogleAuthSettings(clientId: string, firebaseProjectId: string
 // 2. Helper to save updated token back to Firestore
 async function saveAccessToken(clientId: string, firebaseProjectId: string, accessToken: string, expiryTime: number) {
   try {
-    const firestoreFields = {
-      fields: {
-        clientId: { stringValue: clientId },
-        googleAccessToken: { stringValue: accessToken },
-        googleTokenExpiry: { stringValue: String(expiryTime) }
-      }
+    const fieldsToUpdate = {
+      clientId: { stringValue: clientId },
+      googleAccessToken: { stringValue: accessToken },
+      googleTokenExpiry: { stringValue: String(expiryTime) }
     };
 
-    const updateParams = new URLSearchParams();
-    updateParams.append("updateMask.fieldPaths", "googleAccessToken");
-    updateParams.append("updateMask.fieldPaths", "googleTokenExpiry");
-
-    await fetch(`${settingsUrl(clientId, firebaseProjectId)}?${updateParams.toString()}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(firestoreFields)
-    });
+    const res = await patchClientSettings(clientId, fieldsToUpdate, firebaseProjectId);
+    if (!res.ok) {
+      console.error("[GMB] Failed to save refreshed token:", res.error || res.status);
+    }
   } catch (error) {
     console.error("[GMB] Failed to save refreshed token:", error);
   }
@@ -123,7 +117,8 @@ export async function getFreshGoogleAccess(
   const credentials = await getGoogleAuthSettings(clientId, firebaseProjectId);
   if (!credentials) return null;
 
-  let { accessToken, refreshToken, expiryTime } = credentials;
+  const { refreshToken } = credentials;
+  let { accessToken, expiryTime } = credentials;
 
   // Check if token is missing, expired or expiring in the next 5 minutes
   if (!accessToken || Date.now() + 300 * 1000 >= expiryTime) {
@@ -223,7 +218,7 @@ export async function publishPinToGmb(pin: PinType): Promise<boolean> {
       `Project Details:\n${pin.description}`;
 
     // Setup GMB local post structure
-    const postBody: any = {
+    const postBody: Record<string, unknown> = {
       languageCode: "en-US",
       topicType: "STANDARD",
       summary: summary.slice(0, 1500), // Google's local post summary limit

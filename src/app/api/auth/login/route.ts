@@ -3,7 +3,6 @@ import { issueToken, safeEqual, rateLimited, clientIp } from "@/lib/pindrop-auth
 
 const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || "pdm-pindrop-central";
 const clientId = process.env.PDM_CLIENT_ID || "born-again-roofing";
-const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/settings/${clientId}`;
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,12 +21,11 @@ export async function POST(req: NextRequest) {
 
     let correctPasscode = "";
 
-    // 1. Attempt to fetch from Firestore settings
-    const res = await fetch(firestoreUrl);
+    // 1. Attempt to fetch from Firestore settings using authenticated helper
+    const { getClientSettings, getStringValue } = await import("@/lib/firestore-admin");
+    const res = await getClientSettings(clientId, firebaseProjectId);
     if (res.ok) {
-      const data = await res.json();
-      const fields = data.fields || {};
-      correctPasscode = fields.rooferPasscode?.stringValue || "";
+      correctPasscode = getStringValue(res.fields.rooferPasscode);
     }
 
     // 2. Fallback to env variable if not set in database.

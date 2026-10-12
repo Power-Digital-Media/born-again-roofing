@@ -57,47 +57,28 @@ export async function GET(request: Request) {
       return NextResponse.redirect(new URL("/admin/drop-pin?google_sync=error&message=No+access+token+returned", request.url));
     }
 
-    // Save tokens in Firebase Firestore settings collection via REST API
-    // We use a PATCH request (which creates the document if missing, or updates it if present)
+    // Save tokens in Firebase Firestore settings collection via authenticated partial patch
     const expiryTime = Date.now() + (expires_in || 3600) * 1000;
     
-    // Construct Firestore fields structure (standard REST document format)
-    const firestoreFields: any = {
-      fields: {
-        clientId: { stringValue: clientId },
-        accessToken: { stringValue: access_token },
-        expiryTime: { doubleValue: expiryTime }
-      }
+    const { patchClientSettings } = await import("@/lib/firestore-admin");
+    type ImportType = import("@/lib/firestore-admin").FirestoreFields;
+    const fieldsToUpdate: ImportType = {
+      clientId: { stringValue: clientId },
+      accessToken: { stringValue: access_token },
+      googleAccessToken: { stringValue: access_token },
+      expiryTime: { doubleValue: expiryTime },
+      googleTokenExpiry: { stringValue: expiryTime.toString() },
     };
 
-    // Google only sends the refresh_token on the FIRST authorization (or when prompt=consent is used)
-    // Save it if present so we don't overwrite a previous refresh token with blank/null
     if (refresh_token) {
-      firestoreFields.fields.refreshToken = { stringValue: refresh_token };
+      fieldsToUpdate.refreshToken = { stringValue: refresh_token };
+      fieldsToUpdate.googleRefreshToken = { stringValue: refresh_token };
     }
 
-    const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/settings/${clientId}`;
-    
-    // If updating, tell Firestore which fields to write via query parameters to prevent replacing document entirely
-    const updateParams = new URLSearchParams();
-    updateParams.append("updateMask.fieldPaths", "clientId");
-    updateParams.append("updateMask.fieldPaths", "accessToken");
-    updateParams.append("updateMask.fieldPaths", "expiryTime");
-    if (refresh_token) {
-      updateParams.append("updateMask.fieldPaths", "refreshToken");
-    }
-
-    const saveResponse = await fetch(`${firestoreUrl}?${updateParams.toString()}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(firestoreFields)
-    });
+    const saveResponse = await patchClientSettings(clientId, fieldsToUpdate, firebaseProjectId);
 
     if (!saveResponse.ok) {
-      const saveError = await saveResponse.text();
-      console.error("Failed to save tokens in Firestore settings:", saveError);
+      console.error("Failed to save tokens in Firestore settings:", saveResponse.error || saveResponse.status);
       return NextResponse.redirect(new URL("/admin/drop-pin?google_sync=error&message=Failed+to+save+auth+settings", request.url));
     }
 

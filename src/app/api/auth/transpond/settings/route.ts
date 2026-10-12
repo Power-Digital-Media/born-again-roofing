@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireSession } from "@/lib/pindrop-auth";
 
+import { getClientSettings, patchClientSettings, type FirestoreFields } from "@/lib/firestore-admin";
+
 const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || "pdm-pindrop-central";
 const clientId = process.env.PDM_CLIENT_ID || "born-again-roofing";
-const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/settings/${clientId}`;
 
 // Helper to mask API key for security (only show first 4 and last 4 characters)
 function maskApiKey(key: string): string {
@@ -26,16 +27,20 @@ export async function GET(request: NextRequest) {
     let googleReviewUrl = "";
     let googleConnected = false;
 
-    // A. Read from Firestore
-    const res = await fetch(firestoreUrl);
+    // A. Read from Firestore using authenticated service account
+    const res = await getClientSettings(clientId, firebaseProjectId);
     if (res.ok) {
-      const data = await res.json();
-      const fields = data.fields || {};
+      const fields = res.fields || {};
       
-      const parseVal = (val: any) => val?.stringValue || "";
-      const parseArrayVal = (val: any): string[] => {
-        if (!val?.arrayValue?.values) return [];
-        return val.arrayValue.values.map((v: any) => v.stringValue || "");
+      const parseVal = (val: unknown) =>
+        val && typeof val === "object" && "stringValue" in val
+          ? String((val as { stringValue: unknown }).stringValue)
+          : "";
+      const parseArrayVal = (val: unknown): string[] => {
+        if (!val || typeof val !== "object" || !("arrayValue" in val)) return [];
+        const arr = (val as { arrayValue?: { values?: Array<{ stringValue?: string }> } }).arrayValue;
+        if (!arr?.values) return [];
+        return arr.values.map((v) => v.stringValue || "");
       };
 
       transpondApiKey = parseVal(fields.transpondApiKey);
@@ -82,7 +87,7 @@ export async function GET(request: NextRequest) {
 
     // E. Check social connection status via Transpond API
     let socialConnected = false;
-    let connectedChannels: any[] = [];
+    let connectedChannels: unknown[] = [];
     if (transpondApiKey) {
       try {
         const socialRes = await fetch("https://api.transpond.io/social", {
@@ -115,9 +120,10 @@ export async function GET(request: NextRequest) {
       googleConnected
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
     console.error("[Transpond settings API] GET failed:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -129,75 +135,53 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { apiKey, groupId, technicians, rooferPasscode, companyName, googleReviewUrl } = body;
 
-    // Read current settings document (so we don't wipe out other fields like Google tokens)
-    const getRes = await fetch(firestoreUrl);
-    const existingDoc = getRes.ok ? await getRes.json() : { fields: {} };
-    const fields = existingDoc.fields || {};
-
-    const updatedFields: any = { ...fields };
-    const updateParams = new URLSearchParams();
-
-    // Always keep clientId updated
-    updatedFields.clientId = { stringValue: clientId };
-    updateParams.append("updateMask.fieldPaths", "clientId");
+    const fieldsToUpdate: FirestoreFields = {
+      clientId: { stringValue: clientId },
+    };
 
     if (apiKey !== undefined && groupId !== undefined) {
       if (!apiKey || !groupId) {
         return NextResponse.json({ error: "Both API Key and Group ID are required." }, { status: 400 });
       }
-      updatedFields.transpondApiKey = { stringValue: apiKey };
-      updatedFields.transpondGroupId = { stringValue: groupId };
-      updateParams.append("updateMask.fieldPaths", "transpondApiKey");
-      updateParams.append("updateMask.fieldPaths", "transpondGroupId");
+      fieldsToUpdate.transpondApiKey = { stringValue: apiKey };
+      fieldsToUpdate.transpondGroupId = { stringValue: groupId };
     }
 
     if (technicians !== undefined) {
       if (!Array.isArray(technicians)) {
         return NextResponse.json({ error: "Technicians must be an array of strings." }, { status: 400 });
       }
-      updatedFields.technicians = {
+      fieldsToUpdate.technicians = {
         arrayValue: {
           values: technicians.map((tech: string) => ({ stringValue: tech }))
         }
       };
-      updateParams.append("updateMask.fieldPaths", "technicians");
     }
 
     if (rooferPasscode !== undefined) {
-      updatedFields.rooferPasscode = { stringValue: rooferPasscode };
-      updateParams.append("updateMask.fieldPaths", "rooferPasscode");
+      fieldsToUpdate.rooferPasscode = { stringValue: rooferPasscode };
     }
 
     if (companyName !== undefined) {
-      updatedFields.companyName = { stringValue: companyName };
-      updateParams.append("updateMask.fieldPaths", "companyName");
+      fieldsToUpdate.companyName = { stringValue: companyName };
     }
 
     if (googleReviewUrl !== undefined) {
-      updatedFields.googleReviewUrl = { stringValue: googleReviewUrl };
-      updateParams.append("updateMask.fieldPaths", "googleReviewUrl");
+      fieldsToUpdate.googleReviewUrl = { stringValue: googleReviewUrl };
     }
 
-    const firestoreFields = { fields: updatedFields };
-
-    const patchRes = await fetch(`${firestoreUrl}?${updateParams.toString()}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(firestoreFields)
-    });
+    const patchRes = await patchClientSettings(clientId, fieldsToUpdate, firebaseProjectId);
 
     if (!patchRes.ok) {
-      const errText = await patchRes.text();
-      console.error("[Transpond settings API] Failed to patch Firestore settings:", errText);
+      console.error("[Transpond settings API] Failed to patch Firestore settings:", patchRes.error || patchRes.status);
       return NextResponse.json({ error: "Failed to write to settings database" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, message: "Settings saved successfully!" });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
     console.error("[Transpond settings API] POST failed:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

@@ -69,38 +69,31 @@ export async function GET(request: NextRequest) {
 
     const expiryTime = (Date.now() + expires_in * 1000).toString();
 
-    // 2. Read and update settings in Firestore settings collection
-    const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/settings/${clientId}`;
-    
-    const getRes = await fetch(firestoreUrl);
-    const existingDoc = getRes.ok ? await getRes.json() : { fields: {} };
-    const fields = existingDoc.fields || {};
-
-    const updatedFields: any = { ...fields };
-    updatedFields.clientId = { stringValue: clientId };
-    updatedFields.googleAccessToken = { stringValue: access_token };
+    // 2. Update Google OAuth tokens in Firestore settings collection using authenticated partial patch
+    const { patchClientSettings } = await import("@/lib/firestore-admin");
+    type ImportType = import("@/lib/firestore-admin").FirestoreFields;
+    const fieldsToUpdate: ImportType = {
+      clientId: { stringValue: clientId },
+      googleAccessToken: { stringValue: access_token },
+      googleTokenExpiry: { stringValue: expiryTime },
+    };
     if (refresh_token) {
-      updatedFields.googleRefreshToken = { stringValue: refresh_token };
+      fieldsToUpdate.googleRefreshToken = { stringValue: refresh_token };
     }
-    updatedFields.googleTokenExpiry = { stringValue: expiryTime };
 
-    const firestoreFields = { fields: updatedFields };
-    const patchRes = await fetch(firestoreUrl, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(firestoreFields)
-    });
+    const patchRes = await patchClientSettings(clientId, fieldsToUpdate, firebaseProjectId);
 
     if (!patchRes.ok) {
-      const errText = await patchRes.text();
-      return errorRedirect(`Failed to write settings to Firestore: ${errText}`);
+      console.error("[Google OAuth Callback] Failed to write settings to Firestore:", patchRes.error || patchRes.status);
+      return errorRedirect(`Failed to write settings to Firestore: ${patchRes.error || `HTTP ${patchRes.status}`}`);
     }
 
     // 3. Success redirect
     return NextResponse.redirect(`${baseUrl}/admin/drop-pin?clientId=${clientId}&google_sync=success`);
 
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
     console.error("[Google OAuth Callback] Token exchange failed:", err);
-    return errorRedirect(`System error: ${err.message}`);
+    return errorRedirect(`System error: ${msg}`);
   }
 }

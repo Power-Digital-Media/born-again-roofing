@@ -5,20 +5,20 @@ interface TranspondSettings {
   groupId: string;
 }
 
+import { getClientSettings, getStringValue } from "./firestore-admin";
+
 // 1. Helper to fetch stored Transpond settings from Firestore
 async function getTranspondSettings(clientId: string, firebaseProjectId: string): Promise<TranspondSettings | null> {
   try {
-    const url = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/settings/${clientId}`;
-    const res = await fetch(url);
+    const res = await getClientSettings(clientId, firebaseProjectId);
     if (!res.ok) {
-      console.log(`[Transpond Social] No Transpond settings found in Firestore for ${clientId}. Falling back to env.`);
+      console.log(`[Transpond Social] No Transpond settings found in Firestore for ${clientId} (HTTP ${res.status}). Falling back to env.`);
       return null;
     }
-    const data = await res.json();
-    const fields = data.fields || {};
+    const fields = res.fields || {};
 
-    const apiKey = fields.transpondApiKey?.stringValue || "";
-    const groupId = fields.transpondGroupId?.stringValue || "";
+    const apiKey = getStringValue(fields.transpondApiKey);
+    const groupId = getStringValue(fields.transpondGroupId);
 
     if (!apiKey) return null;
     return { apiKey, groupId };
@@ -67,7 +67,9 @@ export async function publishPinToTranspondSocial(pin: PinType): Promise<boolean
       return false;
     }
 
-    const channelIds = channels.map((c: any) => c.id).filter(Boolean);
+    const channelIds = channels
+      .map((c: unknown) => (c && typeof c === "object" && "id" in c ? String((c as { id: unknown }).id) : ""))
+      .filter(Boolean);
     if (channelIds.length === 0) {
       console.log("[Transpond Social] No valid social channel IDs resolved.");
       return false;

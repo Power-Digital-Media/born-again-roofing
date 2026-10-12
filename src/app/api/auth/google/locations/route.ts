@@ -6,7 +6,6 @@ export const dynamic = "force-dynamic";
 
 const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || "pdm-pindrop-central";
 const clientId = process.env.PDM_CLIENT_ID || "born-again-roofing";
-const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/settings/${clientId}`;
 
 // GET: list the Google Business Profile locations the connected account can manage,
 // and which one (if any) is currently pinned for automatic posting.
@@ -43,19 +42,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "That location is not available to the connected Google account." }, { status: 400 });
   }
 
-  const params = new URLSearchParams();
-  params.append("updateMask.fieldPaths", "googleLocationName");
-  params.append("updateMask.fieldPaths", "googleLocationTitle");
-  const res = await fetch(`${firestoreUrl}?${params.toString()}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      fields: {
-        googleLocationName: { stringValue: match.name },
-        googleLocationTitle: { stringValue: match.title }
-      }
-    })
-  });
+  const { patchClientSettings } = await import("@/lib/firestore-admin");
+  const res = await patchClientSettings(
+    clientId,
+    {
+      googleLocationName: { stringValue: match.name },
+      googleLocationTitle: { stringValue: match.title }
+    },
+    firebaseProjectId
+  );
+
   if (!res.ok) {
     return NextResponse.json({ error: "Failed to save the selected location." }, { status: 500 });
   }

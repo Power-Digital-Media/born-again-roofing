@@ -82,14 +82,12 @@ export async function POST(request: NextRequest) {
     let groupId = 0;
 
     try {
-      const settingsRes = await fetch(
-        `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/settings/${clientId}`
-      );
+      const { getClientSettings, getStringValue } = await import("@/lib/firestore-admin");
+      const settingsRes = await getClientSettings(clientId, firebaseProjectId);
       if (settingsRes.ok) {
-        const settingsData = await settingsRes.json();
-        const fields = settingsData.fields || {};
-        transpondKey = fields.transpondApiKey?.stringValue || "";
-        groupId = parseInt(fields.transpondGroupId?.stringValue || "0", 10);
+        const fields = settingsRes.fields || {};
+        transpondKey = getStringValue(fields.transpondApiKey);
+        groupId = parseInt(getStringValue(fields.transpondGroupId) || "0", 10);
       }
     } catch (err) {
       console.error("[forms] Failed to read Transpond settings from Firestore:", err);
