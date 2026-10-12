@@ -54,7 +54,11 @@ export default function DropPinPage() {
 
   const [author, setAuthor] = useState("");
   const [quickReviewAuthor, setQuickReviewAuthor] = useState("");
-  const [date, setDate] = useState("");
+  const [date] = useState(() => {
+    const today = new Date();
+    const options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric", year: "numeric" };
+    return today.toLocaleDateString("en-US", options);
+  });
   const [location, setLocation] = useState("");
   const [service, setService] = useState("");
   const [customService, setCustomService] = useState("");
@@ -361,13 +365,6 @@ export default function DropPinPage() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
-  // Set default date to today's date format (e.g. Jul 22, 2026)
-  useEffect(() => {
-    const today = new Date();
-    const options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric", year: "numeric" };
-    setDate(today.toLocaleDateString("en-US", options));
-  }, []);
-
   // Check authentication and URL params on load
   useEffect(() => {
     const cachedAuth = sessionStorage.getItem("roofer_pin_auth");
@@ -381,6 +378,7 @@ export default function DropPinPage() {
       }
     } catch {}
     if (cachedAuth === "true" || hasValidToken) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsAuthenticated(true);
       setUserRole(initialRole);
       if (initialRole === "admin") {
@@ -402,6 +400,7 @@ export default function DropPinPage() {
       alert(`❌ Google Auth Failed: ${errorMsg || "Unknown Error"}`);
       window.history.replaceState({}, document.title, window.location.pathname);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -436,7 +435,7 @@ export default function DropPinPage() {
         const data = await res.json();
         setPasscodeError(data.error || "Incorrect passcode. Please try again.");
       }
-    } catch (err) {
+    } catch {
       setPasscodeError("Connection error. Please try again.");
     }
   };
@@ -594,9 +593,10 @@ export default function DropPinPage() {
       }
 
       setImages((prev) => [...prev, ...newUrls]);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Upload error:", err);
-      alert(err.message || "Failed to upload one or more photos. Please try again.");
+      const msg = err instanceof Error ? err.message : String(err);
+      alert(msg || "Failed to upload one or more photos. Please try again.");
     } finally {
       setIsCompressing(false);
       setUploadStatus("");
@@ -1328,7 +1328,7 @@ export default function DropPinPage() {
                         </div>
 
                         <div style={{ fontSize: "0.65rem", color: "var(--text-muted)", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "12px", marginTop: "12px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                          <span>Don't have accounts?</span>
+                          <span>Don&apos;t have accounts?</span>
                           <a href="https://get.capsulenow.io/w87ng8tquqti" target="_blank" rel="noopener noreferrer" style={{ color: "#e2b047", textDecoration: "underline" }}>Capsule</a>
                           <span>•</span>
                           <a href="https://get.capsulenow.io/h70zife95sd6-no30m" target="_blank" rel="noopener noreferrer" style={{ color: "#e2b047", textDecoration: "underline" }}>Transpond</a>
