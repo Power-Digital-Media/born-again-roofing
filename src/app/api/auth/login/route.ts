@@ -38,14 +38,27 @@ export async function POST(req: NextRequest) {
         process.env.PORTAL_PASSCODE || process.env.NEXT_PUBLIC_PORTAL_PASSCODE || legacyDefault;
     }
 
+    // 1. Check if the submitted passcode is the administrator credential
+    const { verifyAdminPasscode } = await import("@/lib/pindrop-auth");
+    if (verifyAdminPasscode(passcode)) {
+      const issued = issueToken("admin");
+      return NextResponse.json({
+        success: true,
+        role: "admin",
+        ...(issued ? { token: issued.token, expiresAt: issued.expiresAt } : {}),
+      });
+    }
+
+    // 2. Check if the submitted passcode is the technician credential
     if (!correctPasscode) {
       return NextResponse.json({ error: "Portal passcode is not configured" }, { status: 500 });
     }
 
     if (safeEqual(passcode, correctPasscode)) {
-      const issued = issueToken();
+      const issued = issueToken("tech");
       return NextResponse.json({
         success: true,
+        role: "tech",
         ...(issued ? { token: issued.token, expiresAt: issued.expiresAt } : {}),
       });
     }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireSession } from "@/lib/pindrop-auth";
+import { requireAdminSession } from "@/lib/pindrop-auth";
 import { getFreshGoogleAccess, listGmbLocations } from "@/lib/google-gmb";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +10,7 @@ const clientId = process.env.PDM_CLIENT_ID || "born-again-roofing";
 // GET: list the Google Business Profile locations the connected account can manage,
 // and which one (if any) is currently pinned for automatic posting.
 export async function GET(request: NextRequest) {
-  const denied = requireSession(request);
+  const denied = requireAdminSession(request);
   if (denied) return denied;
 
   const access = await getFreshGoogleAccess(clientId, firebaseProjectId);
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 // POST { locationName }: pin the single location that jobs should be posted to.
 // The value must be one of the locations the connected account can actually manage.
 export async function POST(request: NextRequest) {
-  const denied = requireSession(request);
+  const denied = requireAdminSession(request);
   if (denied) return denied;
 
   const { locationName } = await request.json().catch(() => ({}));

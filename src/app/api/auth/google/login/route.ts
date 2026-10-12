@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdminSession } from "@/lib/pindrop-auth";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
+  const denied = requireAdminSession(request);
+  if (denied) return denied;
+
   try {
     // The tenant is fixed by this deployment's environment (PDM_CLIENT_ID), never by a URL parameter.
     // Random nonce stored in an httpOnly cookie and echoed back via "state" to block forged callbacks.
@@ -35,8 +39,9 @@ export async function GET(request: NextRequest) {
       path: "/api/auth/google",
     });
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
     console.error("[Google OAuth Login] Initiating failed:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

@@ -48,6 +48,7 @@ const serviceList = [
 
 export default function DropPinPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<"admin" | "tech" | null>(null);
   const [passcode, setPasscode] = useState("");
   const [passcodeError, setPasscodeError] = useState("");
 
@@ -107,6 +108,7 @@ export default function DropPinPage() {
     localStorage.removeItem("roofer_pin_token");
     sessionStorage.removeItem("roofer_pin_auth");
     setIsAuthenticated(false);
+    setUserRole(null);
   };
 
   const fetchTranspondSettings = async () => {
@@ -114,6 +116,9 @@ export default function DropPinPage() {
       const res = await fetch("/api/auth/transpond/settings", { headers: authHeaders(false) });
       if (res.status === 401) {
         handleSessionExpired();
+        return;
+      }
+      if (res.status === 403) {
         return;
       }
       if (res.ok) {
@@ -331,13 +336,20 @@ export default function DropPinPage() {
   useEffect(() => {
     const cachedAuth = sessionStorage.getItem("roofer_pin_auth");
     let hasValidToken = false;
+    let initialRole: "admin" | "tech" = "tech";
     try {
       const saved = JSON.parse(localStorage.getItem("roofer_pin_token") || "null");
       hasValidToken = !!(saved && saved.token && saved.expiresAt > Date.now());
+      if (saved && saved.role === "admin") {
+        initialRole = "admin";
+      }
     } catch {}
     if (cachedAuth === "true" || hasValidToken) {
       setIsAuthenticated(true);
-      fetchTranspondSettings();
+      setUserRole(initialRole);
+      if (initialRole === "admin") {
+        fetchTranspondSettings();
+      }
       const tourSeen = localStorage.getItem("pindrop_tour_seen");
       if (!tourSeen) {
         setTimeout(() => setTourStep(1), 800);
@@ -367,15 +379,19 @@ export default function DropPinPage() {
       });
       if (res.ok) {
         const loginData = await res.json().catch(() => ({}));
+        const role: "admin" | "tech" = loginData.role === "admin" ? "admin" : "tech";
+        setUserRole(role);
         if (loginData.token) {
           localStorage.setItem(
             "roofer_pin_token",
-            JSON.stringify({ token: loginData.token, expiresAt: loginData.expiresAt })
+            JSON.stringify({ token: loginData.token, expiresAt: loginData.expiresAt, role })
           );
         }
         sessionStorage.setItem("roofer_pin_auth", "true");
         setIsAuthenticated(true);
-        fetchTranspondSettings();
+        if (role === "admin") {
+          fetchTranspondSettings();
+        }
         const tourSeen = localStorage.getItem("pindrop_tour_seen");
         if (!tourSeen) {
           setTimeout(() => setTourStep(1), 800);
@@ -1140,6 +1156,7 @@ export default function DropPinPage() {
           </div>
 
           {/* Unified Integrations Accordion Card */}
+          {userRole === "admin" && (
           <div className="double-bezel-wrapper" style={{ maxWidth: "580px", margin: "2rem auto 0", height: "auto" }}>
             <div className="double-bezel-inner" style={{ padding: "1.5rem", textAlign: "left", height: "auto" }}>
               <h3 style={{ color: "#ffffff", fontSize: "1.1rem", fontWeight: "800", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: "8px" }}>
@@ -1168,7 +1185,14 @@ export default function DropPinPage() {
                         </p>
                         <button
                           type="button"
-                          onClick={() => window.location.href = "/api/auth/google/login?clientId=born-again-roofing"}
+                          onClick={() => {
+                            const raw = localStorage.getItem("roofer_pin_token");
+                            let token = "";
+                            if (raw) {
+                              try { token = JSON.parse(raw).token || ""; } catch {}
+                            }
+                            window.location.href = `/api/auth/google/login?clientId=born-again-roofing&token=${encodeURIComponent(token)}`;
+                          }}
                           className="btn btn-outline"
                           style={{ width: "100%", fontSize: "0.75rem", height: "36px", display: "inline-flex", alignItems: "center", justifyContent: "center", background: "rgba(226, 176, 71, 0.08)", color: "#ffffff", border: "1px solid #e2b047", cursor: "pointer" }}
                         >
@@ -1330,6 +1354,7 @@ export default function DropPinPage() {
                 </div>
               </div>
             </div>
+          )}
             </>
            )}
 
@@ -1382,7 +1407,7 @@ export default function DropPinPage() {
                   <div style={{ display: "flex", flexDirection: "column", gap: "1rem", fontSize: "0.8rem", color: "#ffffff", lineHeight: "1.6", textAlign: "left" }}>
                     <div style={{ background: "rgba(255, 255, 255, 0.02)", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
                       <strong style={{ color: "#e2b047", display: "block", marginBottom: "4px" }}>Step 1: Open Google Cloud Console</strong>
-                      Go to <a href="https://console.cloud.google.com" target="_blank" rel="noopener noreferrer" style={{ color: "#e2b047", textDecoration: "underline" }}>console.cloud.google.com</a> and sign in with the Google Account that manages the business maps profile. Create a new project (e.g., "PinDrop SEO").
+                      Go to <a href="https://console.cloud.google.com" target="_blank" rel="noopener noreferrer" style={{ color: "#e2b047", textDecoration: "underline" }}>console.cloud.google.com</a> and sign in with the Google Account that manages the business maps profile. Create a new project (e.g., &quot;PinDrop SEO&quot;).
                     </div>
 
                     <div style={{ background: "rgba(255, 255, 255, 0.02)", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
@@ -1395,7 +1420,7 @@ export default function DropPinPage() {
 
                     <div style={{ background: "rgba(255, 255, 255, 0.02)", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
                       <strong style={{ color: "#e2b047", display: "block", marginBottom: "4px" }}>Step 3: Create OAuth Credentials</strong>
-                      Go to <strong>APIs & Services &gt; Credentials</strong>. Create an "OAuth Client ID" (select "Web Application"). 
+                      Go to <strong>APIs & Services &gt; Credentials</strong>. Create an &quot;OAuth Client ID&quot; (select &quot;Web Application&quot;). 
                       Add your deployment domains (e.g., `https://bornagainroofing.com` and `http://localhost:3000`) under **Authorized Javascript Origins** and **Authorized Redirect URIs**.
                     </div>
 

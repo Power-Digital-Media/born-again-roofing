@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireSession } from "@/lib/pindrop-auth";
+import { requireAdminSession } from "@/lib/pindrop-auth";
 
 import { getClientSettings, patchClientSettings, type FirestoreFields } from "@/lib/firestore-admin";
 
@@ -15,7 +15,7 @@ function maskApiKey(key: string): string {
 
 // 1. GET Settings & Social Connection Status
 export async function GET(request: NextRequest) {
-  const denied = requireSession(request);
+  const denied = requireAdminSession(request);
   if (denied) return denied;
   try {
     let transpondApiKey = "";
@@ -129,7 +129,7 @@ export async function GET(request: NextRequest) {
 
 // 2. POST Save Settings
 export async function POST(request: NextRequest) {
-  const denied = requireSession(request);
+  const denied = requireAdminSession(request);
   if (denied) return denied;
   try {
     const body = await request.json();

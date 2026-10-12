@@ -1,4 +1,13 @@
-import { createHmac, timingSafeEqual } from "crypto";
+import crypto, { createHmac, timingSafeEqual } from "crypto";
+
+export type SessionRole = "tech" | "admin";
+
+export interface SessionData {
+  valid: boolean;
+  role?: SessionRole;
+  clientId?: string;
+  expiresAt?: number;
+}
 
 /**
  * Pin Drop session tokens.
@@ -6,9 +15,11 @@ import { createHmac, timingSafeEqual } from "crypto";
  * Technicians still type the same passcode. On success the server returns a
  * signed, expiring token that the app stores and attaches to later requests.
  *
- * Enforcement is OPT-IN: protected routes only reject requests when BOTH
- * PINDROP_SESSION_SECRET is set AND PINDROP_AUTH_ENFORCED === "true".
- * Until then behavior is identical to before.
+ * Enforcement is OPT-IN for technician routes: protected routes only reject
+ * requests when BOTH PINDROP_SESSION_SECRET is set AND PINDROP_AUTH_ENFORCED === "true".
+ *
+ * Administrative routes (settings, GBP location management, OAuth initiation)
+ * require valid administrator sessions UNCONDITIONALLY via requireAdminSession().
  */
 
 const TOKEN_TTL_MS = 90 * 24 * 60 * 60 * 1000; // 90 days
@@ -33,40 +44,122 @@ function sign(payload: string): string {
   return b64url(createHmac("sha256", secret()).update(payload).digest());
 }
 
-/** Returns a signed token, or null if no secret is configured. */
-export function issueToken(): { token: string; expiresAt: number } | null {
+/** Returns a signed token with explicit role ("tech" | "admin"), or null if no secret is configured. */
+export function issueToken(role: SessionRole = "tech"): { token: string; expiresAt: number; role: SessionRole } | null {
   if (!secret()) return null;
   const expiresAt = Date.now() + TOKEN_TTL_MS;
-  const payload = b64url(JSON.stringify({ c: clientIdFromEnv(), exp: expiresAt }));
-  return { token: `${payload}.${sign(payload)}`, expiresAt };
+  const payload = b64url(JSON.stringify({ c: clientIdFromEnv(), exp: expiresAt, role }));
+  return { token: `${payload}.${sign(payload)}`, expiresAt, role };
 }
 
-export function verifyToken(token: string | null | undefined): boolean {
-  if (!token || !secret()) return false;
+export function verifySessionToken(token: string | null | undefined): SessionData {
+  if (!token || !secret()) return { valid: false };
   const [payload, sig] = token.split(".");
-  if (!payload || !sig) return false;
+  if (!payload || !sig) return { valid: false };
   const expected = sign(payload);
   const a = Buffer.from(sig);
   const b = Buffer.from(expected);
-  if (a.length !== b.length || !timingSafeEqual(a, b)) return false;
+  if (a.length !== b.length || !timingSafeEqual(a, b)) return { valid: false };
   try {
     const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
-    return data.c === clientIdFromEnv() && typeof data.exp === "number" && data.exp > Date.now();
+    if (data.c === clientIdFromEnv() && typeof data.exp === "number" && data.exp > Date.now()) {
+      const role: SessionRole | undefined =
+        data.role === "admin" ? "admin" : (data.role === "tech" ? "tech" : undefined);
+      return { valid: true, role, clientId: data.c, expiresAt: data.exp };
+    }
   } catch {
+    return { valid: false };
+  }
+  return { valid: false };
+}
+
+export function verifyToken(token: string | null | undefined): boolean {
+  return verifySessionToken(token).valid;
+}
+
+/**
+ * Verifies technician passcode vs admin credential.
+ * Checks PINDROP_ADMIN_PASSCODE_HASH (SHA-256) or PINDROP_ADMIN_PASSCODE.
+ * Never logs or exposes credentials.
+ */
+export function verifyAdminPasscode(passcode: string): boolean {
+  if (!passcode || typeof passcode !== "string") return false;
+
+  const adminPasscode = process.env.PINDROP_ADMIN_PASSCODE;
+  const adminHash = process.env.PINDROP_ADMIN_PASSCODE_HASH;
+
+  if (!adminPasscode && !adminHash) {
     return false;
   }
+
+  if (adminHash) {
+    const inputHash = crypto.createHash("sha256").update(passcode).digest("hex");
+    if (safeEqual(inputHash, adminHash)) {
+      return true;
+    }
+  }
+
+  if (adminPasscode) {
+    if (safeEqual(passcode, adminPasscode)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**
  * Returns null if the request may proceed, or a 401 Response if it must be rejected.
- * Always allows the request while enforcement is disabled.
+ * Allows technician requests while enforcement is disabled.
  */
 export function requireSession(request: Request): Response | null {
   if (!authEnforced()) return null;
   const header = request.headers.get("authorization") || "";
   const token = header.startsWith("Bearer ") ? header.slice(7) : "";
-  if (verifyToken(token)) return null;
+  const session = verifySessionToken(token);
+  if (session.valid) return null;
   return Response.json({ error: "Session expired. Please sign in again." }, { status: 401 });
+}
+
+/**
+ * Unconditional Administrator Authentication Gate.
+ * Always verifies token signature, expiration, tenant, and administrator role ("admin").
+ * Fails closed if server authentication secret is unconfigured.
+ */
+export function requireAdminSession(request: Request): Response | null {
+  if (!secret()) {
+    return Response.json({ error: "Server authentication is not configured." }, { status: 500 });
+  }
+
+  let token = "";
+  const header = request.headers.get("authorization") || "";
+  if (header.startsWith("Bearer ")) {
+    token = header.slice(7);
+  } else {
+    // Check URL query parameter for browser navigations (e.g. initiating OAuth flow)
+    try {
+      const url = new URL(request.url);
+      const queryToken = url.searchParams.get("token");
+      if (queryToken) {
+        token = queryToken;
+      }
+    } catch {}
+  }
+
+  if (!token) {
+    return Response.json({ error: "Administrator authorization required." }, { status: 401 });
+  }
+
+  const session = verifySessionToken(token);
+  if (!session.valid) {
+    return Response.json({ error: "Session expired or invalid. Please sign in again." }, { status: 401 });
+  }
+
+  if (session.role !== "admin") {
+    return Response.json({ error: "Forbidden: Administrator privileges required." }, { status: 403 });
+  }
+
+  return null;
 }
 
 export function safeEqual(a: string, b: string): boolean {
