@@ -28,8 +28,22 @@ export function getStringValue(val?: FirestoreValue): string {
 let cachedToken: { token: string; expiresAt: number } | null = null;
 
 export async function getFirestoreAccessToken(): Promise<string | null> {
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  let clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+
+  if (clientEmail && clientEmail.trim().startsWith('{')) {
+    try {
+      const parsed = JSON.parse(clientEmail);
+      if (parsed.client_email) clientEmail = parsed.client_email;
+      if (parsed.private_key) privateKey = parsed.private_key;
+    } catch {}
+  } else if (!privateKey && process.env.FIREBASE_SERVICE_ACCOUNT) {
+    try {
+      const parsed = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+      if (parsed.client_email) clientEmail = parsed.client_email;
+      if (parsed.private_key) privateKey = parsed.private_key;
+    } catch {}
+  }
 
   if (!clientEmail || !privateKey) {
     return null;

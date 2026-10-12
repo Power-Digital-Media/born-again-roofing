@@ -135,15 +135,6 @@ export function requireAdminSession(request: Request): Response | null {
   const header = request.headers.get("authorization") || "";
   if (header.startsWith("Bearer ")) {
     token = header.slice(7);
-  } else {
-    // Check URL query parameter for browser navigations (e.g. initiating OAuth flow)
-    try {
-      const url = new URL(request.url);
-      const queryToken = url.searchParams.get("token");
-      if (queryToken) {
-        token = queryToken;
-      }
-    } catch {}
   }
 
   if (!token) {

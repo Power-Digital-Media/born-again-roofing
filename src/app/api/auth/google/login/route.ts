@@ -30,7 +30,12 @@ export async function GET(request: NextRequest) {
     oauthUrl.searchParams.append("prompt", "consent");
     oauthUrl.searchParams.append("state", nonce);
 
-    const response = NextResponse.redirect(oauthUrl.toString());
+    const isJson = request.headers.get("accept")?.includes("application/json");
+
+    const response = isJson
+      ? NextResponse.json({ url: oauthUrl.toString() })
+      : NextResponse.redirect(oauthUrl.toString());
+
     response.cookies.set("gmb_oauth_state", nonce, {
       httpOnly: true,
       secure: protocol === "https",

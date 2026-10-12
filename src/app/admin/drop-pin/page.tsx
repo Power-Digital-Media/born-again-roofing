@@ -87,6 +87,7 @@ export default function DropPinPage() {
   const [companyName, setCompanyName] = useState("");
   const [googleReviewUrl, setGoogleReviewUrl] = useState("");
   const [newReviewUrlInput, setNewReviewUrlInput] = useState("");
+  const [isConnectingGoogle, setIsConnectingGoogle] = useState(false);
 
   // Signed session token issued by /api/auth/login (stored per device, 90 days).
   const authHeaders = (json = true): Record<string, string> => {
@@ -247,6 +248,41 @@ export default function DropPinPage() {
     } catch (err) {
       console.error(err);
       alert("Error saving review link.");
+    }
+  };
+
+  const handleConnectGoogle = async () => {
+    try {
+      setIsConnectingGoogle(true);
+      const res = await fetch("/api/auth/google/login", {
+        headers: {
+          ...authHeaders(false),
+          Accept: "application/json",
+        },
+      });
+
+      if (res.status === 401 || res.status === 403) {
+        alert("Administrator authorization required to connect Google Business Profile.");
+        return;
+      }
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "Failed to initiate Google connection.");
+        return;
+      }
+
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Invalid response from server when initiating Google connection.");
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      alert(`Error connecting to Google: ${msg}`);
+    } finally {
+      setIsConnectingGoogle(false);
     }
   };
 
@@ -1185,18 +1221,12 @@ export default function DropPinPage() {
                         </p>
                         <button
                           type="button"
-                          onClick={() => {
-                            const raw = localStorage.getItem("roofer_pin_token");
-                            let token = "";
-                            if (raw) {
-                              try { token = JSON.parse(raw).token || ""; } catch {}
-                            }
-                            window.location.href = `/api/auth/google/login?clientId=born-again-roofing&token=${encodeURIComponent(token)}`;
-                          }}
+                          onClick={handleConnectGoogle}
+                          disabled={isConnectingGoogle}
                           className="btn btn-outline"
-                          style={{ width: "100%", fontSize: "0.75rem", height: "36px", display: "inline-flex", alignItems: "center", justifyContent: "center", background: "rgba(226, 176, 71, 0.08)", color: "#ffffff", border: "1px solid #e2b047", cursor: "pointer" }}
+                          style={{ width: "100%", fontSize: "0.75rem", height: "36px", display: "inline-flex", alignItems: "center", justifyContent: "center", background: "rgba(226, 176, 71, 0.08)", color: "#ffffff", border: "1px solid #e2b047", cursor: isConnectingGoogle ? "not-allowed" : "pointer" }}
                         >
-                          {googleConnected ? "🔄 Re-connect Maps Profile" : "Connect Maps Profile"}
+                          {isConnectingGoogle ? "Connecting to Google..." : (googleConnected ? "🔄 Re-connect Maps Profile" : "Connect Maps Profile")}
                         </button>
 
                         <div style={{ marginTop: "16px", paddingTop: "12px", borderTop: "1px dashed rgba(255,255,255,0.1)" }}>
