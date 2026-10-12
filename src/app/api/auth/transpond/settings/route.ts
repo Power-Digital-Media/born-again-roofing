@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAdminSession } from "@/lib/pindrop-auth";
+import { requireSession, requireAdminSession } from "@/lib/pindrop-auth";
 
 import { getClientSettings, patchClientSettings, type FirestoreFields } from "@/lib/firestore-admin";
 
@@ -15,7 +15,7 @@ function maskApiKey(key: string): string {
 
 // 1. GET Settings & Social Connection Status
 export async function GET(request: NextRequest) {
-  const denied = requireAdminSession(request);
+  const denied = requireSession(request);
   if (denied) return denied;
   try {
     let transpondApiKey = "";
@@ -68,21 +68,19 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // D. Fallback to default technicians if Firestore list is empty
-    if (technicians.length === 0) {
-      if (clientId === "born-again-roofing") {
-        technicians = [
-          "Chris Smith",
-          "Damien Johnston",
-          "Christopher Heard",
-          "Eddie Buchanan",
-          "Robert Christoforo",
-          "Daniel Lickness",
-          "David Dilmore"
-        ];
-      } else {
-        technicians = [];
-      }
+    // D. Merge default technicians for Born Again Roofing
+    if (clientId === "born-again-roofing") {
+      const defaultTechs = [
+        "Chris Smith",
+        "Damien Johnston",
+        "Christopher Heard",
+        "Kevin Heard",
+        "Eddie Buchanan",
+        "Robert Christoforo",
+        "Daniel Lickness",
+        "David Dilmore"
+      ];
+      technicians = Array.from(new Set([...technicians, ...defaultTechs]));
     }
 
     // E. Check social connection status via Transpond API
@@ -129,11 +127,26 @@ export async function GET(request: NextRequest) {
 
 // 2. POST Save Settings
 export async function POST(request: NextRequest) {
-  const denied = requireAdminSession(request);
-  if (denied) return denied;
   try {
     const body = await request.json();
     const { apiKey, groupId, technicians, rooferPasscode, companyName, googleReviewUrl } = body;
+
+    // Administrative fields require full administrator session
+    const hasAdminFields =
+      apiKey !== undefined ||
+      groupId !== undefined ||
+      rooferPasscode !== undefined ||
+      companyName !== undefined ||
+      googleReviewUrl !== undefined;
+
+    if (hasAdminFields) {
+      const adminDenied = requireAdminSession(request);
+      if (adminDenied) return adminDenied;
+    } else {
+      // Technician-only updates (e.g. adding technician name from the field) require any valid session
+      const denied = requireSession(request);
+      if (denied) return denied;
+    }
 
     const fieldsToUpdate: FirestoreFields = {
       clientId: { stringValue: clientId },

@@ -46,6 +46,17 @@ const serviceList = [
   "Custom Category..."
 ];
 
+const DEFAULT_TECHNICIANS = [
+  "Chris Smith",
+  "Damien Johnston",
+  "Christopher Heard",
+  "Kevin Heard",
+  "Eddie Buchanan",
+  "Robert Christoforo",
+  "Daniel Lickness",
+  "David Dilmore"
+];
+
 export default function DropPinPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<"admin" | "tech" | null>(null);
@@ -84,7 +95,7 @@ export default function DropPinPage() {
   const [expandedTab, setExpandedTab] = useState<"google" | "crm" | "social" | "team" | null>(null);
   const [showAddTechInput, setShowAddTechInput] = useState(false);
   const [tourStep, setTourStep] = useState<number | null>(null);
-  const [authorList, setAuthorList] = useState<string[]>([]);
+  const [authorList, setAuthorList] = useState<string[]>(DEFAULT_TECHNICIANS);
   const [newTechName, setNewTechName] = useState("");
   const [newRooferPasscode, setNewRooferPasscode] = useState("");
   const [isUpdatingPasscode, setIsUpdatingPasscode] = useState(false);
@@ -135,8 +146,13 @@ export default function DropPinPage() {
         }
         setSocialConnected(data.socialConnected || false);
         setGoogleConnected(data.googleConnected || false);
-        setAuthorList(data.technicians || []);
-        setCompanyName(data.companyName || "");
+        if (data.technicians && Array.isArray(data.technicians) && data.technicians.length > 0) {
+          const merged = Array.from(new Set([...data.technicians, ...DEFAULT_TECHNICIANS]));
+          setAuthorList(merged);
+        } else {
+          setAuthorList(DEFAULT_TECHNICIANS);
+        }
+        setCompanyName(data.companyName || "Born Again Roofing");
         setGoogleReviewUrl(data.googleReviewUrl || "");
         setNewReviewUrlInput(data.googleReviewUrl || "");
       }
@@ -170,8 +186,19 @@ export default function DropPinPage() {
 
   const handleAddTechnician = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newTechName.trim()) return;
-    const updatedTechs = [...authorList, newTechName.trim()];
+    const trimmed = newTechName.trim();
+    if (!trimmed) return;
+    const updatedTechs = authorList.includes(trimmed) ? authorList : [...authorList, trimmed];
+    setAuthorList(updatedTechs);
+    setAuthor(trimmed);
+    setQuickReviewAuthor(trimmed);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("pindrop_selected_author", trimmed);
+      } catch {}
+    }
+    setNewTechName("");
+    setShowAddTechInput(false);
     try {
       const res = await fetch("/api/auth/transpond/settings", {
         method: "POST",
@@ -179,20 +206,19 @@ export default function DropPinPage() {
         body: JSON.stringify({ technicians: updatedTechs })
       });
       if (res.ok) {
-        setNewTechName("");
         fetchTranspondSettings();
-      } else {
-        alert("Failed to add technician name.");
       }
     } catch (err) {
-      console.error(err);
-      alert("Error adding technician.");
+      console.error("Failed to save technician to server:", err);
     }
   };
 
   const handleDeleteTechnician = async (techName: string) => {
     if (!confirm(`Are you sure you want to remove ${techName}?`)) return;
     const updatedTechs = authorList.filter((tech) => tech !== techName);
+    setAuthorList(updatedTechs);
+    if (author === techName) setAuthor("");
+    if (quickReviewAuthor === techName) setQuickReviewAuthor("");
     try {
       const res = await fetch("/api/auth/transpond/settings", {
         method: "POST",
@@ -381,9 +407,14 @@ export default function DropPinPage() {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsAuthenticated(true);
       setUserRole(initialRole);
-      if (initialRole === "admin") {
-        fetchTranspondSettings();
-      }
+      fetchTranspondSettings();
+      try {
+        const savedAuthor = localStorage.getItem("pindrop_selected_author");
+        if (savedAuthor) {
+          setAuthor(savedAuthor);
+          setQuickReviewAuthor(savedAuthor);
+        }
+      } catch {}
       const tourSeen = localStorage.getItem("pindrop_tour_seen");
       if (!tourSeen) {
         setTimeout(() => setTourStep(1), 800);
@@ -424,9 +455,14 @@ export default function DropPinPage() {
         }
         sessionStorage.setItem("roofer_pin_auth", "true");
         setIsAuthenticated(true);
-        if (role === "admin") {
-          fetchTranspondSettings();
-        }
+        fetchTranspondSettings();
+        try {
+          const savedAuthor = localStorage.getItem("pindrop_selected_author");
+          if (savedAuthor) {
+            setAuthor(savedAuthor);
+            setQuickReviewAuthor(savedAuthor);
+          }
+        } catch {}
         const tourSeen = localStorage.getItem("pindrop_tour_seen");
         if (!tourSeen) {
           setTimeout(() => setTourStep(1), 800);
@@ -828,7 +864,7 @@ export default function DropPinPage() {
                 <div className="form-group" style={{ border: tourStep === 1 ? "2px solid #e2b047" : "1px solid transparent", borderRadius: "8px", padding: tourStep === 1 ? "8px" : "0", boxShadow: tourStep === 1 ? "0 0 12px rgba(226, 176, 71, 0.4)" : "none", transition: "all 0.3s" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <label className="form-label">Roofer/Technician Name</label>
-                    {author && (
+                    {author && userRole === "admin" && (
                       <button
                         type="button"
                         onClick={() => handleDeleteTechnician(author)}
@@ -847,6 +883,12 @@ export default function DropPinPage() {
                         setAuthor("");
                       } else {
                         setAuthor(e.target.value);
+                        setQuickReviewAuthor(e.target.value);
+                        if (e.target.value) {
+                          try {
+                            localStorage.setItem("pindrop_selected_author", e.target.value);
+                          } catch {}
+                        }
                       }
                     }}
                     required={!showAddTechInput}
@@ -1150,7 +1192,15 @@ export default function DropPinPage() {
                   <select
                     className="form-input"
                     value={quickReviewAuthor}
-                    onChange={(e) => setQuickReviewAuthor(e.target.value)}
+                    onChange={(e) => {
+                      setQuickReviewAuthor(e.target.value);
+                      setAuthor(e.target.value);
+                      if (e.target.value) {
+                        try {
+                          localStorage.setItem("pindrop_selected_author", e.target.value);
+                        } catch {}
+                      }
+                    }}
                     style={{ margin: 0, width: "100%", height: "42px", background: "rgba(255, 255, 255, 0.02)" }}
                   >
                     <option value="">Select Your Name...</option>
