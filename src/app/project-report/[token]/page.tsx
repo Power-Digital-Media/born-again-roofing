@@ -20,6 +20,7 @@ export default function ProjectReportPage({ params }: { params: Promise<{ token:
     const [isDrawing, setIsDrawing] = useState(false);
     const [signerName, setSignerName] = useState("");
     const [agreementType, setAgreementType] = useState<"material_approval" | "completion_signoff">("completion_signoff");
+    const [sigConsent, setSigConsent] = useState(false);
     const [sigSaved, setSigSaved] = useState(false);
 
     useEffect(() => {
@@ -535,18 +536,43 @@ export default function ProjectReportPage({ params }: { params: Promise<{ token:
                                     style={{ width: "100%", height: 150, touchAction: "none", cursor: "crosshair" }}
                                 />
                             </div>
+                            <label
+                                style={{
+                                    display: "flex",
+                                    alignItems: "flex-start",
+                                    gap: 10,
+                                    fontSize: 13,
+                                    color: "#cbd5e1",
+                                    cursor: "pointer",
+                                    padding: "6px 2px",
+                                }}
+                            >
+                                <input
+                                    type="checkbox"
+                                    checked={sigConsent}
+                                    onChange={(e) => setSigConsent(e.target.checked)}
+                                    style={{ marginTop: 3, width: 16, height: 16, accentColor: "#22c55e" }}
+                                />
+                                <span>
+                                    I consent to use electronic records and signatures for this project document, and confirm that I am authorized to sign on behalf of the property.
+                                </span>
+                            </label>
                             <div>
                                 <button
                                     type="button"
+                                    disabled={!sigConsent || !signerName.trim()}
                                     onClick={handleSaveRemoteSignature}
                                     style={{
                                         padding: "10px 20px",
                                         borderRadius: 10,
-                                        background: "linear-gradient(135deg, #22c55e, #16a34a)",
+                                        background:
+                                            !sigConsent || !signerName.trim()
+                                                ? "rgba(255,255,255,0.12)"
+                                                : "linear-gradient(135deg, #22c55e, #16a34a)",
                                         border: "none",
                                         color: "#fff",
                                         fontWeight: 800,
-                                        cursor: "pointer",
+                                        cursor: !sigConsent || !signerName.trim() ? "not-allowed" : "pointer",
                                     }}
                                 >
                                     ✍️ Submit Digital Signature

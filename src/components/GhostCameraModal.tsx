@@ -104,7 +104,25 @@ export default function GhostCameraModal({
     setRecordingSeconds(0);
 
     try {
-      const recorder = new MediaRecorder(streamRef.current);
+      let chosenMime = "";
+      if (typeof MediaRecorder !== "undefined" && typeof MediaRecorder.isTypeSupported === "function") {
+        const candidates = [
+          "video/mp4",
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm",
+        ];
+        for (const c of candidates) {
+          if (MediaRecorder.isTypeSupported(c)) {
+            chosenMime = c;
+            break;
+          }
+        }
+      }
+
+      const recorder = chosenMime
+        ? new MediaRecorder(streamRef.current, { mimeType: chosenMime })
+        : new MediaRecorder(streamRef.current);
       mediaRecorderRef.current = recorder;
       recorder.ondataavailable = (e) => {
         if (e.data && e.data.size > 0) chunksRef.current.push(e.data);
@@ -112,7 +130,8 @@ export default function GhostCameraModal({
       recorder.onstop = async () => {
         setIsProcessing(true);
         try {
-          const blob = new Blob(chunksRef.current, { type: recorder.mimeType || "video/webm" });
+          const finalMime = recorder.mimeType || chosenMime || "video/mp4";
+          const blob = new Blob(chunksRef.current, { type: finalMime });
           const base64Video = await new Promise<string>((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => resolve(reader.result as string);
@@ -366,22 +385,65 @@ export default function GhostCameraModal({
             </div>
           )}
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <button
-              type="button"
-              onClick={onClose}
-              style={{
-                padding: "9px 16px",
-                borderRadius: "8px",
-                background: "transparent",
-                border: "1px solid rgba(255,255,255,0.2)",
-                color: "#94a3b8",
-                fontSize: "0.82rem",
-                cursor: "pointer",
-              }}
-            >
-              Cancel
-            </button>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <button
+                type="button"
+                onClick={onClose}
+                style={{
+                  padding: "9px 16px",
+                  borderRadius: "8px",
+                  background: "transparent",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  color: "#94a3b8",
+                  fontSize: "0.82rem",
+                  cursor: "pointer",
+                }}
+              >
+                Cancel
+              </button>
+              <label
+                style={{
+                  padding: "9px 14px",
+                  borderRadius: "8px",
+                  background: "rgba(56, 189, 248, 0.12)",
+                  border: "1px solid rgba(56, 189, 248, 0.35)",
+                  color: "#38bdf8",
+                  fontSize: "0.78rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                📲 Native Camera / Upload
+                <input
+                  type="file"
+                  accept={mode === "video_walkthrough" ? "video/*" : "image/*"}
+                  capture="environment"
+                  style={{ display: "none" }}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setIsProcessing(true);
+                    try {
+                      const dataUrl = await new Promise<string>((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result as string);
+                        reader.onerror = (err) => reject(err);
+                        reader.readAsDataURL(file);
+                      });
+                      if (mode === "ghost_photo" && onCapturePhoto) {
+                        await onCapturePhoto(dataUrl);
+                      } else if (mode === "video_walkthrough" && onCaptureVideo) {
+                        await onCaptureVideo(dataUrl, spokenTranscript);
+                      }
+                      onClose();
+                    } finally {
+                      setIsProcessing(false);
+                    }
+                  }}
+                />
+              </label>
+            </div>
 
             {mode === "ghost_photo" ? (
               <button

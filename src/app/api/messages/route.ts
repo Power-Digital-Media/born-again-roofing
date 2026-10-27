@@ -10,14 +10,17 @@ export async function GET(request: NextRequest) {
     const pinId = searchParams.get("pinId") || undefined;
     const reportToken = searchParams.get("reportToken") || undefined;
 
-    // Allow homeowners viewing their private reportToken page to fetch messages for their project
+    // Allow homeowners viewing their private reportToken page to fetch ONLY customer-visible messages
     if (reportToken) {
       const pin = await getPinByReportToken(reportToken);
       if (!pin) {
         return NextResponse.json({ error: "Invalid project token" }, { status: 404 });
       }
       const msgs = await getMessages(pin.id);
-      return NextResponse.json({ messages: msgs });
+      const customerSafeMsgs = msgs.filter(
+        (m: any) => m.authorRole === "homeowner" || m.visibility === "customer"
+      );
+      return NextResponse.json({ messages: customerSafeMsgs });
     }
 
     const denied = requireSession(request);
