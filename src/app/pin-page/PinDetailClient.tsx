@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import ContactForm from "@/components/ContactForm";
+import { BeforeAfterSlider } from "@/components/BeforeAfterBuilder";
 
-// Public, render-safe subset of a project record. Coordinates and internal fields
-// (latitude, longitude, clientId) are deliberately excluded so they are never serialized into the page.
 export interface PublicPin {
   id: string;
   location: string;
@@ -16,15 +15,18 @@ export interface PublicPin {
   description: string;
   detailedExplanation?: string;
   images: string[];
+  photoMeta?: { url: string; stage: string; caption?: string }[];
+  beforeAfterCollageUrl?: string;
   title?: string;
   aeoAnswers?: { question: string; answer: string }[];
 }
 
 export default function PinDetailClient({ pin, heading }: { pin: PublicPin; heading: string }) {
-  // Pin data arrives pre-fetched from the server so the job details are in the initial HTML.
   const [activeImageState, setActiveImageState] = useState<string | null>(null);
 
   const activeImage = activeImageState || pin.images?.[0];
+  const beforePhoto = pin.photoMeta?.find((m) => m.stage?.toLowerCase() === "before");
+  const afterPhoto = pin.photoMeta?.find((m) => m.stage?.toLowerCase() === "after");
 
   return (
     <>
@@ -49,6 +51,18 @@ export default function PinDetailClient({ pin, heading }: { pin: PublicPin; head
             <Link href="/pins" className="back-link">
               ← Back to Project Feed
             </Link>
+
+            {/* Interactive Before & After Slider if both stages exist */}
+            {beforePhoto && afterPhoto && (
+              <div className="double-bezel-wrapper detail-image-wrapper" style={{ marginBottom: "2rem" }}>
+                <div className="double-bezel-inner detail-image-inner" style={{ padding: "1.25rem" }}>
+                  <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "var(--secondary)", marginBottom: "0.75rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    ⚡ Interactive Before &amp; After Transformation
+                  </div>
+                  <BeforeAfterSlider beforeUrl={beforePhoto.url} afterUrl={afterPhoto.url} height={380} />
+                </div>
+              </div>
+            )}
             
             {/* Image Showcase */}
             <div className="double-bezel-wrapper detail-image-wrapper">
@@ -67,21 +81,42 @@ export default function PinDetailClient({ pin, heading }: { pin: PublicPin; head
               <>
                 <h4 className="project-gallery-title">Job Photos</h4>
                 <div className="project-images-gallery">
-                  {pin.images.map((img) => (
-                    <button
-                      key={img}
-                      className="gallery-thumbnail-wrapper"
-                      onClick={() => setActiveImageState(img)}
-                      aria-label="View larger image"
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={img}
-                        alt={`${heading}, photo ${pin.images.indexOf(img) + 1}`}
-                        className={`gallery-thumb-img ${activeImage === img ? "active-thumb" : ""}`}
-                      />
-                    </button>
-                  ))}
+                  {pin.images.map((img) => {
+                    const meta = pin.photoMeta?.find((m) => m.url === img);
+                    return (
+                      <button
+                        key={img}
+                        className="gallery-thumbnail-wrapper"
+                        onClick={() => setActiveImageState(img)}
+                        aria-label="View larger image"
+                        style={{ position: "relative" }}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={img}
+                          alt={`${heading}, photo ${pin.images.indexOf(img) + 1}`}
+                          className={`gallery-thumb-img ${activeImage === img ? "active-thumb" : ""}`}
+                        />
+                        {meta?.stage && (
+                          <span
+                            style={{
+                              position: "absolute",
+                              bottom: 4,
+                              left: 4,
+                              padding: "2px 6px",
+                              borderRadius: 99,
+                              background: "rgba(0,0,0,0.75)",
+                              color: "#fde047",
+                              fontSize: "0.62rem",
+                              fontWeight: 800,
+                            }}
+                          >
+                            {meta.stage}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </>
             )}

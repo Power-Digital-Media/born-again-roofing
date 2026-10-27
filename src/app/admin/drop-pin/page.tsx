@@ -1,7 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import type { PinType, PinPhotoMeta, PhotoStage, ChecklistItem, PhotoComment } from "@/lib/db";
+import {
+  extractExifGpsFromFile,
+  findClosestJobByGps,
+  compressAndPreparePhoto,
+  getDefaultChecklistForService,
+} from "@/lib/exif-gps";
+import PhotoMarkupModal from "@/components/PhotoMarkupModal";
+import { BeforeAfterSlider, generateBeforeAfterCompositeDataUrl } from "@/components/BeforeAfterBuilder";
+import GhostCameraModal from "@/components/GhostCameraModal";
+import CrewMessengerPanel from "@/components/CrewMessengerPanel";
+import ProjectWorkspaceModal from "@/components/ProjectWorkspaceModal";
 
 const cityCoords: Record<string, [number, number]> = {
   "Pearl, MS": [32.2729, -90.1312],
@@ -104,8 +116,32 @@ export default function DropPinPage() {
   const [newReviewUrlInput, setNewReviewUrlInput] = useState("");
   const [isConnectingGoogle, setIsConnectingGoogle] = useState(false);
 
+  // CompanyCam + Messenger Suite State
+  const [portalMode, setPortalMode] = useState<"capture" | "projects" | "messenger">("capture");
+  const [allPins, setAllPins] = useState<PinType[]>([]);
+  const [selectedWorkspacePin, setSelectedWorkspacePin] = useState<PinType | null>(null);
+  const [projectSearch, setProjectSearch] = useState("");
+  const [projectStatusFilter, setProjectStatusFilter] = useState<"all" | "in_progress" | "inspection" | "completed">("all");
+  const [photoMetaList, setPhotoMetaList] = useState<PinPhotoMeta[]>([]);
+  const [stampWatermark, setStampWatermark] = useState(true);
+  const [markupPhotoIndex, setMarkupPhotoIndex] = useState<number | null>(null);
+  const [ghostCamMode, setGhostCamMode] = useState<"ghost_photo" | "video_walkthrough" | null>(null);
+  const [buildingCollage, setBuildingCollage] = useState(false);
+  const [beforeAfterCollageUrl, setBeforeAfterCollageUrl] = useState("");
+  const [walkthroughVideoUrl, setWalkthroughVideoUrl] = useState("");
+  const [projectStatus, setProjectStatus] = useState<"in_progress" | "inspection" | "completed">("completed");
+  const [publishToPublicMap, setPublishToPublicMap] = useState(true);
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [internalNotes, setInternalNotes] = useState("");
+  const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
+  const [showInternalSection, setShowInternalSection] = useState(false);
+  const [isDictating, setIsDictating] = useState(false);
+  const [autoMatchedJob, setAutoMatchedJob] = useState<{ job: PinType; distanceFeet: number; source: "gps" | "exif" } | null>(null);
+  const [lastCreatedPin, setLastCreatedPin] = useState<PinType | null>(null);
+
   // Signed session token issued by /api/auth/login (stored per device, 90 days).
-  const authHeaders = (json = true): Record<string, string> => {
+  const authHeaders = useCallback((json = true): Record<string, string> => {
     const headers: Record<string, string> = json ? { "Content-Type": "application/json" } : {};
     try {
       const raw = localStorage.getItem("roofer_pin_token");
@@ -117,7 +153,21 @@ export default function DropPinPage() {
       }
     } catch {}
     return headers;
-  };
+  }, []);
+
+  const fetchAllPins = useCallback(async () => {
+    try {
+      const res = await fetch("/api/pins/?includeInternal=true", { headers: authHeaders(false) });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setAllPins(data);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load project folders:", err);
+    }
+  }, [authHeaders]);
 
   // If the server says the session is no longer valid, return to the passcode screen.
   const handleSessionExpired = () => {
@@ -408,6 +458,7 @@ export default function DropPinPage() {
       setIsAuthenticated(true);
       setUserRole(initialRole);
       fetchTranspondSettings();
+      fetchAllPins();
       try {
         const savedAuthor = localStorage.getItem("pindrop_selected_author");
         if (savedAuthor) {
@@ -456,6 +507,7 @@ export default function DropPinPage() {
         sessionStorage.setItem("roofer_pin_auth", "true");
         setIsAuthenticated(true);
         fetchTranspondSettings();
+        fetchAllPins();
         try {
           const savedAuthor = localStorage.getItem("pindrop_selected_author");
           if (savedAuthor) {
@@ -505,6 +557,47 @@ export default function DropPinPage() {
     }
   }, [tourStep]);
 
+  // Auto-populate default SOP checklist when service changes
+  useEffect(() => {
+    const finalSvc = service === "Custom Category..." ? customService : service;
+    if (finalSvc) {
+      setChecklist(
+        getDefaultChecklistForService(finalSvc).map((item) => ({
+          ...item,
+          completed: false,
+        }))
+      );
+    }
+  }, [service, customService]);
+
+  const applyCoordinatesAndMatchJob = (lat: number, lng: number, source: "gps" | "exif") => {
+    setLatitude(lat);
+    setLongitude(lng);
+
+    let closestCity = "";
+    let minDistance = Infinity;
+    for (const [city, coords] of Object.entries(cityCoords)) {
+      const dist = Math.pow(lat - coords[0], 2) + Math.pow(lng - coords[1], 2);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestCity = city;
+      }
+    }
+    if (closestCity && !location) {
+      setLocation(closestCity);
+    }
+
+    // Check if within ~525 ft (160m) of an existing job folder
+    const match = findClosestJobByGps(lat, lng, allPins, 160);
+    if (match) {
+      setAutoMatchedJob({
+        job: match.job,
+        distanceFeet: Math.round(match.distanceMeters * 3.28084),
+        source,
+      });
+    }
+  };
+
   const getGPSLocation = () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser.");
@@ -516,25 +609,8 @@ export default function DropPinPage() {
       (position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-        setLatitude(lat);
-        setLongitude(lng);
         setGeoLoading(false);
-
-        // Deterministically find the closest city in MS to coordinates
-        let closestCity = "";
-        let minDistance = Infinity;
-
-        for (const [city, coords] of Object.entries(cityCoords)) {
-          const dist = Math.pow(lat - coords[0], 2) + Math.pow(lng - coords[1], 2);
-          if (dist < minDistance) {
-            minDistance = dist;
-            closestCity = city;
-          }
-        }
-
-        if (closestCity) {
-          setLocation(closestCity);
-        }
+        applyCoordinatesAndMatchJob(lat, lng, "gps");
       },
       (error) => {
         setGeoLoading(false);
@@ -545,90 +621,112 @@ export default function DropPinPage() {
     );
   };
 
-  // Client-side image compression and Firebase Storage upload helper
+  const handleVoiceDictate = () => {
+    const SpeechRec =
+      typeof window !== "undefined"
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+        : null;
+    if (!SpeechRec) {
+      alert("Voice dictation is supported in Chrome, Safari, and Edge on mobile/desktop.");
+      return;
+    }
+    if (isDictating) {
+      setIsDictating(false);
+      return;
+    }
+    const recognition = new SpeechRec();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    setIsDictating(true);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recognition.onresult = (event: any) => {
+      const transcript = event.results?.[0]?.[0]?.transcript || "";
+      if (transcript) {
+        setDescription((prev) => `${prev ? prev.trim() + " " : ""}${transcript.trim()}`);
+      }
+    };
+    recognition.onerror = () => setIsDictating(false);
+    recognition.onend = () => setIsDictating(false);
+    recognition.start();
+  };
+
+  const uploadBase64Photo = async (base64Data: string): Promise<string> => {
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ base64Data }),
+    });
+    if (response.status === 401) {
+      handleSessionExpired();
+      throw new Error("Your session expired. Please sign in again.");
+    }
+    if (!response.ok) {
+      throw new Error("Photo upload failed");
+    }
+    const data = await response.json();
+    return data.url || base64Data;
+  };
+
+  // Client-side 1600px HD compression, EXIF GPS extraction, and Firebase Storage upload helper
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     setIsCompressing(true);
-    setUploadStatus("Processing images...");
+    setUploadStatus("Processing HD images & reading EXIF GPS...");
 
     try {
       const fileList = Array.from(files);
       const newUrls: string[] = [];
+      const newMetaItems: PinPhotoMeta[] = [];
 
       for (let i = 0; i < fileList.length; i++) {
         const file = fileList[i];
-        setUploadStatus(`Compressing photo ${i + 1} of ${fileList.length}...`);
+        setUploadStatus(`Compressing HD photo ${i + 1} of ${fileList.length}...`);
 
-        // Get base64 data URL from file
-        const dataUrl = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = (event) => resolve(event.target?.result as string);
-          reader.onerror = (err) => reject(err);
-          reader.readAsDataURL(file);
-        });
+        // 1. Extract EXIF GPS coordinates from camera roll photo if present
+        const exif = await extractExifGpsFromFile(file);
+        if (exif.latitude && exif.longitude && latitude === "" && longitude === "") {
+          applyCoordinatesAndMatchJob(exif.latitude, exif.longitude, "exif");
+        }
 
-        // Compress image via Canvas
-        const compressedBase64 = await new Promise<string>((resolve) => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement("canvas");
-            const MAX_WIDTH = 700;
-            const MAX_HEIGHT = 700;
-            let width = img.width;
-            let height = img.height;
+        const defaultStage: PhotoStage =
+          photoMetaList.length === 0 && i === 0 ? "after" : "during";
 
-            if (width > height) {
-              if (width > MAX_WIDTH) {
-                height *= MAX_WIDTH / width;
-                width = MAX_WIDTH;
+        // 2. Compress at 1600px @ 0.82 JPEG + optional Date/GPS/Tech watermark stamp
+        const compressedBase64 = await compressAndPreparePhoto(file, {
+          maxDimension: 1600,
+          quality: 0.82,
+          stampWatermark,
+          watermarkText: stampWatermark
+            ? {
+                dateStr: exif.capturedAt || new Date().toLocaleString(),
+                locationStr: location || undefined,
+                coordsStr: exif.latitude ? `${exif.latitude.toFixed(3)}, ${exif.longitude?.toFixed(3)}` : undefined,
+                stageStr: defaultStage,
+                authorStr: author || undefined,
               }
-            } else {
-              if (height > MAX_HEIGHT) {
-                width *= MAX_HEIGHT / height;
-                height = MAX_HEIGHT;
-              }
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-
-            const ctx = canvas.getContext("2d");
-            if (ctx) {
-              ctx.drawImage(img, 0, 0, width, height);
-              resolve(canvas.toDataURL("image/jpeg", 0.5));
-            } else {
-              resolve(dataUrl);
-            }
-          };
-          img.src = dataUrl;
+            : undefined,
         });
 
-        // Upload to API
-        setUploadStatus(`Uploading photo ${i + 1} of ${fileList.length} to Cloud...`);
-        const response = await fetch("/api/upload", {
-          method: "POST",
-          headers: authHeaders(),
-          body: JSON.stringify({ base64Data: compressedBase64 }),
+        setUploadStatus(`Uploading HD photo ${i + 1} of ${fileList.length} to Cloud...`);
+        const url = await uploadBase64Photo(compressedBase64);
+        newUrls.push(url);
+        newMetaItems.push({
+          url,
+          stage: defaultStage,
+          caption: "",
+          author: author || "Field Specialist",
+          capturedAt: exif.capturedAt || new Date().toISOString(),
+          isPublic: true,
+          comments: [],
         });
-
-        if (response.status === 401) {
-          handleSessionExpired();
-          throw new Error("Your session expired. Please sign in again.");
-        }
-
-        if (!response.ok) {
-          throw new Error(`Upload failed for photo ${i + 1}`);
-        }
-
-        const data = await response.json();
-        if (data.url) {
-          newUrls.push(data.url);
-        }
       }
 
       setImages((prev) => [...prev, ...newUrls]);
+      setPhotoMetaList((prev) => [...prev, ...newMetaItems]);
     } catch (err: unknown) {
       console.error("Upload error:", err);
       const msg = err instanceof Error ? err.message : String(err);
@@ -641,6 +739,43 @@ export default function DropPinPage() {
 
   const handleRemoveImage = (indexToRemove: number) => {
     setImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+    setPhotoMetaList((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+  };
+
+  const handleBuildBeforeAfterCollage = async () => {
+    const beforeItem = photoMetaList.find((p) => p.stage === "before") || photoMetaList[0];
+    const afterItem = photoMetaList.find((p) => p.stage === "after") || photoMetaList[photoMetaList.length - 1];
+    if (!beforeItem || !afterItem) return;
+    setBuildingCollage(true);
+    try {
+      const collageBase64 = await generateBeforeAfterCompositeDataUrl({
+        beforeUrl: beforeItem.url,
+        afterUrl: afterItem.url,
+        companyName: companyName || "Born Again Roofing",
+        service: (service === "Custom Category..." ? customService : service) || "Roofing & Remodeling",
+        location: location || "Central MS",
+      });
+      const uploadedCollageUrl = await uploadBase64Photo(collageBase64);
+      setBeforeAfterCollageUrl(uploadedCollageUrl);
+      setImages((prev) => [uploadedCollageUrl, ...prev]);
+      setPhotoMetaList((prev) => [
+        {
+          url: uploadedCollageUrl,
+          stage: "after",
+          caption: "Before & After Transformation Split",
+          author: author || "Field Specialist",
+          capturedAt: new Date().toISOString(),
+          isPublic: true,
+          comments: [],
+        },
+        ...prev,
+      ]);
+    } catch (err) {
+      console.error("Failed building collage:", err);
+      alert("Could not generate Before/After graphic.");
+    } finally {
+      setBuildingCollage(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -656,13 +791,27 @@ export default function DropPinPage() {
     setSubmitLoading(true);
     setSubmitError("");
 
+    const publicImageUrls = photoMetaList
+      .filter((m) => m.isPublic !== false)
+      .map((m) => m.url);
+
     const payload = {
       author,
       date,
       location,
       service: finalService,
       description,
-      images,
+      images: publicImageUrls.length > 0 ? publicImageUrls : images,
+      photoMeta: photoMetaList,
+      beforeAfterCollageUrl: beforeAfterCollageUrl || undefined,
+      walkthroughVideoUrl: walkthroughVideoUrl || undefined,
+      projectStatus,
+      publishToPublicMap,
+      customerName: customerName.trim() || undefined,
+      customerPhone: customerPhone.trim() || undefined,
+      streetAddress: streetAddress.trim() || undefined,
+      internalNotes: internalNotes.trim() || undefined,
+      checklist,
       latitude: latitude !== "" ? latitude : undefined,
       longitude: longitude !== "" ? longitude : undefined
     };
@@ -679,11 +828,22 @@ export default function DropPinPage() {
       }
 
       if (response.ok) {
+        const resData = await response.json();
+        if (resData.pin) {
+          setLastCreatedPin(resData.pin);
+        }
+        fetchAllPins();
         setSubmitSuccess(true);
         // Reset form values
-        setAuthor("");
         setDescription("");
         setImages([]);
+        setPhotoMetaList([]);
+        setBeforeAfterCollageUrl("");
+        setWalkthroughVideoUrl("");
+        setCustomerName("");
+        setCustomerPhone("");
+        setInternalNotes("");
+        setAutoMatchedJob(null);
         setLatitude("");
         setLongitude("");
         setService("");
@@ -806,16 +966,280 @@ export default function DropPinPage() {
             </button>
           </span>
           <h1>PDM PinDrop</h1>
-          <p className="subtitle">Submit recent project photographs and details from the field</p>
+          <p className="subtitle">Field Photo Documentation, Crew Messenger &amp; Live SEO Pin Engine</p>
+
+          {/* CompanyCam Top Mode Switcher */}
+          <div
+            style={{
+              display: "flex",
+              gap: 8,
+              justifyContent: "center",
+              flexWrap: "wrap",
+              marginTop: 18,
+            }}
+          >
+            {(
+              [
+                { id: "capture", label: "📍 Capture / Check-In" },
+                { id: "projects", label: `🗂️ Active Jobs & Folders (${allPins.length})` },
+                { id: "messenger", label: "💬 Crew Messenger" },
+              ] as const
+            ).map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setPortalMode(tab.id)}
+                style={{
+                  padding: "10px 18px",
+                  borderRadius: 99,
+                  border: portalMode === tab.id ? "1px solid #e2b047" : "1px solid rgba(255,255,255,0.12)",
+                  background: portalMode === tab.id ? "rgba(226,176,71,0.2)" : "rgba(255,255,255,0.03)",
+                  color: portalMode === tab.id ? "#ffffff" : "#94a3b8",
+                  fontSize: "0.82rem",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  transition: "all 0.2s",
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {submitSuccess ? (
+        {/* MODE 2: ACTIVE JOBS & FOLDERS FEED */}
+        {portalMode === "projects" && (
+          <div style={{ maxWidth: 860, margin: "0 auto 2.5rem", display: "flex", flexDirection: "column", gap: 16 }}>
+            <div
+              style={{
+                background: "#16161f",
+                border: "1px solid rgba(255,255,255,0.1)",
+                borderRadius: 16,
+                padding: 18,
+                display: "flex",
+                flexDirection: "column",
+                gap: 14,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#fff" }}>
+                    🗂️ Job Folders &amp; Multi-Day Project Workspaces
+                  </h3>
+                  <p style={{ margin: "4px 0 0", fontSize: 12, color: "#94a3b8" }}>
+                    Click any job folder to add more Before/During/After photos, annotate damage, check off SOPs, upload PDFs, capture homeowner e-signatures, or share the Customer/Insurance Report link.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPortalMode("capture")}
+                  style={{
+                    padding: "9px 16px",
+                    borderRadius: 10,
+                    background: "#e2b047",
+                    border: "none",
+                    color: "#0f172a",
+                    fontWeight: 800,
+                    fontSize: 12,
+                    cursor: "pointer",
+                  }}
+                >
+                  ➕ Start New Job Pin
+                </button>
+              </div>
+
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <input
+                  type="text"
+                  value={projectSearch}
+                  onChange={(e) => setProjectSearch(e.target.value)}
+                  placeholder="Search by customer name, street, city, technician, or service..."
+                  style={{
+                    flex: 1,
+                    minWidth: 220,
+                    padding: "10px 14px",
+                    borderRadius: 10,
+                    background: "#0d0d14",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    color: "#fff",
+                    fontSize: 13,
+                  }}
+                />
+                {(
+                  [
+                    { id: "all", label: "All Jobs" },
+                    { id: "in_progress", label: "🚧 In Progress" },
+                    { id: "inspection", label: "🔍 Inspection" },
+                    { id: "completed", label: "✅ Completed" },
+                  ] as const
+                ).map((st) => (
+                  <button
+                    key={st.id}
+                    type="button"
+                    onClick={() => setProjectStatusFilter(st.id)}
+                    style={{
+                      padding: "8px 12px",
+                      borderRadius: 8,
+                      border: projectStatusFilter === st.id ? "1px solid #e2b047" : "1px solid rgba(255,255,255,0.1)",
+                      background: projectStatusFilter === st.id ? "rgba(226,176,71,0.16)" : "rgba(255,255,255,0.03)",
+                      color: projectStatusFilter === st.id ? "#fff" : "#94a3b8",
+                      fontSize: 12,
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    {st.label}
+                  </button>
+                ))}
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+                {allPins
+                  .filter((p) => {
+                    if (projectStatusFilter !== "all" && (p.projectStatus || "completed") !== projectStatusFilter) {
+                      return false;
+                    }
+                    if (!projectSearch.trim()) return true;
+                    const q = projectSearch.toLowerCase();
+                    return (
+                      (p.customerName || "").toLowerCase().includes(q) ||
+                      (p.streetAddress || "").toLowerCase().includes(q) ||
+                      p.location.toLowerCase().includes(q) ||
+                      p.service.toLowerCase().includes(q) ||
+                      p.author.toLowerCase().includes(q)
+                    );
+                  })
+                  .map((job) => {
+                    const thumb = job.images?.[0] || job.photoMeta?.[0]?.url;
+                    const statusLabel =
+                      job.projectStatus === "in_progress"
+                        ? "🚧 In Progress"
+                        : job.projectStatus === "inspection"
+                        ? "🔍 Inspection"
+                        : "✅ Completed";
+                    return (
+                      <div
+                        key={job.id}
+                        onClick={() => setSelectedWorkspacePin(job)}
+                        style={{
+                          background: "#0d0d14",
+                          borderRadius: 14,
+                          border: "1px solid rgba(255,255,255,0.09)",
+                          overflow: "hidden",
+                          cursor: "pointer",
+                          transition: "transform 0.15s, border-color 0.15s",
+                        }}
+                      >
+                        <div style={{ height: 150, background: "#1e293b", position: "relative" }}>
+                          {thumb && (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={thumb} alt={job.service} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          )}
+                          <span
+                            style={{
+                              position: "absolute",
+                              top: 8,
+                              left: 8,
+                              padding: "3px 9px",
+                              borderRadius: 99,
+                              background: "rgba(0,0,0,0.75)",
+                              color: "#fde047",
+                              fontSize: 11,
+                              fontWeight: 800,
+                            }}
+                          >
+                            {statusLabel}
+                          </span>
+                          <span
+                            style={{
+                              position: "absolute",
+                              bottom: 8,
+                              right: 8,
+                              padding: "3px 8px",
+                              borderRadius: 6,
+                              background: "rgba(0,0,0,0.78)",
+                              color: "#fff",
+                              fontSize: 11,
+                              fontWeight: 700,
+                            }}
+                          >
+                            📸 {job.photoMeta?.length || job.images?.length || 0} Photos
+                          </span>
+                        </div>
+                        <div style={{ padding: 12 }}>
+                          <div style={{ fontWeight: 800, color: "#fff", fontSize: 14, marginBottom: 2 }}>
+                            {job.customerName || job.service}
+                          </div>
+                          <div style={{ fontSize: 12, color: "#cbd5e1" }}>
+                            {job.location} • {job.service}
+                          </div>
+                          <div style={{ fontSize: 11, color: "#64748b", marginTop: 6, display: "flex", justifyContent: "space-between" }}>
+                            <span>👷 {job.author}</span>
+                            <span>{job.date}</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODE 3: CREW MESSENGER */}
+        {portalMode === "messenger" && (
+          <div style={{ maxWidth: 820, margin: "0 auto 2.5rem" }}>
+            <CrewMessengerPanel
+              currentAuthorName={author || authorList[0] || "Field Specialist"}
+              currentAuthorRole={userRole === "admin" ? "admin" : "tech"}
+              crewMembers={authorList.map((name) => ({ name }))}
+              pins={allPins}
+              authHeaders={() => authHeaders(false)}
+              onOpenProject={(pin) => setSelectedWorkspacePin(pin)}
+            />
+          </div>
+        )}
+
+        {/* MODE 1: CAPTURE / CHECK-IN */}
+        {portalMode === "capture" && submitSuccess ? (
           <div className="double-bezel-wrapper success-card">
             <div className="double-bezel-inner success-inner">
               <span className="success-icon">🎉</span>
               <h3>Pin Dropped Successfully!</h3>
               <p style={{ marginBottom: "1.5rem" }}>The job has been recorded and will show on the map and feed in real-time.</p>
               
+              {/* Customer & Insurance Photo Report Portal Card */}
+              {lastCreatedPin?.reportToken && (
+                <div style={{ background: "rgba(226, 176, 71, 0.08)", border: "1px solid rgba(226, 176, 71, 0.35)", borderRadius: "12px", padding: "1.25rem", marginBottom: "1.25rem", textAlign: "left" }}>
+                  <h4 style={{ color: "#fde047", fontSize: "0.95rem", fontWeight: "800", marginBottom: "0.4rem" }}>
+                    📄 Share Customer / Insurance Photo Report
+                  </h4>
+                  <p style={{ fontSize: "0.78rem", color: "#cbd5e1", margin: "0 0 0.85rem 0", lineHeight: "1.45" }}>
+                    Send the interactive Before/After timeline, HD photos, e-signature pad &amp; printable PDF report directly to the homeowner or adjuster:
+                  </p>
+                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                    <a
+                      href={`/project-report/${lastCreatedPin.reportToken}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn btn-outline"
+                      style={{ flex: "1 1 140px", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.78rem", padding: "8px 12px", background: "#e2b047", color: "#0f172a", fontWeight: 800 }}
+                    >
+                      📄 Open Photo Report ↗
+                    </a>
+                    <a
+                      href={`sms:${lastCreatedPin.customerPhone || ""}?&body=${encodeURIComponent(
+                        `Hi ${lastCreatedPin.customerName || "there"}, here is your official ${companyName || "Born Again Roofing"} Photo Report & Project Timeline: ${typeof window !== "undefined" ? window.location.origin : ""}/project-report/${lastCreatedPin.reportToken}`
+                      )}`}
+                      className="btn btn-outline"
+                      style={{ flex: "1 1 140px", textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.78rem", padding: "8px 12px" }}
+                    >
+                      📲 Text Report to Customer
+                    </a>
+                  </div>
+                </div>
+              )}
+
               {/* Review request integration */}
               <div style={{ background: "rgba(255, 255, 255, 0.02)", border: "1px solid var(--border)", borderRadius: "12px", padding: "1.5rem", marginBottom: "2rem", textAlign: "left" }}>
                 <h4 style={{ color: "#ffffff", fontSize: "0.95rem", fontWeight: "800", marginBottom: "0.5rem" }}>👉 Send Google Review Request</h4>
@@ -854,11 +1278,68 @@ export default function DropPinPage() {
               </div>
             </div>
           </div>
-        ) : (
+        ) : portalMode === "capture" ? (
           <>
             <div className="double-bezel-wrapper form-card">
             <div className="double-bezel-inner form-inner">
               <form onSubmit={handleSubmit} className="portal-form">
+
+                {/* Auto-Detected Nearby Job Banner (Geolocation / Photo EXIF Match) */}
+                {autoMatchedJob && (
+                  <div
+                    style={{
+                      padding: "12px 14px",
+                      borderRadius: 12,
+                      background: "rgba(226,176,71,0.14)",
+                      border: "1px solid #e2b047",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
+                    }}
+                  >
+                    <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#fde047" }}>
+                      📍 Auto-Detected Nearby Job ({autoMatchedJob.distanceFeet} ft away via{" "}
+                      {autoMatchedJob.source === "exif" ? "Photo EXIF GPS" : "Live GPS"}):
+                    </div>
+                    <div style={{ fontSize: "0.8rem", color: "#fff" }}>
+                      <strong>{autoMatchedJob.job.customerName || autoMatchedJob.job.service}</strong> in{" "}
+                      {autoMatchedJob.job.location} ({autoMatchedJob.job.date})
+                    </div>
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedWorkspacePin(autoMatchedJob.job)}
+                        style={{
+                          padding: "7px 12px",
+                          borderRadius: 8,
+                          background: "#e2b047",
+                          border: "none",
+                          color: "#0f172a",
+                          fontWeight: 800,
+                          fontSize: "0.76rem",
+                          cursor: "pointer",
+                        }}
+                      >
+                        🗂️ Open This Job Folder &amp; Add Photos
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAutoMatchedJob(null)}
+                        style={{
+                          padding: "7px 10px",
+                          borderRadius: 8,
+                          background: "rgba(255,255,255,0.08)",
+                          border: "1px solid rgba(255,255,255,0.15)",
+                          color: "#cbd5e1",
+                          fontSize: "0.75rem",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Dismiss (Create New Pin)
+                      </button>
+                    </div>
+                  </div>
+                )}
                 
                 {/* Roofer Name */}
                 <div className="form-group" style={{ border: tourStep === 1 ? "2px solid #e2b047" : "1px solid transparent", borderRadius: "8px", padding: tourStep === 1 ? "8px" : "0", boxShadow: tourStep === 1 ? "0 0 12px rgba(226, 176, 71, 0.4)" : "none", transition: "all 0.3s" }}>
@@ -1087,15 +1568,52 @@ export default function DropPinPage() {
                   </p>
                 </div>
 
-                {/* Date (Read-Only/Autocompleted) */}
-                <div className="form-group">
-                  <label className="form-label">Date</label>
-                  <input type="text" className="form-input" value={date} disabled />
+                {/* Date & Job Status Row */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                  <div className="form-group">
+                    <label className="form-label">Date</label>
+                    <input type="text" className="form-input" value={date} disabled />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Project Status</label>
+                    <select
+                      className="form-input"
+                      value={projectStatus}
+                      onChange={(e) => {
+                        const val = e.target.value as "in_progress" | "inspection" | "completed";
+                        setProjectStatus(val);
+                        if (val === "inspection") setPublishToPublicMap(false);
+                        if (val === "completed") setPublishToPublicMap(true);
+                      }}
+                    >
+                      <option value="completed">✅ Completed Project</option>
+                      <option value="in_progress">🚧 Active Job (In Progress)</option>
+                      <option value="inspection">🔍 Inspection Only (Internal)</option>
+                    </select>
+                  </div>
                 </div>
 
-                {/* Description */}
+                {/* Description + Hands-Free Voice Dictation */}
                 <div className="form-group">
-                  <label className="form-label">Project Description</label>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 6 }}>
+                    <label className="form-label">Project Description</label>
+                    <button
+                      type="button"
+                      onClick={handleVoiceDictate}
+                      style={{
+                        padding: "4px 10px",
+                        borderRadius: 99,
+                        border: isDictating ? "1px solid #ef4444" : "1px solid rgba(226,176,71,0.4)",
+                        background: isDictating ? "rgba(239,68,68,0.2)" : "rgba(226,176,71,0.12)",
+                        color: isDictating ? "#fca5a5" : "#fde047",
+                        fontSize: "0.72rem",
+                        fontWeight: 800,
+                        cursor: "pointer",
+                      }}
+                    >
+                      {isDictating ? "🛑 Listening... Tap to Stop" : "🎙️ Voice Dictate Notes"}
+                    </button>
+                  </div>
                   <textarea
                     rows={4}
                     placeholder="Describe the job. E.g., Installed a GAF Timberline HDZ architectural roof system in Byram, MS. Completed leak diagnostics near the chimney."
@@ -1106,12 +1624,119 @@ export default function DropPinPage() {
                   />
                 </div>
 
-                {/* Photo Upload and Capture */}
+                {/* Collapsible Private Customer Info & SOP Checklist Drawer */}
+                <div
+                  style={{
+                    background: "rgba(255,255,255,0.02)",
+                    border: "1px solid rgba(255,255,255,0.09)",
+                    borderRadius: 10,
+                    overflow: "hidden",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setShowInternalSection(!showInternalSection)}
+                    style={{
+                      width: "100%",
+                      padding: "12px 14px",
+                      background: "transparent",
+                      border: "none",
+                      color: "#e2e8f0",
+                      fontSize: "0.8rem",
+                      fontWeight: 800,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <span>🔒 Customer Info, Private Crew Notes &amp; SOP Checklist (Optional)</span>
+                    <span>{showInternalSection ? "▲" : "▼"}</span>
+                  </button>
+
+                  {showInternalSection && (
+                    <div style={{ padding: "0 14px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                        <input
+                          type="text"
+                          placeholder="Customer Name (Private)"
+                          value={customerName}
+                          onChange={(e) => setCustomerName(e.target.value)}
+                          className="form-input"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Customer Phone (for Portal SMS)"
+                          value={customerPhone}
+                          onChange={(e) => setCustomerPhone(e.target.value)}
+                          className="form-input"
+                        />
+                      </div>
+                      <textarea
+                        rows={2}
+                        placeholder="Private Crew / Adjuster Notes (Never shown on public map)..."
+                        value={internalNotes}
+                        onChange={(e) => setInternalNotes(e.target.value)}
+                        className="form-input textarea"
+                      />
+                      <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "0.78rem", color: "#cbd5e1", cursor: "pointer" }}>
+                        <input
+                          type="checkbox"
+                          checked={publishToPublicMap}
+                          onChange={(e) => setPublishToPublicMap(e.target.checked)}
+                        />
+                        🌐 Publish this job to the Public SEO Project Map
+                      </label>
+
+                      {checklist.length > 0 && (
+                        <div style={{ marginTop: 4, display: "flex", flexDirection: "column", gap: 6 }}>
+                          <div style={{ fontSize: "0.74rem", fontWeight: 800, color: "#fde047" }}>
+                            ✅ Required SOP Photo &amp; Inspection Checklist:
+                          </div>
+                          {checklist.map((item, idx) => (
+                            <label
+                              key={item.id}
+                              style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "0.76rem", color: item.completed ? "#4ade80" : "#e2e8f0", cursor: "pointer" }}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={item.completed}
+                                onChange={(e) => {
+                                  const next = [...checklist];
+                                  next[idx] = {
+                                    ...item,
+                                    completed: e.target.checked,
+                                    completedBy: e.target.checked ? author || "Tech" : undefined,
+                                    completedAt: e.target.checked ? new Date().toISOString() : undefined,
+                                  };
+                                  setChecklist(next);
+                                }}
+                              />
+                              <span>{item.label}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Photo Upload, Ghost Cam, Markup & Stage Tagging */}
                 <div className="form-group">
-                  <label className="form-label">Project Photographs (1-4 images)</label>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 6 }}>
+                    <label className="form-label">Project Photographs (HD 1600px • Up to 60)</label>
+                    <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.73rem", color: "#cbd5e1", cursor: "pointer" }}>
+                      <input
+                        type="checkbox"
+                        checked={stampWatermark}
+                        onChange={(e) => setStampWatermark(e.target.checked)}
+                      />
+                      🏷️ Stamp Date/GPS Watermark
+                    </label>
+                  </div>
                   {isCompressing ? (
                     <div className="upload-btn disabled">
-                      {uploadStatus || "Processing Images..."}
+                      {uploadStatus || "Processing HD Images..."}
                     </div>
                   ) : (
                     <div className="upload-buttons-container">
@@ -1125,7 +1750,7 @@ export default function DropPinPage() {
                         disabled={isCompressing}
                       />
                       <label htmlFor="photo-capture" className="upload-btn primary-upload-btn">
-                        📸 Take Live Photo
+                        📸 Take Live HD Photo
                       </label>
 
                       <input
@@ -1138,24 +1763,201 @@ export default function DropPinPage() {
                         disabled={isCompressing}
                       />
                       <label htmlFor="photo-gallery" className="upload-btn outline-upload-btn">
-                        📁 Select from Gallery
+                        📁 Select from Gallery (Auto-Reads EXIF GPS)
                       </label>
+
+                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                        <button
+                          type="button"
+                          onClick={() => setGhostCamMode("ghost_photo")}
+                          style={{
+                            flex: 1,
+                            padding: "10px 12px",
+                            borderRadius: 8,
+                            background: "rgba(168,85,247,0.16)",
+                            border: "1px solid rgba(168,85,247,0.4)",
+                            color: "#e9d5ff",
+                            fontSize: "0.78rem",
+                            fontWeight: 800,
+                            cursor: "pointer",
+                          }}
+                        >
+                          👻 Ghost Cam (After Alignment)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setGhostCamMode("video_walkthrough")}
+                          style={{
+                            flex: 1,
+                            padding: "10px 12px",
+                            borderRadius: 8,
+                            background: "rgba(59,130,246,0.16)",
+                            border: "1px solid rgba(59,130,246,0.4)",
+                            color: "#93c5fd",
+                            fontSize: "0.78rem",
+                            fontWeight: 800,
+                            cursor: "pointer",
+                          }}
+                        >
+                          🎥 Video Walkthrough + Voice
+                        </button>
+
+                        {photoMetaList.length >= 2 && (
+                          <button
+                            type="button"
+                            onClick={handleBuildBeforeAfterCollage}
+                            disabled={buildingCollage}
+                            style={{
+                              flex: 1,
+                              padding: "10px 12px",
+                              borderRadius: 8,
+                              background: "rgba(226,176,71,0.16)",
+                              border: "1px solid rgba(226,176,71,0.45)",
+                              color: "#fde047",
+                              fontSize: "0.78rem",
+                              fontWeight: 800,
+                              cursor: "pointer",
+                            }}
+                          >
+                            {buildingCollage ? "Building Split..." : "✨ Build Before/After Graphic"}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   )}
 
-                  {images.length > 0 && (
-                    <div className="preview-grid">
-                      {images.map((img, idx) => (
-                        <div key={idx} className="preview-item">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={img} alt={`Preview ${idx}`} className="preview-img" />
-                          <button
-                            type="button"
-                            className="preview-remove"
-                            onClick={() => handleRemoveImage(idx)}
-                          >
-                            &times;
-                          </button>
+                  {/* Interactive Before/After Preview if both stages are tagged */}
+                  {photoMetaList.some((p) => p.stage === "before") &&
+                    photoMetaList.some((p) => p.stage === "after") && (
+                      <div style={{ marginTop: 10 }}>
+                        <div style={{ fontSize: "0.74rem", fontWeight: 800, color: "#fde047", marginBottom: 6 }}>
+                          ⚡ Live Before &amp; After Slider Preview
+                        </div>
+                        <BeforeAfterSlider
+                          beforeUrl={photoMetaList.find((p) => p.stage === "before")!.url}
+                          afterUrl={photoMetaList.find((p) => p.stage === "after")!.url}
+                          height={220}
+                        />
+                      </div>
+                    )}
+
+                  {photoMetaList.length > 0 && (
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+                        gap: 10,
+                        marginTop: 12,
+                      }}
+                    >
+                      {photoMetaList.map((item, idx) => (
+                        <div
+                          key={`${item.url}-${idx}`}
+                          style={{
+                            background: "#0d0d14",
+                            borderRadius: 8,
+                            border: "1px solid rgba(255,255,255,0.12)",
+                            overflow: "hidden",
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <div style={{ position: "relative", height: 125 }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={item.url} alt={`Preview ${idx}`} className="preview-img" />
+                            <button
+                              type="button"
+                              className="preview-remove"
+                              onClick={() => handleRemoveImage(idx)}
+                            >
+                              &times;
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setMarkupPhotoIndex(idx)}
+                              style={{
+                                position: "absolute",
+                                bottom: 6,
+                                left: 6,
+                                padding: "3px 8px",
+                                borderRadius: 6,
+                                background: "rgba(0,0,0,0.82)",
+                                border: "1px solid rgba(255,255,255,0.25)",
+                                color: "#fff",
+                                fontSize: "0.68rem",
+                                fontWeight: 700,
+                                cursor: "pointer",
+                              }}
+                            >
+                              ✏️ Markup / 💬 ({item.comments?.length || 0})
+                            </button>
+                          </div>
+                          <div style={{ padding: 6, display: "flex", flexDirection: "column", gap: 4 }}>
+                            <div style={{ display: "flex", gap: 4 }}>
+                              <select
+                                value={item.stage}
+                                onChange={(e) => {
+                                  const next = [...photoMetaList];
+                                  next[idx] = { ...next[idx], stage: e.target.value as PhotoStage };
+                                  setPhotoMetaList(next);
+                                }}
+                                style={{
+                                  flex: 1,
+                                  padding: "3px 6px",
+                                  borderRadius: 4,
+                                  background: "#16161f",
+                                  border: "1px solid rgba(255,255,255,0.15)",
+                                  color: "#fff",
+                                  fontSize: "0.7rem",
+                                  fontWeight: 700,
+                                }}
+                              >
+                                <option value="before">⏪ Before</option>
+                                <option value="during">🔨 During</option>
+                                <option value="after">✅ After</option>
+                                <option value="damage">⚠️ Damage</option>
+                                <option value="material">📦 Material</option>
+                              </select>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const next = [...photoMetaList];
+                                  next[idx] = { ...next[idx], isPublic: item.isPublic === false };
+                                  setPhotoMetaList(next);
+                                }}
+                                style={{
+                                  padding: "3px 6px",
+                                  borderRadius: 4,
+                                  border: "1px solid rgba(255,255,255,0.15)",
+                                  background: item.isPublic !== false ? "rgba(34,197,94,0.18)" : "rgba(239,68,68,0.2)",
+                                  color: item.isPublic !== false ? "#4ade80" : "#f87171",
+                                  fontSize: "0.65rem",
+                                  fontWeight: 700,
+                                  cursor: "pointer",
+                                }}
+                              >
+                                {item.isPublic !== false ? "🌐" : "🔒"}
+                              </button>
+                            </div>
+                            <input
+                              type="text"
+                              value={item.caption || ""}
+                              onChange={(e) => {
+                                const next = [...photoMetaList];
+                                next[idx] = { ...next[idx], caption: e.target.value };
+                                setPhotoMetaList(next);
+                              }}
+                              placeholder="Photo note..."
+                              style={{
+                                padding: "3px 6px",
+                                borderRadius: 4,
+                                background: "#16161f",
+                                border: "1px solid rgba(255,255,255,0.1)",
+                                color: "#e2e8f0",
+                                fontSize: "0.68rem",
+                              }}
+                            />
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -1436,7 +2238,136 @@ export default function DropPinPage() {
             </div>
           )}
             </>
-           )}
+           ) : null}
+
+          {/* CompanyCam Modals: Photo Markup, Ghost Camera & Single-Project Workspace */}
+          {markupPhotoIndex !== null && photoMetaList[markupPhotoIndex] && (
+            <PhotoMarkupModal
+              imageUrl={photoMetaList[markupPhotoIndex].url}
+              initialComments={photoMetaList[markupPhotoIndex].comments || []}
+              authorName={author || "Field Specialist"}
+              technicians={authorList}
+              onClose={() => setMarkupPhotoIndex(null)}
+              onSaveAnnotatedImage={async (annotatedDataUrl) => {
+                let finalUrl = photoMetaList[markupPhotoIndex].url;
+                if (annotatedDataUrl !== photoMetaList[markupPhotoIndex].url) {
+                  finalUrl = await uploadBase64Photo(annotatedDataUrl);
+                }
+                const nextMeta = [...photoMetaList];
+                nextMeta[markupPhotoIndex] = {
+                  ...nextMeta[markupPhotoIndex],
+                  url: finalUrl,
+                };
+                setPhotoMetaList(nextMeta);
+                const nextImgs = [...images];
+                nextImgs[markupPhotoIndex] = finalUrl;
+                setImages(nextImgs);
+              }}
+              onAddPhotoComment={async (comment) => {
+                const nextMeta = [...photoMetaList];
+                const existing = nextMeta[markupPhotoIndex].comments || [];
+                nextMeta[markupPhotoIndex] = {
+                  ...nextMeta[markupPhotoIndex],
+                  comments: [
+                    ...existing,
+                    {
+                      ...comment,
+                      id: `pcomm_${Date.now()}`,
+                      createdAt: new Date().toISOString(),
+                    },
+                  ],
+                };
+                setPhotoMetaList(nextMeta);
+              }}
+            />
+          )}
+
+          {ghostCamMode && (
+            <GhostCameraModal
+              ghostBeforeUrl={
+                photoMetaList.find((p) => p.stage === "before")?.url || photoMetaList[0]?.url
+              }
+              mode={ghostCamMode}
+              onClose={() => setGhostCamMode(null)}
+              onCapturePhoto={async (dataUrl) => {
+                setGhostCamMode(null);
+                setIsCompressing(true);
+                setUploadStatus("Uploading Ghost-Aligned HD Photo...");
+                try {
+                  const uploadedUrl = await uploadBase64Photo(dataUrl);
+                  setImages((prev) => [...prev, uploadedUrl]);
+                  setPhotoMetaList((prev) => [
+                    ...prev,
+                    {
+                      url: uploadedUrl,
+                      stage: "after",
+                      caption: "Ghost-Cam Aligned After Shot",
+                      uploadedBy: author || "Field Specialist",
+                      capturedAt: new Date().toISOString(),
+                      isPublic: true,
+                      comments: [],
+                    },
+                  ]);
+                } catch (err) {
+                  console.error("Failed uploading ghost photo:", err);
+                } finally {
+                  setIsCompressing(false);
+                  setUploadStatus("");
+                }
+              }}
+              onCaptureVideo={async (videoDataUrl, transcript) => {
+                setGhostCamMode(null);
+                setIsCompressing(true);
+                setUploadStatus("Uploading Field Video Walkthrough...");
+                try {
+                  const resBlob = await fetch(videoDataUrl);
+                  const videoBlob = await resBlob.blob();
+                  const file = new File([videoBlob], `walkthrough_${Date.now()}.webm`, {
+                    type: videoBlob.type || "video/webm",
+                  });
+                  const formData = new FormData();
+                  formData.append("file", file);
+                  const res = await fetch("/api/upload", {
+                    method: "POST",
+                    headers: authHeaders(false),
+                    body: formData,
+                  });
+                  const data = await res.json();
+                  if (data.url) {
+                    setWalkthroughVideoUrl(data.url);
+                  } else {
+                    setWalkthroughVideoUrl(videoDataUrl);
+                  }
+                  if (transcript) {
+                    setDescription((prev) =>
+                      `${prev ? prev.trim() + " " : ""}${transcript.trim()}`
+                    );
+                  }
+                } catch (err) {
+                  console.error("Video upload failed:", err);
+                  setWalkthroughVideoUrl(videoDataUrl);
+                } finally {
+                  setIsCompressing(false);
+                  setUploadStatus("");
+                }
+              }}
+            />
+          )}
+
+          {selectedWorkspacePin && (
+            <ProjectWorkspaceModal
+              pin={selectedWorkspacePin}
+              companyName={companyName || "Born Again Roofing"}
+              currentTechName={author || authorList[0] || "Field Specialist"}
+              crewMembers={authorList.map((name) => ({ name }))}
+              authHeaders={() => authHeaders(false)}
+              onClose={() => setSelectedWorkspacePin(null)}
+              onUpdated={(updated) => {
+                setSelectedWorkspacePin(updated);
+                setAllPins((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+              }}
+            />
+          )}
 
           {/* Google Business API Instructions Modal */}
           {showGoogleModal && (
