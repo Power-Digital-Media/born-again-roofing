@@ -14,6 +14,7 @@ import { BeforeAfterSlider, generateBeforeAfterCompositeDataUrl } from "@/compon
 import GhostCameraModal from "@/components/GhostCameraModal";
 import CrewMessengerPanel from "@/components/CrewMessengerPanel";
 import ProjectWorkspaceModal from "@/components/ProjectWorkspaceModal";
+import CompanyPhotoFeed from "@/components/CompanyPhotoFeed";
 
 const cityCoords: Record<string, [number, number]> = {
   "Pearl, MS": [32.2729, -90.1312],
@@ -459,6 +460,7 @@ export default function DropPinPage() {
       setUserRole(initialRole);
       fetchTranspondSettings();
       fetchAllPins();
+      trySilentGpsAutoFill();
       try {
         const savedAuthor = localStorage.getItem("pindrop_selected_author");
         if (savedAuthor) {
@@ -583,8 +585,8 @@ export default function DropPinPage() {
         closestCity = city;
       }
     }
-    if (closestCity && !location) {
-      setLocation(closestCity);
+    if (closestCity) {
+      setLocation((prev) => prev || closestCity);
     }
 
     // Check if within ~525 ft (160m) of an existing job folder
@@ -620,6 +622,36 @@ export default function DropPinPage() {
       { enableHighAccuracy: true, timeout: 10000 }
     );
   };
+
+  // Silent background GPS auto-fill when mobile camera strips EXIF GPS headers
+  const trySilentGpsAutoFill = useCallback(() => {
+    if (typeof window === "undefined" || !navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        setLatitude((prev) => (prev === "" ? lat : prev));
+        setLongitude((prev) => (prev === "" ? lng : prev));
+
+        let closestCity = "";
+        let minDistance = Infinity;
+        for (const [city, coords] of Object.entries(cityCoords)) {
+          const dist = Math.pow(lat - coords[0], 2) + Math.pow(lng - coords[1], 2);
+          if (dist < minDistance) {
+            minDistance = dist;
+            closestCity = city;
+          }
+        }
+        if (closestCity) {
+          setLocation((prev) => prev || closestCity);
+        }
+      },
+      () => {
+        // Ignore silent background GPS errors
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+    );
+  }, []);
 
   const handleVoiceDictate = () => {
     const SpeechRec =
@@ -690,6 +722,9 @@ export default function DropPinPage() {
         const exif = await extractExifGpsFromFile(file);
         if (exif.latitude && exif.longitude && latitude === "" && longitude === "") {
           applyCoordinatesAndMatchJob(exif.latitude, exif.longitude, "exif");
+        } else if (latitude === "" || !location) {
+          // Mobile live camera captures strip EXIF GPS; fall back to device geolocation
+          trySilentGpsAutoFill();
         }
 
         const defaultStage: PhotoStage =
@@ -778,15 +813,41 @@ export default function DropPinPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent | React.MouseEvent) => {
+    if (e) e.preventDefault();
+    if (submitLoading || isCompressing) return;
 
-    const finalService = service === "Custom Category..." ? customService : service;
+    const finalService = (service === "Custom Category..." ? customService : service).trim();
 
-    if (!author || !location || !finalService || !description || images.length === 0) {
-      setSubmitError("Please fill in all fields and upload at least one image.");
+    if (images.length === 0) {
+      setSubmitError("⚠️ Please take or select at least 1 project photo before submitting.");
       return;
     }
+
+    const missingFields: string[] = [];
+    if (!author) missingFields.push("Technician Name");
+    if (!location) missingFields.push("Location (City)");
+    if (!finalService) missingFields.push("Service Type");
+
+    if (missingFields.length > 0) {
+      setSubmitError(`⚠️ Almost done! Please select ${missingFields.join(", ")} in the box above to finish submitting.`);
+      return;
+    }
+
+    const customCaptions = photoMetaList
+      .map((m) => (m.caption || "").trim())
+      .filter(
+        (c) =>
+          c.length > 0 &&
+          c !== "Ghost-Cam Aligned After Shot" &&
+          c !== "Before & After Transformation Split"
+      );
+
+    const finalDescription =
+      description.trim() ||
+      (customCaptions.length > 0
+        ? `${finalService} in ${location}: ${customCaptions.join(" — ")}`
+        : `Completed ${finalService} project documentation in ${location} by ${author}.`);
 
     setSubmitLoading(true);
     setSubmitError("");
@@ -800,7 +861,7 @@ export default function DropPinPage() {
       date,
       location,
       service: finalService,
-      description,
+      description: finalDescription,
       images: publicImageUrls.length > 0 ? publicImageUrls : images,
       photoMeta: photoMetaList,
       beforeAfterCollageUrl: beforeAfterCollageUrl || undefined,
@@ -829,11 +890,14 @@ export default function DropPinPage() {
 
       if (response.ok) {
         const resData = await response.json();
-        if (resData.pin) {
-          setLastCreatedPin(resData.pin);
+        if (resData && (resData.pin || resData.id)) {
+          setLastCreatedPin(resData.pin || resData);
         }
         fetchAllPins();
         setSubmitSuccess(true);
+        if (typeof window !== "undefined") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
         // Reset form values
         setDescription("");
         setImages([]);
@@ -981,7 +1045,7 @@ export default function DropPinPage() {
             {(
               [
                 { id: "capture", label: "📍 Capture / Check-In" },
-                { id: "projects", label: `🗂️ Active Jobs & Folders (${allPins.length})` },
+                { id: "projects", label: `📸 Live Photo Feed & Jobs (${allPins.length})` },
                 { id: "messenger", label: "💬 Crew Messenger" },
               ] as const
             ).map((tab) => (
@@ -1007,182 +1071,20 @@ export default function DropPinPage() {
           </div>
         </div>
 
-        {/* MODE 2: ACTIVE JOBS & FOLDERS FEED */}
+        {/* MODE 2: COMPANYCAM-STYLE LIVE PHOTO FEED & JOB FOLDERS */}
         {portalMode === "projects" && (
-          <div style={{ maxWidth: 860, margin: "0 auto 2.5rem", display: "flex", flexDirection: "column", gap: 16 }}>
-            <div
-              style={{
-                background: "#16161f",
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: 16,
-                padding: 18,
-                display: "flex",
-                flexDirection: "column",
-                gap: 14,
+          <div style={{ maxWidth: 940, margin: "0 auto 2.5rem" }}>
+            <CompanyPhotoFeed
+              pins={allPins}
+              crewList={authorList}
+              currentAuthor={author || authorList[0]}
+              authHeaders={() => authHeaders(false)}
+              onOpenWorkspace={(job) => setSelectedWorkspacePin(job)}
+              onStartNewPin={() => setPortalMode("capture")}
+              onPinUpdated={(updated) => {
+                setAllPins((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
               }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#fff" }}>
-                    🗂️ Job Folders &amp; Multi-Day Project Workspaces
-                  </h3>
-                  <p style={{ margin: "4px 0 0", fontSize: 12, color: "#94a3b8" }}>
-                    Click any job folder to add more Before/During/After photos, annotate damage, check off SOPs, upload PDFs, capture homeowner e-signatures, or share the Customer/Insurance Report link.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setPortalMode("capture")}
-                  style={{
-                    padding: "9px 16px",
-                    borderRadius: 10,
-                    background: "#e2b047",
-                    border: "none",
-                    color: "#0f172a",
-                    fontWeight: 800,
-                    fontSize: 12,
-                    cursor: "pointer",
-                  }}
-                >
-                  ➕ Start New Job Pin
-                </button>
-              </div>
-
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                <input
-                  type="text"
-                  value={projectSearch}
-                  onChange={(e) => setProjectSearch(e.target.value)}
-                  placeholder="Search by customer name, street, city, technician, or service..."
-                  style={{
-                    flex: 1,
-                    minWidth: 220,
-                    padding: "10px 14px",
-                    borderRadius: 10,
-                    background: "#0d0d14",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    color: "#fff",
-                    fontSize: 13,
-                  }}
-                />
-                {(
-                  [
-                    { id: "all", label: "All Jobs" },
-                    { id: "in_progress", label: "🚧 In Progress" },
-                    { id: "inspection", label: "🔍 Inspection" },
-                    { id: "completed", label: "✅ Completed" },
-                  ] as const
-                ).map((st) => (
-                  <button
-                    key={st.id}
-                    type="button"
-                    onClick={() => setProjectStatusFilter(st.id)}
-                    style={{
-                      padding: "8px 12px",
-                      borderRadius: 8,
-                      border: projectStatusFilter === st.id ? "1px solid #e2b047" : "1px solid rgba(255,255,255,0.1)",
-                      background: projectStatusFilter === st.id ? "rgba(226,176,71,0.16)" : "rgba(255,255,255,0.03)",
-                      color: projectStatusFilter === st.id ? "#fff" : "#94a3b8",
-                      fontSize: 12,
-                      fontWeight: 700,
-                      cursor: "pointer",
-                    }}
-                  >
-                    {st.label}
-                  </button>
-                ))}
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
-                {allPins
-                  .filter((p) => {
-                    if (projectStatusFilter !== "all" && (p.projectStatus || "completed") !== projectStatusFilter) {
-                      return false;
-                    }
-                    if (!projectSearch.trim()) return true;
-                    const q = projectSearch.toLowerCase();
-                    return (
-                      (p.customerName || "").toLowerCase().includes(q) ||
-                      (p.streetAddress || "").toLowerCase().includes(q) ||
-                      p.location.toLowerCase().includes(q) ||
-                      p.service.toLowerCase().includes(q) ||
-                      p.author.toLowerCase().includes(q)
-                    );
-                  })
-                  .map((job) => {
-                    const thumb = job.images?.[0] || job.photoMeta?.[0]?.url;
-                    const statusLabel =
-                      job.projectStatus === "in_progress"
-                        ? "🚧 In Progress"
-                        : job.projectStatus === "inspection"
-                        ? "🔍 Inspection"
-                        : "✅ Completed";
-                    return (
-                      <div
-                        key={job.id}
-                        onClick={() => setSelectedWorkspacePin(job)}
-                        style={{
-                          background: "#0d0d14",
-                          borderRadius: 14,
-                          border: "1px solid rgba(255,255,255,0.09)",
-                          overflow: "hidden",
-                          cursor: "pointer",
-                          transition: "transform 0.15s, border-color 0.15s",
-                        }}
-                      >
-                        <div style={{ height: 150, background: "#1e293b", position: "relative" }}>
-                          {thumb && (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={thumb} alt={job.service} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                          )}
-                          <span
-                            style={{
-                              position: "absolute",
-                              top: 8,
-                              left: 8,
-                              padding: "3px 9px",
-                              borderRadius: 99,
-                              background: "rgba(0,0,0,0.75)",
-                              color: "#fde047",
-                              fontSize: 11,
-                              fontWeight: 800,
-                            }}
-                          >
-                            {statusLabel}
-                          </span>
-                          <span
-                            style={{
-                              position: "absolute",
-                              bottom: 8,
-                              right: 8,
-                              padding: "3px 8px",
-                              borderRadius: 6,
-                              background: "rgba(0,0,0,0.78)",
-                              color: "#fff",
-                              fontSize: 11,
-                              fontWeight: 700,
-                            }}
-                          >
-                            📸 {job.photoMeta?.length || job.images?.length || 0} Photos
-                          </span>
-                        </div>
-                        <div style={{ padding: 12 }}>
-                          <div style={{ fontWeight: 800, color: "#fff", fontSize: 14, marginBottom: 2 }}>
-                            {job.customerName || job.service}
-                          </div>
-                          <div style={{ fontSize: 12, color: "#cbd5e1" }}>
-                            {job.location} • {job.service}
-                          </div>
-                          <div style={{ fontSize: 11, color: "#64748b", marginTop: 6, display: "flex", justifyContent: "space-between" }}>
-                            <span>👷 {job.author}</span>
-                            <span>{job.date}</span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
+            />
           </div>
         )}
 
@@ -1282,7 +1184,7 @@ export default function DropPinPage() {
           <>
             <div className="double-bezel-wrapper form-card">
             <div className="double-bezel-inner form-inner">
-              <form onSubmit={handleSubmit} className="portal-form">
+              <form onSubmit={handleSubmit} className="portal-form" noValidate>
 
                 {/* Auto-Detected Nearby Job Banner (Geolocation / Photo EXIF Match) */}
                 {autoMatchedJob && (
@@ -1372,7 +1274,6 @@ export default function DropPinPage() {
                         }
                       }
                     }}
-                    required={!showAddTechInput}
                   >
                     <option value="">Select Technician</option>
                     {authorList.map((auth) => (
@@ -1422,7 +1323,6 @@ export default function DropPinPage() {
                     className="form-input"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    required
                   >
                     <option value="">Select City</option>
                     {Object.keys(cityCoords).sort().map((city) => (
@@ -1438,7 +1338,6 @@ export default function DropPinPage() {
                     className="form-input"
                     value={service}
                     onChange={(e) => setService(e.target.value)}
-                    required
                   >
                     <option value="">Select Service Type</option>
                     {serviceList.map((svc) => (
@@ -1456,7 +1355,6 @@ export default function DropPinPage() {
                       placeholder="e.g. Sheetrock & Drywall, Plumbing, Siding"
                       value={customService}
                       onChange={(e) => setCustomService(e.target.value)}
-                      required
                     />
                   </div>
                 )}
@@ -1616,11 +1514,10 @@ export default function DropPinPage() {
                   </div>
                   <textarea
                     rows={4}
-                    placeholder="Describe the job. E.g., Installed a GAF Timberline HDZ architectural roof system in Byram, MS. Completed leak diagnostics near the chimney."
+                    placeholder="Describe the job (optional — auto-fills from your photo notes & service if left blank). E.g., Installed a GAF Timberline HDZ architectural roof system in Byram, MS."
                     className="form-input textarea"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    required
                   />
                 </div>
 
@@ -1964,15 +1861,167 @@ export default function DropPinPage() {
                   )}
                 </div>
 
-                {submitError && <p className="submit-error">{submitError}</p>}
+                {/* Inline Quick-Complete Card right above Submit Button so field techs never have to scroll up */}
+                {(photoMetaList.length > 0 || submitError) &&
+                  (!author ||
+                    !location ||
+                    !(service === "Custom Category..." ? customService.trim() : service)) && (
+                    <div
+                      style={{
+                        background: "rgba(226, 176, 71, 0.1)",
+                        border: "1.5px solid #e2b047",
+                        borderRadius: 12,
+                        padding: "14px",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#fde047" }}>
+                        ⚡ Quick Complete Required Details to Submit:
+                      </div>
+
+                      {!author && (
+                        <div>
+                          <label style={{ fontSize: "0.72rem", color: "#cbd5e1", fontWeight: 700, display: "block", marginBottom: 4 }}>
+                            1. Select Your Name
+                          </label>
+                          <select
+                            className="form-input"
+                            value={author}
+                            onChange={(e) => {
+                              setAuthor(e.target.value);
+                              setQuickReviewAuthor(e.target.value);
+                              setSubmitError("");
+                              if (e.target.value) {
+                                try {
+                                  localStorage.setItem("pindrop_selected_author", e.target.value);
+                                } catch {}
+                              }
+                            }}
+                            style={{ padding: "8px 10px", fontSize: "0.85rem", background: "#0d0d14" }}
+                          >
+                            <option value="">Select Technician...</option>
+                            {authorList.map((auth) => (
+                              <option key={auth} value={auth}>{auth}</option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+
+                      {!location && (
+                        <div>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                            <label style={{ fontSize: "0.72rem", color: "#cbd5e1", fontWeight: 700 }}>
+                              Location (City)
+                            </label>
+                            <button
+                              type="button"
+                              onClick={getGPSLocation}
+                              disabled={geoLoading}
+                              style={{
+                                background: "rgba(226,176,71,0.2)",
+                                border: "1px solid #e2b047",
+                                color: "#fde047",
+                                borderRadius: 6,
+                                padding: "2px 8px",
+                                fontSize: "0.68rem",
+                                fontWeight: 800,
+                                cursor: "pointer",
+                              }}
+                            >
+                              {geoLoading ? "Locating..." : "📍 Auto-Detect GPS City"}
+                            </button>
+                          </div>
+                          <select
+                            className="form-input"
+                            value={location}
+                            onChange={(e) => {
+                              setLocation(e.target.value);
+                              setSubmitError("");
+                            }}
+                            style={{ padding: "8px 10px", fontSize: "0.85rem", background: "#0d0d14" }}
+                          >
+                            <option value="">Select City...</option>
+                            {Object.keys(cityCoords).sort().map((city) => (
+                              <option key={city} value={city}>{city}</option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+
+                      {!(service === "Custom Category..." ? customService.trim() : service) && (
+                        <div>
+                          <label style={{ fontSize: "0.72rem", color: "#cbd5e1", fontWeight: 700, display: "block", marginBottom: 4 }}>
+                            Service Type
+                          </label>
+                          <select
+                            className="form-input"
+                            value={service}
+                            onChange={(e) => {
+                              setService(e.target.value);
+                              setSubmitError("");
+                            }}
+                            style={{ padding: "8px 10px", fontSize: "0.85rem", background: "#0d0d14" }}
+                          >
+                            <option value="">Select Service Type...</option>
+                            {serviceList.map((svc) => (
+                              <option key={svc} value={svc}>{svc}</option>
+                            ))}
+                          </select>
+                          {service === "Custom Category..." && (
+                            <input
+                              type="text"
+                              className="form-input"
+                              placeholder="Specify Custom Service (e.g. Excavation, Slab, Siding)"
+                              value={customService}
+                              onChange={(e) => {
+                                setCustomService(e.target.value);
+                                setSubmitError("");
+                              }}
+                              style={{ marginTop: 6, padding: "8px 10px", fontSize: "0.85rem", background: "#0d0d14" }}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                {submitError && (
+                  <div
+                    style={{
+                      background: "rgba(239, 68, 68, 0.14)",
+                      border: "1px solid #ef4444",
+                      borderRadius: 10,
+                      padding: "10px 14px",
+                      color: "#fca5a5",
+                      fontSize: "0.84rem",
+                      fontWeight: 700,
+                      textAlign: "center",
+                    }}
+                  >
+                    {submitError}
+                  </div>
+                )}
 
                 {/* Form Buttons */}
                 <button
                   type="submit"
-                  className="btn btn-outline submit-form-btn"
+                  onClick={handleSubmit}
+                  className="btn btn-primary submit-form-btn"
                   disabled={submitLoading || isCompressing}
+                  style={{
+                    userSelect: "none",
+                    WebkitUserSelect: "none",
+                    WebkitTouchCallout: "none",
+                    touchAction: "manipulation",
+                  }}
                 >
-                  {submitLoading ? "Submitting..." : "Submit Project Pin"}
+                  {submitLoading
+                    ? "⏳ Submitting Project Pin..."
+                    : isCompressing
+                    ? "⏳ Uploading Photo..."
+                    : "🚀 Submit Project Pin"}
                 </button>
 
               </form>
@@ -2293,8 +2342,28 @@ export default function DropPinPage() {
                 setGhostCamMode(null);
                 setIsCompressing(true);
                 setUploadStatus("Uploading Ghost-Aligned HD Photo...");
+                if (latitude === "" || !location) {
+                  trySilentGpsAutoFill();
+                }
                 try {
-                  const uploadedUrl = await uploadBase64Photo(dataUrl);
+                  const compressedBase64 = await compressAndPreparePhoto(dataUrl, {
+                    maxDimension: 1600,
+                    quality: 0.82,
+                    stampWatermark,
+                    watermarkText: stampWatermark
+                      ? {
+                          dateStr: new Date().toLocaleString(),
+                          locationStr: location || undefined,
+                          coordsStr:
+                            typeof latitude === "number" && typeof longitude === "number"
+                              ? `${latitude.toFixed(3)}, ${longitude.toFixed(3)}`
+                              : undefined,
+                          stageStr: "after",
+                          authorStr: author || undefined,
+                        }
+                      : undefined,
+                  });
+                  const uploadedUrl = await uploadBase64Photo(compressedBase64);
                   setImages((prev) => [...prev, uploadedUrl]);
                   setPhotoMetaList((prev) => [
                     ...prev,
@@ -2302,7 +2371,7 @@ export default function DropPinPage() {
                       url: uploadedUrl,
                       stage: "after",
                       caption: "Ghost-Cam Aligned After Shot",
-                      uploadedBy: author || "Field Specialist",
+                      author: author || "Field Specialist",
                       capturedAt: new Date().toISOString(),
                       isPublic: true,
                       comments: [],
@@ -2320,24 +2389,8 @@ export default function DropPinPage() {
                 setIsCompressing(true);
                 setUploadStatus("Uploading Field Video Walkthrough...");
                 try {
-                  const resBlob = await fetch(videoDataUrl);
-                  const videoBlob = await resBlob.blob();
-                  const file = new File([videoBlob], `walkthrough_${Date.now()}.webm`, {
-                    type: videoBlob.type || "video/webm",
-                  });
-                  const formData = new FormData();
-                  formData.append("file", file);
-                  const res = await fetch("/api/upload", {
-                    method: "POST",
-                    headers: authHeaders(false),
-                    body: formData,
-                  });
-                  const data = await res.json();
-                  if (data.url) {
-                    setWalkthroughVideoUrl(data.url);
-                  } else {
-                    setWalkthroughVideoUrl(videoDataUrl);
-                  }
+                  const uploadedVideoUrl = await uploadBase64Photo(videoDataUrl);
+                  setWalkthroughVideoUrl(uploadedVideoUrl);
                   if (transcript) {
                     setDescription((prev) =>
                       `${prev ? prev.trim() + " " : ""}${transcript.trim()}`
@@ -2345,7 +2398,6 @@ export default function DropPinPage() {
                   }
                 } catch (err) {
                   console.error("Video upload failed:", err);
-                  setWalkthroughVideoUrl(videoDataUrl);
                 } finally {
                   setIsCompressing(false);
                   setUploadStatus("");
@@ -2684,6 +2736,20 @@ export default function DropPinPage() {
         .form-card {
           max-width: 580px;
           margin: 0 auto;
+          transform: none !important;
+        }
+        .form-card:hover {
+          transform: none !important;
+        }
+        .portal-container :global(.double-bezel-wrapper:hover) {
+          transform: none !important;
+        }
+        .portal-container :global(button),
+        .portal-container :global(.btn) {
+          user-select: none;
+          -webkit-user-select: none;
+          -webkit-touch-callout: none;
+          touch-action: manipulation;
         }
         .form-inner {
           padding: 2.5rem !important;
@@ -2894,10 +2960,15 @@ export default function DropPinPage() {
         }
         .submit-form-btn {
           width: 100%;
-          padding: 0.9rem !important;
-          font-size: 0.95rem;
-          font-weight: 700;
+          padding: 1rem !important;
+          font-size: 1rem;
+          font-weight: 800;
           margin-top: 0.5rem;
+          user-select: none;
+          -webkit-user-select: none;
+          -webkit-touch-callout: none;
+          touch-action: manipulation;
+          cursor: pointer;
         }
         
         /* Success Card Styles */
