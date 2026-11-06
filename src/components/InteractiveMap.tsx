@@ -39,6 +39,10 @@ const cityCoords: Record<string, [number, number]> = {
   "Richland, MS": [32.2354, -90.1565],
   "Terry, MS": [32.1038, -90.3204],
   "Utica, MS": [32.1121, -90.6272],
+  "Learned, MS": [32.2025, -90.5502],
+  "Bolton, MS": [32.3493, -90.4604],
+  "Edwards, MS": [32.3304, -90.6057],
+  "Pelahatchie, MS": [32.3143, -89.7987],
   "Gluckstadt, MS": [32.5188, -90.1315],
   "Magee, MS": [31.8710, -89.7337],
   "Hattiesburg, MS": [31.3271, -89.2903]

@@ -35,6 +35,10 @@ const cityCoords: Record<string, [number, number]> = {
   "Richland, MS": [32.2354, -90.1565],
   "Terry, MS": [32.1038, -90.3204],
   "Utica, MS": [32.1121, -90.6272],
+  "Learned, MS": [32.2025, -90.5502],
+  "Bolton, MS": [32.3493, -90.4604],
+  "Edwards, MS": [32.3304, -90.6057],
+  "Pelahatchie, MS": [32.3143, -89.7987],
   "Gluckstadt, MS": [32.5188, -90.1315],
   "Magee, MS": [31.8710, -89.7337],
   "Hattiesburg, MS": [31.3271, -89.2903]
@@ -84,6 +88,7 @@ export default function DropPinPage() {
     return today.toLocaleDateString("en-US", options);
   });
   const [location, setLocation] = useState("");
+  const [customLocation, setCustomLocation] = useState("");
   const [service, setService] = useState("");
   const [customService, setCustomService] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
@@ -817,6 +822,7 @@ export default function DropPinPage() {
     if (e) e.preventDefault();
     if (submitLoading || isCompressing) return;
 
+    const finalLocation = (location === "CUSTOM_CITY" ? customLocation : location).trim();
     const finalService = (service === "Custom Category..." ? customService : service).trim();
 
     if (images.length === 0) {
@@ -826,7 +832,7 @@ export default function DropPinPage() {
 
     const missingFields: string[] = [];
     if (!author) missingFields.push("Technician Name");
-    if (!location) missingFields.push("Location (City)");
+    if (!finalLocation) missingFields.push("Location (City)");
     if (!finalService) missingFields.push("Service Type");
 
     if (missingFields.length > 0) {
@@ -846,8 +852,8 @@ export default function DropPinPage() {
     const finalDescription =
       description.trim() ||
       (customCaptions.length > 0
-        ? `${finalService} in ${location}: ${customCaptions.join(" — ")}`
-        : `Completed ${finalService} project documentation in ${location} by ${author}.`);
+        ? `${finalService} in ${finalLocation}: ${customCaptions.join(" — ")}`
+        : `Completed ${finalService} project documentation in ${finalLocation} by ${author}.`);
 
     setSubmitLoading(true);
     setSubmitError("");
@@ -859,7 +865,7 @@ export default function DropPinPage() {
     const payload = {
       author,
       date,
-      location,
+      location: finalLocation,
       service: finalService,
       description: finalDescription,
       images: publicImageUrls.length > 0 ? publicImageUrls : images,
@@ -1328,7 +1334,20 @@ export default function DropPinPage() {
                     {Object.keys(cityCoords).sort().map((city) => (
                       <option key={city} value={city}>{city}</option>
                     ))}
+                    <option value="CUSTOM_CITY" style={{ color: "#e2b047", fontWeight: "bold" }}>
+                      + Custom City / Town...
+                    </option>
                   </select>
+                  {location === "CUSTOM_CITY" && (
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="e.g. Learned, MS or Bentonia, MS"
+                      value={customLocation}
+                      onChange={(e) => setCustomLocation(e.target.value)}
+                      style={{ marginTop: 6 }}
+                    />
+                  )}
                 </div>
 
                 {/* Service Category */}
@@ -1864,7 +1883,7 @@ export default function DropPinPage() {
                 {/* Inline Quick-Complete Card right above Submit Button so field techs never have to scroll up */}
                 {(photoMetaList.length > 0 || submitError) &&
                   (!author ||
-                    !location ||
+                    !(location === "CUSTOM_CITY" ? customLocation.trim() : location) ||
                     !(service === "Custom Category..." ? customService.trim() : service)) && (
                     <div
                       style={{
@@ -1909,7 +1928,7 @@ export default function DropPinPage() {
                         </div>
                       )}
 
-                      {!location && (
+                      {!(location === "CUSTOM_CITY" ? customLocation.trim() : location) && (
                         <div>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
                             <label style={{ fontSize: "0.72rem", color: "#cbd5e1", fontWeight: 700 }}>
@@ -1946,7 +1965,23 @@ export default function DropPinPage() {
                             {Object.keys(cityCoords).sort().map((city) => (
                               <option key={city} value={city}>{city}</option>
                             ))}
+                            <option value="CUSTOM_CITY" style={{ color: "#e2b047", fontWeight: "bold" }}>
+                              + Custom City / Town...
+                            </option>
                           </select>
+                          {location === "CUSTOM_CITY" && (
+                            <input
+                              type="text"
+                              className="form-input"
+                              placeholder="Specify City / Town (e.g. Learned, MS)"
+                              value={customLocation}
+                              onChange={(e) => {
+                                setCustomLocation(e.target.value);
+                                setSubmitError("");
+                              }}
+                              style={{ marginTop: 6, padding: "8px 10px", fontSize: "0.85rem", background: "#0d0d14" }}
+                            />
+                          )}
                         </div>
                       )}
 
