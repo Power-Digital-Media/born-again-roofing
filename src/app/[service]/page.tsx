@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import ServiceCTA from "@/components/ServiceCTA";
 import FAQSchema from "@/components/FAQSchema";
+import RoofingHeroActions from "@/components/RoofingHeroActions";
 
 interface ServiceDetail {
   title: string;
@@ -218,7 +219,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!page) return {};
   
   return {
-    title: page.title,
+    title: page.title.includes("|") ? { absolute: page.title } : page.title,
     description: page.description,
     alternates: {
       canonical: `/${service}/`
@@ -354,6 +355,18 @@ export default async function ServiceSubpage({ params }: PageProps) {
   };
 
   const verse = serviceVerses[service];
+  const isRoofingSpecialty =
+    service === "skylight-repair-and-replacement" ||
+    service.startsWith("synthetic-");
+  const defaultFormService =
+    service === "skylight-repair-and-replacement"
+      ? "Roof Repair"
+      : service.startsWith("synthetic-")
+        ? "Roof Replacement"
+        : "Home Remodeling / Additions";
+  const heroCtaLabel = isRoofingSpecialty
+    ? "Get Free Roof Estimate"
+    : "Get a Free Estimate";
 
   return (
     <>
@@ -368,8 +381,13 @@ export default async function ServiceSubpage({ params }: PageProps) {
           <h1>{page.heading}</h1>
           <p className="hero-subtext">{page.subheading}</p>
 
+          <RoofingHeroActions
+            defaultService={defaultFormService}
+            ctaLabel={heroCtaLabel}
+          />
+
           {verse && (
-            <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+            <div style={{ marginTop: "2rem", textAlign: "center", maxWidth: "520px" }}>
               <p
                 style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
                 dangerouslySetInnerHTML={{ __html: `&ldquo;${verse.text}&rdquo;` }}
@@ -458,7 +476,7 @@ export default async function ServiceSubpage({ params }: PageProps) {
       </section>
 
       {/* Bottom CTA */}
-      <ServiceCTA />
+      <ServiceCTA defaultService={defaultFormService} />
 
       <FAQSchema faqs={page.faqs.map((faq) => ({ question: faq.q, answer: faq.a }))} />
     </>

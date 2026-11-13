@@ -22,10 +22,10 @@ export default function Header() {
         {/* Logo / Brand */}
         <Link href="/" className="logo-link">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/wp_logo.png" alt="Born Again Roofing Logo" className="logo-img" />
+          <img src="/images/wp_logo.png" alt="Born Again Home Remodeling and Roofing Logo" className="logo-img" />
           <div className="logo-text-wrapper">
             <span className="logo-title">Born Again</span>
-            <span className="logo-subtitle">Roofing &amp; Remodeling</span>
+            <span className="logo-subtitle">Roofing &amp; Remodeling · Central MS</span>
           </div>
         </Link>
 
@@ -53,14 +53,21 @@ export default function Header() {
           <Link href="/areas-we-service" className="nav-link">Areas Served</Link>
           <Link href="/pins" className="nav-link">Project Pins</Link>
           <Link href="/reviews" className="nav-link">Reviews</Link>
-          <Link 
-            href="/contact-us" 
+          <a
+            href="tel:6015736178"
+            className="nav-link"
+            style={{ fontWeight: 700, color: "var(--secondary)", whiteSpace: "nowrap" }}
+          >
+            (601) 573-6178
+          </a>
+          <Link
+            href="/contact-us/"
             className="btn btn-primary btn-island"
             onClick={(e) => {
               e.preventDefault();
               window.dispatchEvent(
                 new CustomEvent("open-estimate-drawer", {
-                  detail: { type: "estimate" }
+                  detail: { type: "estimate", defaultService: "Roof Replacement" }
                 })
               );
             }}
@@ -75,7 +82,7 @@ export default function Header() {
         </nav>
 
         {/* Mobile menu toggle (Morphing Hamburger) */}
-        <button 
+        <button
           onClick={() => {
             setMobileMenuOpen(!mobileMenuOpen);
             if (!mobileMenuOpen) {
@@ -123,15 +130,15 @@ export default function Header() {
           <Link href="/areas-we-service" className="mobile-nav-link" onClick={closeMenu}>Areas Served</Link>
           <Link href="/pins" className="mobile-nav-link" onClick={closeMenu}>Project Pins</Link>
           <Link href="/reviews" className="mobile-nav-link" onClick={closeMenu}>Reviews</Link>
-          <Link 
-            href="/contact-us" 
-            className="btn btn-primary btn-island mobile-nav-link mobile-cta" 
+          <Link
+            href="/contact-us/"
+            className="btn btn-primary btn-island mobile-nav-link mobile-cta"
             onClick={(e) => {
               e.preventDefault();
               closeMenu();
               window.dispatchEvent(
                 new CustomEvent("open-estimate-drawer", {
-                  detail: { type: "estimate" }
+                  detail: { type: "estimate", defaultService: "Roof Replacement" }
                 })
               );
             }}

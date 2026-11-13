@@ -1,34 +1,14 @@
 import { MetadataRoute } from 'next';
-import { getPins } from '@/lib/db';
 
 const BASE_URL = 'https://www.bornagainroofing.com';
 
-// Rendered on request so newly submitted (Firestore-only) projects appear without a redeploy.
-// Read-only: uses the same tenant-scoped getPins() source as /api/pins and the project pages.
-export const dynamic = 'force-dynamic';
-
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const pins = await getPins();
-
-  // Dynamic [service] pages
-  const servicePages = [
-    'bathroom-remodeling',
-    'kitchen-remodeling',
-    'whole-house-remodeling',
-    'painting',
-    'plumbing',
-    'electrical',
-    'flooring',
-    'tile-service',
-    'sheetrock',
-    'insulation',
-    'framing',
-    'trim',
-    'skylight-repair-and-replacement',
-    'synthetic-shingles',
-    'synthetic-slate-roof-installation',
-    'synthetic-tile-roofing',
-    'synthetic-wood-roofing',
+export default function sitemap(): MetadataRoute.Sitemap {
+  // Core roofing pillar pages (highest commercial priority)
+  const serviceIndexPages = [
+    'residential-roofing',
+    'storm-damage-roof-repair',
+    'metal-roofing-repair-and-installation',
+    'commercial-roofing',
   ];
 
   // Residential roofing sub-services
@@ -54,30 +34,51 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'standing-seam-metal-roof-installation',
   ];
 
-  // Area pages
+  // Central Mississippi service area hubs (all 19 verified MS communities)
   const areaPages = [
-    'brandon-ms',
-    'byram-ms',
-    'canton-ms',
-    'clinton-ms',
-    'crystal-springs-ms',
     'florence-ms',
-    'flowood-ms',
-    'gluckstadt-ms',
-    'hazlehurst-ms',
     'jackson-ms',
+    'brandon-ms',
     'madison-ms',
     'pearl-ms',
-    'raymond-ms',
-    'richland-ms',
+    'flowood-ms',
     'ridgeland-ms',
+    'clinton-ms',
+    'byram-ms',
+    'richland-ms',
+    'canton-ms',
+    'gluckstadt-ms',
     'terry-ms',
+    'raymond-ms',
+    'crystal-springs-ms',
+    'hazlehurst-ms',
     'utica-ms',
     'vicksburg-ms',
     'yazoo-city-ms',
   ];
 
-  // Static pages (priority 0.5)
+  // Dynamic [service] pages (remodeling + specialty roofing)
+  const servicePages = [
+    'bathroom-remodeling',
+    'kitchen-remodeling',
+    'whole-house-remodeling',
+    'painting',
+    'plumbing',
+    'electrical',
+    'flooring',
+    'tile-service',
+    'sheetrock',
+    'insulation',
+    'framing',
+    'trim',
+    'skylight-repair-and-replacement',
+    'synthetic-shingles',
+    'synthetic-slate-roof-installation',
+    'synthetic-tile-roofing',
+    'synthetic-wood-roofing',
+  ];
+
+  // Static company & trust pages
   const staticPages = [
     'about-us',
     'contact-us',
@@ -90,69 +91,48 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'terms-and-conditions',
   ];
 
-  // Service index pages (priority 0.9)
-  const serviceIndexPages = [
-    'residential-roofing',
-    'storm-damage-roof-repair',
-    'metal-roofing-repair-and-installation',
-    'commercial-roofing',
-  ];
-
+  // Note: Individual /pin-page/?id=* query-string views are intentionally excluded
+  // from sitemap.xml and marked noindex,follow so 100% of crawl budget and project
+  // content equity concentrates onto the canonical service and Central MS city pages.
   return [
-    // Homepage
     {
       url: `${BASE_URL}/`,
       priority: 1.0,
     },
 
-    // Service index pages
     ...serviceIndexPages.map((page) => ({
       url: `${BASE_URL}/${page}/`,
-      priority: 0.9,
+      priority: 0.95,
     })),
 
-    // Dynamic [service] pages
+    ...residentialSubServices.map((sub) => ({
+      url: `${BASE_URL}/residential-roofing/${sub}/`,
+      priority: 0.85,
+    })),
+
+    ...stormDamageSubServices.map((sub) => ({
+      url: `${BASE_URL}/storm-damage-roof-repair/${sub}/`,
+      priority: 0.85,
+    })),
+
+    ...metalRoofingSubServices.map((sub) => ({
+      url: `${BASE_URL}/metal-roofing-repair-and-installation/${sub}/`,
+      priority: 0.85,
+    })),
+
+    ...areaPages.map((area) => ({
+      url: `${BASE_URL}/areas-we-service/${area}/`,
+      priority: 0.85,
+    })),
+
     ...servicePages.map((service) => ({
       url: `${BASE_URL}/${service}/`,
       priority: 0.8,
     })),
 
-    // Residential roofing sub-services
-    ...residentialSubServices.map((sub) => ({
-      url: `${BASE_URL}/residential-roofing/${sub}/`,
-      priority: 0.8,
-    })),
-
-    // Storm damage sub-services
-    ...stormDamageSubServices.map((sub) => ({
-      url: `${BASE_URL}/storm-damage-roof-repair/${sub}/`,
-      priority: 0.8,
-    })),
-
-    // Metal roofing sub-services
-    ...metalRoofingSubServices.map((sub) => ({
-      url: `${BASE_URL}/metal-roofing-repair-and-installation/${sub}/`,
-      priority: 0.8,
-    })),
-
-    // Area pages
-    ...areaPages.map((area) => ({
-      url: `${BASE_URL}/areas-we-service/${area}/`,
-      priority: 0.7,
-    })),
-
-    // Static pages
     ...staticPages.map((page) => ({
       url: `${BASE_URL}/${page}/`,
       priority: 0.5,
-    })),
-
-    // Project detail pages: historical snapshot + live Firestore projects (priority 0.6)
-    // lastmod is intentionally omitted: the recorded job date is not a page publication/modification time,
-    // and getPins() exposes no reliable page timestamp.
-    ...pins.map((pin) => ({
-      url: `${BASE_URL}/pin-page/?id=${pin.id}`,
-      priority: 0.6,
     })),
   ];
 }

@@ -5,7 +5,7 @@ import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import TrustedBrands from "@/components/TrustedBrands";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Born Again Home Remodeling and Roofing",
+  title: "Free Roofing & Remodeling Estimate",
   description: "Get in touch with Born Again Home Remodeling and Roofing. We offer free estimates for roofing, siding, and remodeling across Jackson, MS. Call (601) 573-6178.",
   alternates: {
     canonical: "/contact-us/"

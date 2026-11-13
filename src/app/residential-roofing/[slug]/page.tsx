@@ -6,6 +6,9 @@ import TrustedBrands from "@/components/TrustedBrands";
 import ServiceCTA from "@/components/ServiceCTA";
 import FAQSchema from "@/components/FAQSchema";
 import RoofingGuideSection from "@/components/RoofingGuideSection";
+import RoofingHeroActions from "@/components/RoofingHeroActions";
+import ServiceBentoGrid from "@/components/ServiceBentoGrid";
+import ServicePinsCarousel from "@/components/ServicePinsCarousel";
 import { roofingGuides } from "@/data/roofingGuides";
 
 interface SubpageDetail {
@@ -117,9 +120,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const page = subpages[slug];
   if (!page) return {};
-  
+
+  const rawTitle = roofingGuides[slug]?.title ?? page.title;
   return {
-    title: roofingGuides[slug]?.title ?? page.title,
+    title: rawTitle.includes("|") ? { absolute: rawTitle } : rawTitle,
     description: roofingGuides[slug]?.description ?? page.description,
     alternates: {
       canonical: `/residential-roofing/${slug}/`
@@ -127,15 +131,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-import ServiceBentoGrid from "@/components/ServiceBentoGrid";
-import ServicePinsCarousel from "@/components/ServicePinsCarousel";
-
 const slugToPinMapping: Record<string, string[]> = {
   "roof-repair": ["Roof Repair"],
   "roof-inspections": ["Roof Inspection"],
   "roof-installation": ["Residential Roofing"],
   "asphalt-shingle-roof-repair-and-replacement": ["Residential Roofing", "Roof Repair"],
   "soffit-and-fascia-repair": ["Soffit & Fascia"]
+};
+
+const slugToDefaultService: Record<string, { service: string; label: string }> = {
+  "roof-repair": { service: "Roof Repair", label: "Get Free Roof Repair Estimate" },
+  "roof-inspections": { service: "Storm Damage Restoration", label: "Schedule Free Roof Inspection" },
+  "roof-installation": { service: "Roof Replacement", label: "Get Free Roof Replacement Quote" },
+  "asphalt-shingle-roof-repair-and-replacement": { service: "Roof Replacement", label: "Get Free Shingle Roof Estimate" },
+  "soffit-and-fascia-repair": { service: "Siding, Gutters & Exterior", label: "Get Soffit & Fascia Estimate" }
 };
 
 const subpageBentoImages: Record<string, { url: string; location: string }[]> = {
@@ -171,6 +180,7 @@ export default async function ResidentialSubpage({ params }: PageProps) {
 
   const mappedCategories = slugToPinMapping[slug] || ["Residential Roofing"];
   const overrideBentoImages = subpageBentoImages[slug];
+  const ctaConfig = slugToDefaultService[slug] || { service: "Roof Replacement", label: "Get Free Roof Estimate" };
 
   return (
     <>
@@ -184,7 +194,11 @@ export default async function ResidentialSubpage({ params }: PageProps) {
           </span>
           <h1>{roofingGuides[slug]?.heading ?? page.heading}</h1>
           <p className="hero-subtext">{page.subheading}</p>
-          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+          <RoofingHeroActions
+            defaultService={ctaConfig.service}
+            ctaLabel={ctaConfig.label}
+          />
+          <div style={{ marginTop: "2rem", textAlign: "center", maxWidth: "520px" }}>
             <p
               style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
               dangerouslySetInnerHTML={{ __html: `&ldquo;Unless the <em>Lord builds the house</em>, the builders <em>labor in vain</em>.&rdquo;` }}
@@ -232,7 +246,7 @@ export default async function ResidentialSubpage({ params }: PageProps) {
             </div>
         </div>
       </section>
-      <ServiceCTA />
+      <ServiceCTA defaultService={ctaConfig.service} />
 
       <FAQSchema faqs={page.faqs.map((faq) => ({ question: faq.q, answer: faq.a }))} />
     </>

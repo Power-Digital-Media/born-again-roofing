@@ -6,15 +6,48 @@ interface SchemaProps {
   path?: string;
 }
 
+const MISSISSIPPI_STATE = {
+  "@type": "State",
+  "name": "Mississippi",
+  "sameAs": "https://en.wikipedia.org/wiki/Mississippi",
+};
+
+const SERVED_MS_CITIES = [
+  { name: "Florence, MS", sameAs: "https://en.wikipedia.org/wiki/Florence,_Mississippi" },
+  { name: "Jackson, MS", sameAs: "https://en.wikipedia.org/wiki/Jackson,_Mississippi" },
+  { name: "Brandon, MS", sameAs: "https://en.wikipedia.org/wiki/Brandon,_Mississippi" },
+  { name: "Madison, MS", sameAs: "https://en.wikipedia.org/wiki/Madison,_Mississippi" },
+  { name: "Pearl, MS", sameAs: "https://en.wikipedia.org/wiki/Pearl,_Mississippi" },
+  { name: "Flowood, MS", sameAs: "https://en.wikipedia.org/wiki/Flowood,_Mississippi" },
+  { name: "Ridgeland, MS", sameAs: "https://en.wikipedia.org/wiki/Ridgeland,_Mississippi" },
+  { name: "Clinton, MS", sameAs: "https://en.wikipedia.org/wiki/Clinton,_Mississippi" },
+  { name: "Byram, MS", sameAs: "https://en.wikipedia.org/wiki/Byram,_Mississippi" },
+  { name: "Richland, MS", sameAs: "https://en.wikipedia.org/wiki/Richland,_Mississippi" },
+  { name: "Canton, MS", sameAs: "https://en.wikipedia.org/wiki/Canton,_Mississippi" },
+  { name: "Gluckstadt, MS", sameAs: "https://en.wikipedia.org/wiki/Gluckstadt,_Mississippi" },
+  { name: "Terry, MS", sameAs: "https://en.wikipedia.org/wiki/Terry,_Mississippi" },
+  { name: "Raymond, MS", sameAs: "https://en.wikipedia.org/wiki/Raymond,_Mississippi" },
+  { name: "Crystal Springs, MS", sameAs: "https://en.wikipedia.org/wiki/Crystal_Springs,_Mississippi" },
+  { name: "Hazlehurst, MS", sameAs: "https://en.wikipedia.org/wiki/Hazlehurst,_Mississippi" },
+  { name: "Utica, MS", sameAs: "https://en.wikipedia.org/wiki/Utica,_Mississippi" },
+  { name: "Vicksburg, MS", sameAs: "https://en.wikipedia.org/wiki/Vicksburg,_Mississippi" },
+  { name: "Yazoo City, MS", sameAs: "https://en.wikipedia.org/wiki/Yazoo_City,_Mississippi" },
+];
+
 export default function LocalBusinessSchema({ pageTitle, pageDescription, path = "" }: SchemaProps) {
   const currentUrl = `https://www.bornagainroofing.com${path}`;
-  const baseDescription = "Born Again Home Remodeling & Roofing LLC provides roof repair, roof replacement, storm damage repair, roof inspections, and metal roofing in Jackson and Central Mississippi, along with home remodeling services.";
+  const baseDescription =
+    "Born Again Home Remodeling & Roofing LLC provides GAF-certified roof repair, roof replacement, storm & hail damage restoration, roof inspections, standing seam metal roofing, commercial roofing, and custom home remodeling across Florence, Brandon, Madison, Jackson, and Central Mississippi.";
 
   const businessSchema = {
     "@type": ["RoofingContractor", "HomeAndConstructionBusiness", "GeneralContractor"],
     "@id": "https://www.bornagainroofing.com/#roofingcontractor",
     "name": "Born Again Home Remodeling and Roofing",
-    "alternateName": ["Born Again Roofing", "Born Again Home Remodeling"],
+    "alternateName": [
+      "Born Again Home Remodeling & Roofing",
+      "Born Again Roofing",
+      "Born Again Home Remodeling",
+    ],
     "legalName": "Born Again Home Remodeling & Roofing LLC",
     "description": baseDescription,
     "image": [
@@ -59,37 +92,22 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
       "https://www.facebook.com/BornAgainHomeRemodelingAndRoofing/",
       "https://www.bbb.org/us/ms/florence/profile/home-improvement/born-again-home-remodeling-roofing-llc-0523-141851401"
     ],
-    "areaServed": [
-      { "@type": "City", "name": "Jackson", "sameAs": "https://en.wikipedia.org/wiki/Jackson,_Mississippi" },
-      { "@type": "City", "name": "Brandon" },
-      { "@type": "City", "name": "Byram" },
-      { "@type": "City", "name": "Canton" },
-      { "@type": "City", "name": "Clinton" },
-      { "@type": "City", "name": "Crystal Springs" },
-      { "@type": "City", "name": "Florence" },
-      { "@type": "City", "name": "Flowood" },
-      { "@type": "City", "name": "Gluckstadt" },
-      { "@type": "City", "name": "Hazlehurst" },
-      { "@type": "City", "name": "Madison" },
-      { "@type": "City", "name": "Pearl" },
-      { "@type": "City", "name": "Raymond" },
-      { "@type": "City", "name": "Richland" },
-      { "@type": "City", "name": "Ridgeland" },
-      { "@type": "City", "name": "Terry" },
-      { "@type": "City", "name": "Utica" },
-      { "@type": "City", "name": "Vicksburg" },
-      { "@type": "City", "name": "Yazoo City" }
-    ],
+    "areaServed": SERVED_MS_CITIES.map((city) => ({
+      "@type": "City",
+      "name": city.name,
+      "sameAs": city.sameAs,
+      "containedInPlace": MISSISSIPPI_STATE,
+    })),
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
-      "name": "Roofing and Remodeling Services",
+      "name": "Roofing and Home Remodeling Services in Central Mississippi",
       "itemListElement": [
         {
           "@type": "OfferCatalog",
           "name": "Residential Roofing",
           "itemListElement": [
             { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Roof Repair", "url": "https://www.bornagainroofing.com/residential-roofing/roof-repair/" } },
-            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Roof Installation", "url": "https://www.bornagainroofing.com/residential-roofing/roof-installation/" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Roof Installation & Replacement", "url": "https://www.bornagainroofing.com/residential-roofing/roof-installation/" } },
             { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Asphalt Shingle Roof Repair and Replacement", "url": "https://www.bornagainroofing.com/residential-roofing/asphalt-shingle-roof-repair-and-replacement/" } },
             { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Roof Inspections", "url": "https://www.bornagainroofing.com/residential-roofing/roof-inspections/" } },
             { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Soffit and Fascia Repair", "url": "https://www.bornagainroofing.com/residential-roofing/soffit-and-fascia-repair/" } }
@@ -97,9 +115,9 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
         },
         {
           "@type": "OfferCatalog",
-          "name": "Storm Damage Repair",
+          "name": "Storm Damage Roof Repair",
           "itemListElement": [
-            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Emergency Roof Repair", "url": "https://www.bornagainroofing.com/storm-damage-roof-repair/emergency-roof-repair/" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Emergency Roof Repair & Tarping", "url": "https://www.bornagainroofing.com/storm-damage-roof-repair/emergency-roof-repair/" } },
             { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Hail Damage Roof Repair", "url": "https://www.bornagainroofing.com/storm-damage-roof-repair/hail-damage-roof-repair/" } },
             { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Wind Damage Roof Repair", "url": "https://www.bornagainroofing.com/storm-damage-roof-repair/wind-damage-roof-repair/" } },
             { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Roof Insurance Claims Help", "url": "https://www.bornagainroofing.com/storm-damage-roof-repair/roof-insurance-claims-help/" } }
@@ -107,9 +125,10 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
         },
         {
           "@type": "OfferCatalog",
-          "name": "Metal Roofing",
+          "name": "Metal & Commercial Roofing",
           "itemListElement": [
-            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Standing Seam Metal Roof Installation", "url": "https://www.bornagainroofing.com/metal-roofing-repair-and-installation/standing-seam-metal-roof-installation/" } }
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Standing Seam Metal Roof Installation", "url": "https://www.bornagainroofing.com/metal-roofing-repair-and-installation/standing-seam-metal-roof-installation/" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Commercial & Flat Roofing", "url": "https://www.bornagainroofing.com/commercial-roofing/" } }
           ]
         },
         {
@@ -126,9 +145,9 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
       ]
     },
     "knowsAbout": [
-      "Roof Repair", "Roof Installation", "Storm Damage Restoration",
+      "Roof Repair", "Roof Replacement", "Roof Installation", "Storm Damage Restoration",
       "Hail Damage Repair", "Wind Damage Repair", "Emergency Tarping",
-      "Metal Roofing", "Standing Seam", "GAF Shingles",
+      "Metal Roofing", "Standing Seam Metal Roofs", "Commercial Flat Roofing", "GAF Architectural Shingles",
       "Kitchen Remodeling", "Bathroom Remodeling", "Whole House Remodeling",
       "Insurance Claims Assistance", "Roof Inspections"
     ],
@@ -154,12 +173,15 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
     }
   };
 
-  // WebPage Schema with Speakable Specification for Voice Search, AEO, and Google Assistant
   const webpageSchema: Record<string, unknown> = {
     "@type": "WebPage",
     "@id": `${currentUrl}#webpage`,
     "url": currentUrl,
-    "name": pageTitle || (path === "/" ? "Roofing Contractors in Jackson, MS | Born Again Roofing" : "Born Again Roofing Service Page"),
+    "name":
+      pageTitle ||
+      (path === "/"
+        ? "Roofing Contractors & Home Remodeling in Jackson, MS | Born Again Home Remodeling & Roofing"
+        : "Born Again Home Remodeling and Roofing"),
     "description": pageDescription || baseDescription,
     "isPartOf": {
       "@id": "https://www.bornagainroofing.com/#website"
@@ -182,12 +204,9 @@ export default function LocalBusinessSchema({ pageTitle, pageDescription, path =
     }
   };
 
-  // Build the @graph array
-  const graphItems: Record<string, unknown>[] = [businessSchema, websiteSchema, webpageSchema];
-
   const fullSchema = {
     "@context": "https://schema.org",
-    "@graph": graphItems
+    "@graph": [businessSchema, websiteSchema, webpageSchema]
   };
 
   return (

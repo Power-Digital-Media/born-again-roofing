@@ -35,7 +35,18 @@ export default function MobileBottomBar() {
         </svg>
         Call Now
       </a>
-      <Link href="/contact-us" className="mobile-bottom-btn mobile-bottom-btn--estimate">
+      <Link
+        href="/contact-us/"
+        className="mobile-bottom-btn mobile-bottom-btn--estimate"
+        onClick={(e) => {
+          e.preventDefault();
+          window.dispatchEvent(
+            new CustomEvent("open-estimate-drawer", {
+              detail: { type: "estimate", defaultService: "Roof Replacement" },
+            })
+          );
+        }}
+      >
         Free Estimate
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>

@@ -9,10 +9,11 @@ import ServiceBentoGrid from "@/components/ServiceBentoGrid";
 import ServiceArticle from "@/components/ServiceArticle";
 import TrustedBrands from "@/components/TrustedBrands";
 import EmergencyCTA from "@/components/EmergencyCTA";
+import RoofingHeroActions from "@/components/RoofingHeroActions";
 
 export const metadata: Metadata = {
   title: "Storm Damage Roof Repair in Jackson, MS",
-  description: "Wind, hail, and storm damage roof repair, emergency tarping, and leak repair for Jackson-area homes. Call (601) 573-6178 or request a roofing estimate.",
+  description: "Wind, hail, and storm damage roof repair, emergency tarping, and insurance inspection help across Florence, Brandon, Madison & Jackson, MS. Call (601) 573-6178.",
   alternates: {
     canonical: "/storm-damage-roof-repair/"
   }
@@ -32,7 +33,12 @@ export default function StormDamagePage() {
             Fast, professional emergency response for wind, hail, and storm damage. We can secure your home and walk your insurance adjuster through the damage on site.
           </p>
 
-          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+          <RoofingHeroActions
+            defaultService="Storm Damage Restoration"
+            ctaLabel="Get Free Storm Roof Inspection"
+          />
+
+          <div style={{ marginTop: "2rem", textAlign: "center", maxWidth: "520px" }}>
             <p
               style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
               dangerouslySetInnerHTML={{ __html: `&ldquo;The Lord is good, a <em>refuge</em> in times of <em>trouble</em>. He cares for those who <em>trust in Him</em>.&rdquo;` }}
@@ -219,8 +225,8 @@ export default function StormDamagePage() {
               Proven Results In Your Area
             </h2>
           </div>
-          <ServiceBentoGrid 
-            services={["Roof Repair", "Roof Inspection", "Emergency Roof Repair"]} 
+          <ServiceBentoGrid
+            services={["Roof Repair", "Roof Inspection", "Emergency Roof Repair"]}
             overrideImages={[
               { url: "/images/wp_storm-damage-home-roof-1.png", location: "Jackson, MS" },
               { url: "/images/wp_roofing-c.jpg", location: "Brandon, MS" }

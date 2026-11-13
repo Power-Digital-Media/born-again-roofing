@@ -6,6 +6,9 @@ import TrustedBrands from "@/components/TrustedBrands";
 import ServiceCTA from "@/components/ServiceCTA";
 import FAQSchema from "@/components/FAQSchema";
 import RoofingGuideSection from "@/components/RoofingGuideSection";
+import RoofingHeroActions from "@/components/RoofingHeroActions";
+import ServiceBentoGrid from "@/components/ServiceBentoGrid";
+import ServicePinsCarousel from "@/components/ServicePinsCarousel";
 import { roofingGuides } from "@/data/roofingGuides";
 
 interface SubpageDetail {
@@ -49,18 +52,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const page = subpages[slug];
   if (!page) return {};
-  
+
+  const rawTitle = roofingGuides[slug]?.title ?? page.title;
   return {
-    title: roofingGuides[slug]?.title ?? page.title,
+    title: rawTitle.includes("|") ? { absolute: rawTitle } : rawTitle,
     description: roofingGuides[slug]?.description ?? page.description,
     alternates: {
       canonical: `/metal-roofing-repair-and-installation/${slug}/`
     }
   };
 }
-
-import ServiceBentoGrid from "@/components/ServiceBentoGrid";
-import ServicePinsCarousel from "@/components/ServicePinsCarousel";
 
 const subpageBentoImages: Record<string, { url: string; location: string }[]> = {
   "standing-seam-metal-roof-installation": [
@@ -92,7 +93,11 @@ export default async function MetalSubpage({ params }: PageProps) {
           </span>
           <h1>{roofingGuides[slug]?.heading ?? page.heading}</h1>
           <p className="hero-subtext">{page.subheading}</p>
-          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+          <RoofingHeroActions
+            defaultService="Metal Roofing"
+            ctaLabel="Get Standing Seam Roof Estimate"
+          />
+          <div style={{ marginTop: "2rem", textAlign: "center", maxWidth: "520px" }}>
             <p
               style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
               dangerouslySetInnerHTML={{ __html: `&ldquo;<em>Enlarge</em> the place of your tent, stretch your tent curtains wide, do not hold back; <em>strengthen your stakes</em>.&rdquo;` }}
@@ -140,7 +145,7 @@ export default async function MetalSubpage({ params }: PageProps) {
             </div>
         </div>
       </section>
-      <ServiceCTA />
+      <ServiceCTA defaultService="Metal Roofing" />
 
       <FAQSchema faqs={page.faqs.map((faq) => ({ question: faq.q, answer: faq.a }))} />
     </>

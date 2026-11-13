@@ -6,7 +6,7 @@ import TrustedBrands from "@/components/TrustedBrands";
 import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
-  title: "About Us | Born Again Home Remodeling and Roofing",
+  title: "About Us",
   description: "We've built a reputation as one of Mississippi's leading roofing and remodeling companies because we treat every project as if it were our own. Call (601) 573-6178.",
   alternates: {
     canonical: "/about-us/"

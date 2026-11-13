@@ -6,6 +6,9 @@ import TrustedBrands from "@/components/TrustedBrands";
 import EmergencyCTA from "@/components/EmergencyCTA";
 import FAQSchema from "@/components/FAQSchema";
 import RoofingGuideSection from "@/components/RoofingGuideSection";
+import RoofingHeroActions from "@/components/RoofingHeroActions";
+import ServiceBentoGrid from "@/components/ServiceBentoGrid";
+import ServicePinsCarousel from "@/components/ServicePinsCarousel";
 import { roofingGuides } from "@/data/roofingGuides";
 
 interface SubpageDetail {
@@ -117,18 +120,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const page = subpages[slug];
   if (!page) return {};
-  
+
+  const rawTitle = roofingGuides[slug]?.title ?? page.title;
   return {
-    title: roofingGuides[slug]?.title ?? page.title,
+    title: rawTitle.includes("|") ? { absolute: rawTitle } : rawTitle,
     description: roofingGuides[slug]?.description ?? page.description,
     alternates: {
       canonical: `/storm-damage-roof-repair/${slug}/`
     }
   };
 }
-
-import ServiceBentoGrid from "@/components/ServiceBentoGrid";
-import ServicePinsCarousel from "@/components/ServicePinsCarousel";
 
 const slugToPinMapping: Record<string, string[]> = {
   "emergency-roof-repair": ["Emergency Roof Repair", "Roof Repair"],
@@ -171,6 +172,16 @@ export default async function StormDamageSubpage({ params }: PageProps) {
 
   const mappedCategories = slugToPinMapping[slug] || ["Roof Repair"];
   const overrideBentoImages = subpageBentoImages[slug];
+  const isEmergency = slug === "emergency-roof-repair";
+  const defaultService =
+    slug === "emergency-roof-repair" || slug === "roof-patches-and-leak-repair"
+      ? "Roof Repair"
+      : "Storm Damage Restoration";
+  const ctaLabel = isEmergency
+    ? "Request Emergency Roof Tarping"
+    : slug === "roof-patches-and-leak-repair"
+      ? "Get Free Leak Repair Estimate"
+      : "Get Free Storm Roof Inspection";
 
   return (
     <>
@@ -184,7 +195,12 @@ export default async function StormDamageSubpage({ params }: PageProps) {
           </span>
           <h1>{roofingGuides[slug]?.heading ?? page.heading}</h1>
           <p className="hero-subtext">{page.subheading}</p>
-          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+          <RoofingHeroActions
+            defaultService={defaultService}
+            ctaLabel={ctaLabel}
+            emergency={isEmergency}
+          />
+          <div style={{ marginTop: "2rem", textAlign: "center", maxWidth: "520px" }}>
             <p
               style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
               dangerouslySetInnerHTML={{ __html: `&ldquo;The Lord is good, a <em>refuge</em> in times of <em>trouble</em>. He cares for those who <em>trust in Him</em>.&rdquo;` }}

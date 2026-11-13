@@ -4,6 +4,7 @@ import { Metadata } from "next";
 
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import ServiceCTA from "@/components/ServiceCTA";
+import RoofingHeroActions from "@/components/RoofingHeroActions";
 import pinsData from "@/data/pins.json";
 
 export const metadata: Metadata = {
@@ -68,10 +69,10 @@ export default function CommercialRoofingPage() {
           <p className="hero-subtext">
             Flat roof systems, silicone roof restoration, metal roof replacement, and storm damage inspections for businesses and buildings across Central Mississippi.
           </p>
-          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center", marginTop: "2rem" }}>
-            <Link href="/contact-us/" className="btn btn-primary">Request a Roofing Estimate</Link>
-            <a href="tel:6015736178" className="btn btn-outline">Call (601) 573-6178</a>
-          </div>
+          <RoofingHeroActions
+            defaultService="Commercial Roofing"
+            ctaLabel="Get Commercial Roof Estimate"
+          />
         </div>
       </section>
 
@@ -149,7 +150,7 @@ export default function CommercialRoofingPage() {
         </div>
       </section>
 
-      <ServiceCTA />
+      <ServiceCTA defaultService="Commercial Roofing" />
     </>
   );
 }

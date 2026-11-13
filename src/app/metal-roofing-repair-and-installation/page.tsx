@@ -9,10 +9,11 @@ import ServiceBentoGrid from "@/components/ServiceBentoGrid";
 import ServiceArticle from "@/components/ServiceArticle";
 import TrustedBrands from "@/components/TrustedBrands";
 import ServiceCTA from "@/components/ServiceCTA";
+import RoofingHeroActions from "@/components/RoofingHeroActions";
 
 export const metadata: Metadata = {
   title: "Metal Roofing in Jackson, MS",
-  description: "Standing seam metal roof installation and metal roof repair for homes in Jackson and Central Mississippi. Request an estimate or call (601) 573-6178.",
+  description: "Standing seam metal roof installation and metal roof repair for homes in Florence, Brandon, Madison & Jackson, MS. Request a free estimate or call (601) 573-6178.",
   alternates: {
     canonical: "/metal-roofing-repair-and-installation/"
   }
@@ -32,7 +33,12 @@ export default function MetalRoofingPage() {
             Standing seam and metal shingle installations and repairs for homes in Central Mississippi.
           </p>
 
-          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+          <RoofingHeroActions
+            defaultService="Metal Roofing"
+            ctaLabel="Get Free Metal Roof Estimate"
+          />
+
+          <div style={{ marginTop: "2rem", textAlign: "center", maxWidth: "520px" }}>
             <p
               style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
               dangerouslySetInnerHTML={{ __html: `&ldquo;<em>Enlarge</em> the place of your tent, stretch your tent curtains wide, do not hold back; <em>strengthen your stakes</em>.&rdquo;` }}
@@ -129,8 +135,8 @@ export default function MetalRoofingPage() {
               Proven Results In Your Area
             </h2>
           </div>
-          <ServiceBentoGrid 
-            services={["Metal Roofing"]} 
+          <ServiceBentoGrid
+            services={["Metal Roofing"]}
             overrideImages={[
               { url: "/images/wp_metal-roof-standing-seam-1.png", location: "Jackson, MS" },
               { url: "/images/wp_roofing-c.jpg", location: "Madison, MS" }
@@ -162,7 +168,7 @@ export default function MetalRoofingPage() {
         </div>
       </section>
 
-      <ServiceCTA />
+      <ServiceCTA defaultService="Metal Roofing" />
     </>
   );
 }

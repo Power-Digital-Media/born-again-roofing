@@ -4,32 +4,33 @@ import { Metadata } from "next";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import TrustedBrands from "@/components/TrustedBrands";
 import ServiceCTA from "@/components/ServiceCTA";
+import RoofingHeroActions from "@/components/RoofingHeroActions";
 
 export const metadata: Metadata = {
-  title: "Areas We Service | Born Again Home Remodeling and Roofing",
-  description: "Explore all areas serviced by Born Again Home Remodeling and Roofing. We offer premium roofing and remodeling solutions across Central Mississippi. Call (601) 573-6178.",
+  title: "Central MS Roofing & Remodeling Service Areas",
+  description: "Explore all 19 Central Mississippi cities served by Born Again Home Remodeling & Roofing from our Florence, MS headquarters. Free estimates: (601) 573-6178.",
   alternates: {
     canonical: "/areas-we-service/"
   }
 };
 
 const locations = [
-  { name: "Brandon, MS", slug: "brandon-ms" },
-  { name: "Byram, MS", slug: "byram-ms" },
-  { name: "Canton, MS", slug: "canton-ms" },
-  { name: "Clinton, MS", slug: "clinton-ms" },
-  { name: "Crystal Springs, MS", slug: "crystal-springs-ms" },
-  { name: "Florence, MS", slug: "florence-ms" },
-  { name: "Flowood, MS", slug: "flowood-ms" },
-  { name: "Gluckstadt, MS", slug: "gluckstadt-ms" },
-  { name: "Hazlehurst, MS", slug: "hazlehurst-ms" },
+  { name: "Florence, MS (HQ)", slug: "florence-ms" },
   { name: "Jackson, MS", slug: "jackson-ms" },
+  { name: "Brandon, MS", slug: "brandon-ms" },
   { name: "Madison, MS", slug: "madison-ms" },
   { name: "Pearl, MS", slug: "pearl-ms" },
-  { name: "Raymond, MS", slug: "raymond-ms" },
-  { name: "Richland, MS", slug: "richland-ms" },
+  { name: "Flowood, MS", slug: "flowood-ms" },
   { name: "Ridgeland, MS", slug: "ridgeland-ms" },
+  { name: "Clinton, MS", slug: "clinton-ms" },
+  { name: "Byram, MS", slug: "byram-ms" },
+  { name: "Richland, MS", slug: "richland-ms" },
+  { name: "Canton, MS", slug: "canton-ms" },
+  { name: "Gluckstadt, MS", slug: "gluckstadt-ms" },
   { name: "Terry, MS", slug: "terry-ms" },
+  { name: "Raymond, MS", slug: "raymond-ms" },
+  { name: "Crystal Springs, MS", slug: "crystal-springs-ms" },
+  { name: "Hazlehurst, MS", slug: "hazlehurst-ms" },
   { name: "Utica, MS", slug: "utica-ms" },
   { name: "Vicksburg, MS", slug: "vicksburg-ms" },
   { name: "Yazoo City, MS", slug: "yazoo-city-ms" }
@@ -38,20 +39,29 @@ const locations = [
 export default function AreasWeServicePage() {
   return (
     <>
-      <LocalBusinessSchema pageTitle="Areas We Service" pageDescription="Explore all areas serviced by Born Again Home Remodeling and Roofing." path="/areas-we-service/" />
+      <LocalBusinessSchema
+        pageTitle="Central MS Roofing & Remodeling Service Areas"
+        pageDescription="Explore all 19 Central Mississippi cities served by Born Again Home Remodeling & Roofing."
+        path="/areas-we-service/"
+      />
 
       {/* Hero */}
       <section className="service-hero">
         <div className="container service-hero-inner scroll-reveal">
           <span className="eyebrow">
-            Born Again Service Area
+            Born Again Service Area · Central Mississippi
           </span>
-          <h1>Areas We Service</h1>
+          <h1>Central Mississippi Areas We Service</h1>
           <p className="hero-subtext">
-            Providing high-end roofing and remodeling services across the Central Mississippi and Jackson Metro Area.
+            Headquartered at 150 Highland Dr in Florence, MS, our GAF-certified roofing and home remodeling crews serve homeowners across Rankin, Hinds, Madison, Copiah, Warren, and Yazoo counties.
           </p>
 
-          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+          <RoofingHeroActions
+            defaultService="Roof Replacement"
+            ctaLabel="Get Free Roof Estimate"
+          />
+
+          <div style={{ marginTop: "2rem", textAlign: "center", maxWidth: "520px" }}>
             <p
               style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
               dangerouslySetInnerHTML={{ __html: `&ldquo;The earth is the Lord&rsquo;s, and <em>everything in it</em>, the world, and <em>all who live in it</em>.&rdquo;` }}
@@ -68,20 +78,20 @@ export default function AreasWeServicePage() {
 
       {/* Locations Directory List */}
       <section className="section">
-        <div className="container" style={{ maxWidth: "800px" }}>
-          <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1.5rem" }}>
-            Our Central Mississippi Service Coverage
+        <div className="container" style={{ maxWidth: "860px" }}>
+          <h2 style={{ color: "var(--primary)", fontSize: "1.8rem", marginBottom: "1rem" }}>
+            Roofing &amp; Remodeling Across 19 Central MS Communities
           </h2>
-          <p style={{ marginBottom: "2rem" }}>
-            We are proud to serve communities throughout Hinds, Madison, Rankin, Copiah, and Warren counties. Click on a specific city below to explore localized roofing, siding, and remodeling projects near you.
+          <p style={{ marginBottom: "2rem", color: "var(--text-muted)", lineHeight: 1.7 }}>
+            Select your city below to view local roofing repairs, full shingle and metal roof replacements, storm inspections, and interior remodeling projects documented by our crew near you.
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 24px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px 24px" }}>
             {locations.map((loc) => (
               <Link
                 key={loc.slug}
-                href={`/areas-we-service/${loc.slug}`}
-                style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--text)", fontWeight: 600, fontSize: "0.95rem" }}
+                href={`/areas-we-service/${loc.slug}/`}
+                style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--text)", fontWeight: 600, fontSize: "0.98rem" }}
                 className="loc-link"
               >
                 <span style={{ color: "var(--secondary)" }}>📍</span> {loc.name}
@@ -91,7 +101,7 @@ export default function AreasWeServicePage() {
         </div>
       </section>
 
-      <ServiceCTA />
+      <ServiceCTA defaultService="Roof Replacement" />
     </>
   );
 }

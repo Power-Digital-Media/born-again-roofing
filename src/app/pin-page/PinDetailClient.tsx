@@ -65,16 +65,18 @@ export default function PinDetailClient({ pin, heading }: { pin: PublicPin; head
             )}
             
             {/* Image Showcase */}
-            <div className="double-bezel-wrapper detail-image-wrapper">
-              <div className="double-bezel-inner detail-image-inner">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={activeImage}
-                  alt={heading}
-                  className="detail-img"
-                />
+            {activeImage && (
+              <div className="double-bezel-wrapper detail-image-wrapper">
+                <div className="double-bezel-inner detail-image-inner">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={activeImage}
+                    alt={heading}
+                    className="detail-img"
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Thumbnail Gallery (if there are multiple images) */}
             {pin.images && pin.images.length > 1 && (

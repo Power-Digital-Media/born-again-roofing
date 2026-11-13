@@ -41,7 +41,13 @@ export default function ServicePinsCarousel({ services, limit = 8 }: ServicePins
 
   const defaultFiltered = useMemo(() => {
     return pinsData
-      .filter((pin) => services.some((svc) => pin.service.toLowerCase().includes(svc.toLowerCase())))
+      .filter(
+        (pin) =>
+          Array.isArray(pin.images) &&
+          pin.images.length > 0 &&
+          services.some((svc) => pin.service.toLowerCase().includes(svc.toLowerCase()))
+      )
+      .sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0))
       .slice(0, limit);
   }, [services, limit]);
 
@@ -53,10 +59,13 @@ export default function ServicePinsCarousel({ services, limit = 8 }: ServicePins
         if (res.ok) return res.json();
         throw new Error("Failed to fetch live pins");
       })
-      .then((data: any[]) => {
+      .then((data: PinType[]) => {
         if (Array.isArray(data)) {
-          const matched = data.filter((pin) =>
-            services.some((svc) => pin.service.toLowerCase().includes(svc.toLowerCase()))
+          const matched = data.filter(
+            (pin) =>
+              Array.isArray(pin.images) &&
+              pin.images.length > 0 &&
+              services.some((svc) => pin.service.toLowerCase().includes(svc.toLowerCase()))
           );
           
           // Sort matched pins so that large ID numbers (recent timestamps) appear first

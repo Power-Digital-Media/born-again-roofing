@@ -8,10 +8,11 @@ import ServiceBentoGrid from "@/components/ServiceBentoGrid";
 import ServiceArticle from "@/components/ServiceArticle";
 import TrustedBrands from "@/components/TrustedBrands";
 import ServiceCTA from "@/components/ServiceCTA";
+import RoofingHeroActions from "@/components/RoofingHeroActions";
 
 export const metadata: Metadata = {
   title: "Residential Roofing in Jackson, MS",
-  description: "Roof repair, roof replacement, inspections, and asphalt shingle roofing for Jackson-area homes. Request an estimate or call (601) 573-6178.",
+  description: "GAF-certified roof repair, roof replacement, inspections, and architectural shingle roofing for Florence, Brandon, Madison & Jackson-area MS homes. Free estimates: (601) 573-6178.",
   alternates: {
     canonical: "/residential-roofing/"
   }
@@ -31,7 +32,12 @@ export default function ResidentialRoofingPage() {
             {"No matter your roofing needs, our skilled team is ready to help. From small leak repairs to major custom architectural shingle installations, we protect your family's investment."}
           </p>
 
-          <div style={{ marginTop: "2.5rem", textAlign: "center", maxWidth: "520px" }}>
+          <RoofingHeroActions
+            defaultService="Roof Replacement"
+            ctaLabel="Get Free Roof Estimate"
+          />
+
+          <div style={{ marginTop: "2rem", textAlign: "center", maxWidth: "520px" }}>
             <p
               style={{ fontStyle: "italic", fontSize: "0.95rem", lineHeight: "1.7", color: "rgba(255, 255, 255, 0.75)", margin: "0 0 0.5rem", fontWeight: "400" }}
               dangerouslySetInnerHTML={{ __html: `&ldquo;Unless the <em>Lord builds the house</em>, the builders <em>labor in vain</em>.&rdquo;` }}
@@ -242,8 +248,8 @@ export default function ResidentialRoofingPage() {
               Proven Results In Your Area
             </h2>
           </div>
-          <ServiceBentoGrid 
-            services={["Residential Roofing", "Roof Repair", "Roof Inspection", "Soffit & Fascia"]} 
+          <ServiceBentoGrid
+            services={["Residential Roofing", "Roof Repair", "Roof Inspection", "Soffit & Fascia"]}
             overrideImages={[
               { url: "/images/wp_roofing-c.jpg", location: "Jackson, MS" },
               { url: "/images/wp_synthetic-tile-roofing-home-1.png", location: "Brandon, MS" }
@@ -295,7 +301,7 @@ export default function ResidentialRoofingPage() {
       </section>
 
       {/* Bottom CTA */}
-      <ServiceCTA />
+      <ServiceCTA defaultService="Roof Replacement" />
     </>
   );
 }

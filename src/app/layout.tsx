@@ -8,6 +8,7 @@ import MobileBottomBar from "@/components/MobileBottomBar";
 import ScrollRevealInit from "@/components/ScrollRevealInit";
 import FormDrawer from "@/components/FormDrawer";
 import FloatingCTA from "@/components/FloatingCTA";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
@@ -25,10 +26,12 @@ const geist = Geist({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Born Again Roofing",
-    default: "Remodeling and Roofing Solutions in Jackson, MS | Born Again Home Remodeling and Roofing"
+    template: "%s | Born Again Home Remodeling & Roofing",
+    default:
+      "Roofing Contractors & Home Remodeling in Jackson, MS | Born Again Home Remodeling & Roofing",
   },
-  description: "At Born Again Home Remodeling and Roofing, we combine faith, integrity, and craftsmanship to deliver premium roofing and remodeling solutions in Jackson, MS, and surrounding areas. Call (601) 573-6178 for free estimates.",
+  description:
+    "GAF-certified roof repair, roof replacement, storm & hail damage restoration, metal roofing, and custom home remodeling in Florence, Brandon, Madison & Jackson, MS. Call (601) 573-6178 for free estimates.",
   metadataBase: new URL("https://www.bornagainroofing.com"),
   alternates: {
     canonical: "/"
@@ -58,8 +61,9 @@ export const metadata: Metadata = {
     }
   },
   openGraph: {
-    title: "Remodeling and Roofing Solutions in Jackson, MS",
-    description: "At Born Again Home Remodeling and Roofing, we combine faith, integrity, and craftsmanship to deliver premium roofing and remodeling solutions in Jackson, MS.",
+    title: "Roofing Contractors & Home Remodeling in Jackson, MS | Born Again Home Remodeling & Roofing",
+    description:
+      "GAF-certified roof repair, roof replacement, storm damage restoration, metal roofing, and home remodeling across Florence, Brandon, Madison & Jackson, MS.",
     url: "https://www.bornagainroofing.com/",
     siteName: "Born Again Home Remodeling and Roofing",
     locale: "en_US",
@@ -69,14 +73,15 @@ export const metadata: Metadata = {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Born Again Home Remodeling and Roofing — Jackson, MS"
+        alt: "Born Again Home Remodeling and Roofing — Central Mississippi"
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
     title: "Born Again Home Remodeling and Roofing",
-    description: "Premium roofing and remodeling solutions in Jackson, MS. Built on faith, integrity, and expert craftsmanship.",
+    description:
+      "GAF-certified roofing and custom home remodeling across Florence, Brandon, Madison & Jackson, MS. Free estimates: (601) 573-6178.",
     images: ["/images/og-image.png"]
   }
 };
@@ -96,12 +101,13 @@ export default function RootLayout({
               strategy="afterInteractive"
             />
             <Script id="google-analytics" strategy="afterInteractive">
-              {`window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${GA_ID}');`}
+              {`window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}window.gtag = gtag;gtag('js', new Date());gtag('config', '${GA_ID}', { send_page_view: false });`}
             </Script>
           </>
         )}
       </head>
       <body style={{ fontFamily: "var(--font-geist), sans-serif", margin: 0, padding: 0 }}>
+        {GA_ID && <AnalyticsTracker gaId={GA_ID} />}
         <Header />
         <main style={{ flexGrow: 1 }}>
           {children}
@@ -115,4 +121,3 @@ export default function RootLayout({
     </html>
   );
 }
-

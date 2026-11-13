@@ -4,7 +4,7 @@ import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import ReviewsList from "@/components/ReviewsList";
 
 export const metadata: Metadata = {
-  title: "Reviews | Born Again Home Remodeling and Roofing",
+  title: "Customer Reviews",
   description: "Read verified customer reviews for Born Again Home Remodeling and Roofing. Hear from satisfied clients in Jackson, Brandon, Madison, and Pearl, MS. Call (601) 573-6178.",
   alternates: {
     canonical: "/reviews/"

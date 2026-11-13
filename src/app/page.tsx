@@ -7,20 +7,48 @@ import ReviewsCarousel from "@/components/ReviewsCarousel";
 import FAQSection from "@/components/FAQSection";
 import FAQSchema from "@/components/FAQSchema";
 import HeroCTAs from "@/components/HeroCTAs";
+import ContactForm from "@/components/ContactForm";
+import RoofingHeroActions from "@/components/RoofingHeroActions";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: { absolute: "Roofing Contractors in Jackson, MS | Born Again Roofing" },
+  title: {
+    absolute:
+      "Roofing Contractors & Home Remodeling in Jackson, MS | Born Again Home Remodeling & Roofing",
+  },
   description:
-    "Roof repair, replacement, storm damage repair, inspections, and metal roofing in Jackson and Central Mississippi. Request an estimate or call (601) 573-6178.",
+    "GAF-certified roof repair, roof replacement, storm & hail damage restoration, metal roofing, and custom home remodeling in Florence, Brandon, Madison & Jackson, MS. Free estimates: (601) 573-6178.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Roofing Contractors in Jackson, MS | Born Again Roofing",
+    title:
+      "Roofing Contractors & Home Remodeling in Jackson, MS | Born Again Home Remodeling & Roofing",
     description:
-      "Roof repair, replacement, storm damage repair, inspections, and metal roofing across Central Mississippi. Born Again Home Remodeling & Roofing LLC.",
+      "GAF-certified roof repair, roof replacement, storm damage restoration, metal roofing, and home remodeling across Florence, Brandon, Madison & Jackson, MS.",
     url: "https://www.bornagainroofing.com/",
   },
 };
+
+const serviceAreaLinks = [
+  { label: "Florence, MS (HQ)", slug: "florence-ms" },
+  { label: "Jackson, MS", slug: "jackson-ms" },
+  { label: "Brandon, MS", slug: "brandon-ms" },
+  { label: "Madison, MS", slug: "madison-ms" },
+  { label: "Pearl, MS", slug: "pearl-ms" },
+  { label: "Flowood, MS", slug: "flowood-ms" },
+  { label: "Ridgeland, MS", slug: "ridgeland-ms" },
+  { label: "Clinton, MS", slug: "clinton-ms" },
+  { label: "Byram, MS", slug: "byram-ms" },
+  { label: "Richland, MS", slug: "richland-ms" },
+  { label: "Canton, MS", slug: "canton-ms" },
+  { label: "Gluckstadt, MS", slug: "gluckstadt-ms" },
+  { label: "Terry, MS", slug: "terry-ms" },
+  { label: "Raymond, MS", slug: "raymond-ms" },
+  { label: "Crystal Springs, MS", slug: "crystal-springs-ms" },
+  { label: "Hazlehurst, MS", slug: "hazlehurst-ms" },
+  { label: "Utica, MS", slug: "utica-ms" },
+  { label: "Vicksburg, MS", slug: "vicksburg-ms" },
+  { label: "Yazoo City, MS", slug: "yazoo-city-ms" },
+];
 
 const homepageFaqs = [
   {
@@ -44,17 +72,21 @@ const homepageFaqs = [
 export default function Home() {
   return (
     <>
-      <LocalBusinessSchema path="/" />
+      <LocalBusinessSchema
+        pageTitle="Roofing Contractors & Home Remodeling in Jackson, MS | Born Again Home Remodeling & Roofing"
+        pageDescription="GAF-certified roof repair, roof replacement, storm & hail damage restoration, metal roofing, and custom home remodeling in Florence, Brandon, Madison & Jackson, MS."
+        path="/"
+      />
 
       {/* Hero Section */}
       <section className="hero-section">
         <Image
           src="/images/wp_486049337_1404947030740628_1371524052289147842_n.jpg"
-          alt="Born Again Roofing hero — Jackson MS roofing professionals"
+          alt="Born Again Home Remodeling & Roofing — GAF-certified roofing contractors in Jackson and Central Mississippi"
           fill
           priority
           sizes="100vw"
-          style={{ objectFit: 'cover', zIndex: 0 }}
+          style={{ objectFit: "cover", zIndex: 0 }}
           quality={50}
         />
         <div className="hero-overlay" />
@@ -62,23 +94,23 @@ export default function Home() {
           
           <div className="hero-content scroll-reveal">
             <span className="eyebrow">{"Where Faith, Craftsmanship, and Care Come Together"}</span>
-            <h1 className="hero-title">
-              Roofing <br />
-              <span className="italic-descender">Contractors</span> <br />
+            <h1 className="hero-title" style={{ fontSize: "clamp(2.25rem, 3.8vw, 3.55rem)", lineHeight: 1.08 }}>
+              GAF-Certified <span className="italic-descender">Roofing</span> <br />
+              &amp; Home Remodeling <br />
               in Jackson, MS
             </h1>
             <p className="hero-subtext hero-subtext-full">
-              Residential roof repair, replacement, storm damage services, metal roofing, and commercial roofing solutions across Central Mississippi. Born Again Home Remodeling &amp; Roofing is a local, Christian-owned company built on honesty, integrity, and service.
+              Residential roof repair, full roof replacement, storm &amp; hail restoration, standing seam metal roofing, commercial roofs, and custom home remodeling across Florence, Brandon, Madison, and Jackson, MS. Born Again Home Remodeling &amp; Roofing is a local, Christian-owned company built on honesty, integrity, and service.
             </p>
             <p className="hero-subtext hero-subtext-short">
-              Residential roof repair, replacement, storm damage services, metal roofing, and commercial roofing solutions across Central Mississippi.
+              GAF-certified roof repair, replacement, storm damage restoration, metal roofing, and home remodeling across Central Mississippi.
             </p>
             <HeroCTAs />
 
             {/* Mobile-only: compact trust line below CTA */}
             <div className="hero-trust-line">
               <span className="hero-trust-stars">★★★★★</span>
-              <span className="hero-trust-text">5.0 Rating · 130+ Google Reviews</span>
+              <span className="hero-trust-text">5.0 Rating · 130+ Google Reviews · GAF Certified</span>
             </div>
 
             {/* Mobile-only: scroll indicator */}
@@ -89,34 +121,27 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="hero-badge-showcase scroll-reveal">
-            <div className="badge-card primary-badge">
-              <div className="badge-gold-ring">
-                <span className="badge-icon">🎖️</span>
-              </div>
-              <div className="badge-details">
-                <span className="badge-eyebrow">Manufacturer Certification</span>
-                <h3>GAF Certified Contractor</h3>
-                <p>GAF warranty options on eligible installations, with system coverage up to 50 years on qualifying shingle systems. Coverage depends on the products installed and GAF&apos;s terms.</p>
-              </div>
-            </div>
-            
-            <div className="badge-grid">
-              <div className="badge-card mini-badge">
-                <div className="mini-badge-icon">⭐</div>
-                <div className="mini-badge-text">
-                  <h4>5.0 Rating</h4>
-                  <p>130+ Google Reviews</p>
-                </div>
-              </div>
-              
-              <div className="badge-card mini-badge">
-                <div className="mini-badge-icon">🛡️</div>
-                <div className="mini-badge-text">
-                  <h4>Licensed & Insured</h4>
-                  <p>Full liability protection</p>
-                </div>
-              </div>
+          <div className="hero-badge-showcase hero-form-wrapper scroll-reveal">
+            <ContactForm compact defaultService="Roof Replacement" />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "0.75rem",
+                padding: "0.85rem 1.15rem",
+                borderRadius: "14px",
+                background: "rgba(15, 18, 25, 0.72)",
+                border: "1px solid rgba(243, 201, 115, 0.2)",
+                fontSize: "0.8rem",
+                fontWeight: 700,
+                color: "#e2e8f0",
+                flexWrap: "wrap",
+              }}
+            >
+              <span>🎖️ GAF Certified</span>
+              <span style={{ color: "var(--secondary)" }}>★★★★★ 5.0 (130+ Reviews)</span>
+              <span>🛡️ Licensed &amp; Insured</span>
             </div>
           </div>
 
@@ -146,7 +171,7 @@ export default function Home() {
             </div>
             <div>
               <h4 style={{ fontSize: "1.05rem", fontWeight: "800", color: "#ffffff", margin: 0 }}>GAF Certified Materials</h4>
-              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", margin: "2px 0 0 0" }}>Lifetime shingle warranty options</p>
+              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", margin: "2px 0 0 0" }}>System warranty options up to 50 yrs</p>
             </div>
           </div>
 
@@ -158,8 +183,8 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <h4 style={{ fontSize: "1.05rem", fontWeight: "800", color: "#ffffff", margin: 0 }}>Locally Owned & Operated</h4>
-              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", margin: "2px 0 0 0" }}>Serving Central Mississippi</p>
+              <h4 style={{ fontSize: "1.05rem", fontWeight: "800", color: "#ffffff", margin: 0 }}>Headquartered in Florence, MS</h4>
+              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", margin: "2px 0 0 0" }}>Serving Jackson &amp; Central Mississippi</p>
             </div>
           </div>
         </div>
@@ -183,6 +208,7 @@ export default function Home() {
                 <li><Link href="/residential-roofing/roof-repair/" className="service-link">Roof Repair</Link></li>
                 <li><Link href="/residential-roofing/roof-installation/" className="service-link">Roof Replacement &amp; Installation</Link></li>
                 <li><Link href="/storm-damage-roof-repair/" className="service-link">Storm Damage Repair</Link></li>
+                <li><Link href="/storm-damage-roof-repair/hail-damage-roof-repair/" className="service-link">Hail Damage Roof Repair</Link></li>
                 <li><Link href="/residential-roofing/roof-inspections/" className="service-link">Roof Inspections</Link></li>
                 <li><Link href="/metal-roofing-repair-and-installation/" className="service-link">Metal Roofing</Link></li>
                 <li><Link href="/commercial-roofing/" className="service-link">Commercial Roofing</Link></li>
@@ -207,12 +233,12 @@ export default function Home() {
                   <p className="service-desc">
                     Complete roof repair, roof installations, inspections, asphalt shingle replacements, and fascia repair using GAF certified materials.
                   </p>
-                  <Link href="/residential-roofing" className="service-link">
+                  <Link href="/residential-roofing/" className="service-link">
                     Learn More <span className="arrow">↗</span>
                   </Link>
                 </div>
                 <div className="bento-split-image" style={{ position: "relative" }}>
-                  <Image src="/images/wp_roofing-c.jpg" alt="GAF Asphalt Shingle Roofing Job" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover' }} quality={60} loading="lazy" />
+                  <Image src="/images/wp_roofing-c.jpg" alt="GAF Asphalt Shingle Roofing Job in Central MS" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "cover" }} quality={60} loading="lazy" />
                 </div>
               </div>
             </div>
@@ -230,7 +256,7 @@ export default function Home() {
                 <p className="service-desc" style={{ color: "#94a3b8" }}>
                   Emergency patching, leak repair, wind and hail damage restoration, plus insurance claim filing assistance.
                 </p>
-                <Link href="/storm-damage-roof-repair" className="service-link" style={{ color: "var(--secondary)", marginTop: "auto" }}>
+                <Link href="/storm-damage-roof-repair/" className="service-link" style={{ color: "var(--secondary)", marginTop: "auto" }}>
                   Learn More <span className="arrow">↗</span>
                 </Link>
               </div>
@@ -251,7 +277,7 @@ export default function Home() {
                 <p className="service-desc" style={{ color: "#94a3b8" }}>
                   Durable standing seam metal roofing, repair, and installations for long-lasting protection.
                 </p>
-                <Link href="/metal-roofing-repair-and-installation" className="service-link" style={{ color: "var(--secondary)", marginTop: "auto" }}>
+                <Link href="/metal-roofing-repair-and-installation/" className="service-link" style={{ color: "var(--secondary)", marginTop: "auto" }}>
                   Learn More <span className="arrow">↗</span>
                 </Link>
               </div>
@@ -284,15 +310,15 @@ export default function Home() {
       {/* Featured Projects Carousel (Loaded dynamically below the fold for LCP optimization) */}
       <ProjectsCarousel />
 
-      {/* Home Remodeling Services (secondary to roofing) */}
+      {/* Home Remodeling Services */}
       <section className="section services-section">
         <div className="container">
 
           <div className="services-header reveal-on-scroll">
-            <span className="eyebrow">Also From Born Again</span>
-            <h2>Home Remodeling Services</h2>
+            <span className="eyebrow">Interior &amp; Exterior Craftsmanship</span>
+            <h2>Custom Home Remodeling Services</h2>
             <p>
-              Alongside roofing, our crews handle kitchen and bath remodels, painting, and whole-house projects for Jackson-area homeowners.
+              Alongside GAF-certified roofing, our full-time craftsmen handle kitchen and bathroom remodels, interior/exterior painting, flooring, and whole-house renovations across Central Mississippi.
             </p>
           </div>
 
@@ -311,16 +337,21 @@ export default function Home() {
                       <circle cx="15" cy="16" r="1" />
                     </svg>
                   </div>
-                  <h3 style={{ color: "#ffffff" }}>Kitchen & Bath Remodeling</h3>
+                  <h3 style={{ color: "#ffffff" }}>Kitchen &amp; Bath Remodeling</h3>
                   <p className="service-desc">
                     Beautiful structural demos, custom cabinet installations, granite countertop styling, sheetrock, and plumbing.
                   </p>
-                  <Link href="/bathroom-remodeling" className="service-link">
-                    Learn More <span className="arrow">↗</span>
-                  </Link>
+                  <div style={{ display: "flex", gap: "1.25rem", flexWrap: "wrap" }}>
+                    <Link href="/kitchen-remodeling/" className="service-link">
+                      Kitchen Remodeling <span className="arrow">↗</span>
+                    </Link>
+                    <Link href="/bathroom-remodeling/" className="service-link">
+                      Bathroom Remodeling <span className="arrow">↗</span>
+                    </Link>
+                  </div>
                 </div>
                 <div className="bento-split-image" style={{ position: "relative" }}>
-                  <Image src="/images/wp_kitchen-remodel-a-1024x1024-1.jpg" alt="Kitchen Remodeling Job" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover' }} quality={60} loading="lazy" />
+                  <Image src="/images/wp_kitchen-remodel-a-1024x1024-1.jpg" alt="Kitchen Remodeling Job in Jackson MS" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "cover" }} quality={60} loading="lazy" />
                 </div>
               </div>
             </div>
@@ -339,7 +370,7 @@ export default function Home() {
                 <p className="service-desc" style={{ color: "#94a3b8" }}>
                   Professional residential painting, drywall patching, framing, trim, and carpentry upgrades.
                 </p>
-                <Link href="/painting" className="service-link" style={{ color: "var(--secondary)", marginTop: "auto" }}>
+                <Link href="/painting/" className="service-link" style={{ color: "var(--secondary)", marginTop: "auto" }}>
                   Learn More <span className="arrow">↗</span>
                 </Link>
               </div>
@@ -360,7 +391,7 @@ export default function Home() {
                 <p className="service-desc" style={{ color: "#94a3b8" }}>
                   Complete home layout transformations, framing, insulation, tile services, and finishing trim.
                 </p>
-                <Link href="/whole-house-remodeling" className="service-link" style={{ color: "var(--secondary)", marginTop: "auto" }}>
+                <Link href="/whole-house-remodeling/" className="service-link" style={{ color: "var(--secondary)", marginTop: "auto" }}>
                   Learn More <span className="arrow">↗</span>
                 </Link>
               </div>
@@ -423,11 +454,60 @@ export default function Home() {
                 <span className="value-number" style={{ position: "absolute", top: "2rem", right: "2.5rem", fontSize: "3.5rem", fontWeight: "900", color: "var(--secondary)", opacity: 0.08 }}>03</span>
                 <h3 style={{ color: "#ffffff", fontSize: "1.35rem", fontWeight: "800", marginBottom: "1rem" }}>Neighborly Care</h3>
                 <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "0.98rem", lineHeight: "1.7" }}>
-                  As a locally owned team serving Jackson, MS and surrounding areas, we treat you like a neighbor. We provide transparent timelines, respectful cleanup, and follow up long after the project is complete to ensure your absolute satisfaction.
+                  Headquartered in Florence, MS and serving the entire Jackson Metro, we treat you like a neighbor. We provide transparent timelines, magnetic yard cleanup, and follow up long after the project is complete to ensure your satisfaction.
                 </p>
               </div>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* Central Mississippi Service Area Hub (Passes Homepage Link Equity to All 19 Suburb Pages) */}
+      <section className="section" style={{ borderBottom: "1px solid var(--border)" }}>
+        <div className="container">
+          <div className="services-header reveal-on-scroll" style={{ marginBottom: "2.5rem" }}>
+            <span className="eyebrow">Local Service Area</span>
+            <h2>Central Mississippi Cities We Serve</h2>
+            <p>
+              Dispatched daily from our headquarters at 150 Highland Dr in Florence, MS across Rankin, Hinds, Madison, Copiah, Warren, and Yazoo counties.
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(195px, 1fr))",
+              gap: "0.85rem 1.25rem",
+              maxWidth: "1040px",
+              margin: "0 auto",
+            }}
+          >
+            {serviceAreaLinks.map((city) => (
+              <Link
+                key={city.slug}
+                href={`/areas-we-service/${city.slug}/`}
+                className="double-bezel-wrapper"
+                style={{ textDecoration: "none" }}
+              >
+                <div
+                  className="double-bezel-inner"
+                  style={{
+                    padding: "0.85rem 1.1rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "8px",
+                    fontSize: "0.92rem",
+                    fontWeight: 700,
+                    color: "#ffffff",
+                  }}
+                >
+                  <span>{city.label}</span>
+                  <span style={{ color: "var(--secondary)" }}>→</span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -454,23 +534,14 @@ export default function Home() {
           <span className="eyebrow" style={{ color: "var(--secondary)" }}>Get Started Today</span>
           <h2>Ready to Protect Your Home with Born Again Quality?</h2>
           <p>
-            Our certified inspectors and remodelers are ready to serve you. Contact us today to schedule your appointment or receive a free estimate.
+            Our GAF-certified roofing inspectors and remodelers are ready to serve you across Central Mississippi. Schedule your free on-site inspection or estimate today.
           </p>
-          <div className="bottom-cta-buttons">
-            <Link href="/contact-us" className="btn btn-secondary btn-island">
-              Book Free Estimate
-              <span className="btn-icon-wrapper">
-                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </span>
-            </Link>
-            <a href="tel:6015736178" className="btn btn-outline" style={{ color: "#ffffff", borderColor: "rgba(255, 255, 255, 0.25)" }}>
-              Call: (601) 573-6178
-            </a>
-          </div>
-          </div>
-        </section>
+          <RoofingHeroActions
+            defaultService="Roof Replacement"
+            ctaLabel="Book Free Estimate"
+          />
+        </div>
+      </section>
 
       <FAQSchema faqs={homepageFaqs} />
     </>

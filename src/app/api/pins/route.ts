@@ -98,6 +98,44 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!/^[A-Za-z .'-]+,\s*MS$/.test(location.trim())) {
+      return NextResponse.json(
+        { error: "Location must be a valid Mississippi city formatted as 'City, MS'" },
+        { status: 400 }
+      );
+    }
+
+    const parsedLat =
+      latitude !== undefined && latitude !== "" && latitude !== null
+        ? parseFloat(String(latitude))
+        : undefined;
+    const parsedLng =
+      longitude !== undefined && longitude !== "" && longitude !== null
+        ? parseFloat(String(longitude))
+        : undefined;
+
+    if (
+      (parsedLat !== undefined && (Number.isNaN(parsedLat) || parsedLat < 30.0 || parsedLat > 35.1)) ||
+      (parsedLng !== undefined && (Number.isNaN(parsedLng) || parsedLng < -91.8 || parsedLng > -88.0))
+    ) {
+      return NextResponse.json(
+        { error: "GPS coordinates must be located within Mississippi" },
+        { status: 400 }
+      );
+    }
+
+    const streetAddressPiiRe =
+      /\b\d{2,5}\s+[A-Za-z0-9.'-]+\s+(?:Dr|Drive|St|Street|Ave|Avenue|Rd|Road|Ln|Lane|Ct|Court|Cir|Circle|Blvd|Boulevard|Way|Pkwy|Hwy|Highway)\b/i;
+    if (streetAddressPiiRe.test(service) || streetAddressPiiRe.test(description)) {
+      return NextResponse.json(
+        {
+          error:
+            "Please keep customer street addresses in the private Street Address field, not in public Service or Description fields.",
+        },
+        { status: 400 }
+      );
+    }
+
     if (
       images.length === 0 ||
       images.length > 60 ||
@@ -131,8 +169,8 @@ export async function POST(request: Request) {
       checklist: Array.isArray(checklist) ? checklist : undefined,
       documents: Array.isArray(documents) ? documents : undefined,
       signatures: Array.isArray(signatures) ? signatures : undefined,
-      latitude: latitude !== undefined && latitude !== "" ? parseFloat(String(latitude)) : undefined,
-      longitude: longitude !== undefined && longitude !== "" ? parseFloat(String(longitude)) : undefined,
+      latitude: parsedLat,
+      longitude: parsedLng,
       detailedExplanation: "",
       aeoAnswers: [],
     };

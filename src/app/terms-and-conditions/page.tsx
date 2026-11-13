@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 
 export const metadata: Metadata = {
-  title: "Terms and Conditions | Born Again Home Remodeling and Roofing",
+  title: "Terms and Conditions",
   description: "Read the Terms and Conditions of Born Again Home Remodeling and Roofing in Jackson, MS. Call (601) 573-6178 for details.",
   alternates: {
     canonical: "/terms-and-conditions/"

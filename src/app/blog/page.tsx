@@ -4,7 +4,7 @@ import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
-  title: "Blog | Born Again Home Remodeling and Roofing",
+  title: "Roofing & Remodeling Blog",
   description: "Read the latest news and advice on roofing and remodeling from Born Again Home Remodeling and Roofing. Call (601) 573-6178.",
   alternates: {
     canonical: "/blog/"

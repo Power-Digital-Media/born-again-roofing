@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Born Again Home Remodeling and Roofing",
+  title: "Privacy Policy",
   description: "Read the Privacy Policy of Born Again Home Remodeling and Roofing in Jackson, MS. Call (601) 573-6178 with any questions about our services.",
   alternates: {
     canonical: "/privacy-policy/"

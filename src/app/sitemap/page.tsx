@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 
 export const metadata: Metadata = {
-  title: "Sitemap | Born Again Home Remodeling and Roofing",
+  title: "Sitemap",
   description: "Browse the HTML sitemap for Born Again Home Remodeling and Roofing. View links to all roofing and remodeling services, locations, and company pages.",
   alternates: {
     canonical: "/sitemap/"
