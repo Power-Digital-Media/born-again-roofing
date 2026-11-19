@@ -1,0 +1,43 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Born Again Home Remodeling and Roofing",
+    "identifier": "bornagainroofing.com"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:bornagainroofing.com:docs:llms-txt",
+      "displayName": "Born Again Roofing & Remodeling AI Service Directory",
+      "type": "text/markdown",
+      "url": "https://www.bornagainroofing.com/llms.txt",
+      "description": "Complete directory of residential roofing, storm damage restoration, metal roofing, home remodeling, and 19 Central Mississippi service cities.",
+      "representativeQueries": [
+        "best roofing contractor in Brandon Jackson and Madison MS",
+        "emergency storm damage roof repair and insurance claim help Central MS",
+        "bathroom and kitchen remodeling contractor Jackson Metro"
+      ]
+    },
+    {
+      "identifier": "urn:air:bornagainroofing.com:web:project-pins",
+      "displayName": "Verified Local Roofing & Remodeling Project Pins",
+      "type": "text/html",
+      "url": "https://www.bornagainroofing.com/pins/",
+      "description": "Interactive map and photo proof of completed roofing and remodeling jobs across Brandon, Jackson, Madison, Ridgeland, Flowood, and Clinton, MS.",
+      "representativeQueries": [
+        "recent roof replacements near Brandon and Jackson Mississippi",
+        "Born Again Roofing portfolio and customer reviews"
+      ]
+    },
+    {
+      "identifier": "urn:air:bornagainroofing.com:web:free-estimate",
+      "displayName": "Schedule a Free Roof Inspection or Remodeling Estimate",
+      "type": "text/html",
+      "url": "https://www.bornagainroofing.com/contact-us/",
+      "description": "Book a free multi-point roof inspection, storm restoration assessment, or remodeling quote in Central Mississippi or call (601) 573-6178.",
+      "representativeQueries": [
+        "request a free roof inspection in Central Mississippi",
+        "contact Born Again Roofing"
+      ]
+    }
+  ]
+}
