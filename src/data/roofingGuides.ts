@@ -105,7 +105,7 @@ export const roofingGuides: Record<string, RoofingGuide> = {
     gaf: true,
     title: "Asphalt Shingle Roofing in Jackson, MS",
     description:
-      "Asphalt shingle repair and replacement for homes in Jackson and nearby cities. Learn the warning signs and how we approach each job, then request an estimate.",
+      "GAF asphalt shingle roof repair & replacement for homes in Jackson, Brandon, Madison & Florence, MS. See warning signs and request a free estimate.",
     signsHeading: "Warning signs on asphalt shingle roofs",
     signs: [
       "Bald spots where the protective granules have worn away",
@@ -303,9 +303,9 @@ export const roofingGuides: Record<string, RoofingGuide> = {
     ],
   },
   "roof-insurance-claims-help": {
-    title: "Roof Insurance Claim Help in Jackson, MS",
+    title: "Roof Insurance Claims in Jackson, MS",
     description:
-      "How roof inspections and photo documentation can support a storm damage claim, and what to expect when your adjuster visits. Jackson-area homeowners.",
+      "How roof inspections and photo documentation support storm damage claims, and what to expect when your adjuster visits in Jackson & Central MS.",
     heading: "Roof Insurance Claim Help in Jackson, MS",
     signsHeading: "When a roof claim may be worth exploring",
     signs: [
@@ -332,7 +332,7 @@ export const roofingGuides: Record<string, RoofingGuide> = {
     ],
   },
   "standing-seam-metal-roof-installation": {
-    title: "Standing Seam Metal Roofs in Jackson, MS",
+    title: "Standing Seam Metal Roof Jackson, MS",
     description:
       "Standing seam metal roof installation for Jackson-area homes. Learn how concealed-fastener panels work and what to consider before choosing metal.",
     signsHeading: "Why homeowners choose standing seam metal",

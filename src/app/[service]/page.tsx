@@ -17,20 +17,20 @@ interface ServiceDetail {
 
 const services: Record<string, ServiceDetail> = {
   "bathroom-remodeling": {
-    title: "Bathroom Remodeling in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Born Again Home Remodeling and Roofing LLC repairs subfloors and bathrooms in Jackson and Canton, Mississippi. Call (601) 573-6178 for details.",
-    heading: "Bathroom Remodeling",
-    subheading: "Custom Bathroom Renovations & Subfloor Repair Services",
-    bodyText: "Bathrooms should be spaces of comfort and relaxation, not just utility. We handle complete bathroom demolition, subfloor water-damage repair, custom shower and tile installations, plumbing setups, and vanity fittings. Our craftsmen ensure your new bathroom is beautifully finished and structurally sound.",
+    title: "Bathroom Remodeler in Jackson, MS | Born Again Remodeling",
+    description: "Trusted 5.0★ bathroom remodeler serving Jackson, Brandon, Madison & Florence, MS. Custom tile showers, vanities, tubs & subfloor repair. Free estimates!",
+    heading: "Bathroom Remodeling in Jackson, MS",
+    subheading: "Custom Tile Showers, Vanities, Full Renovations & Subfloor Repair",
+    bodyText: "Bathrooms should be spaces of comfort and relaxation, not just utility. As a local Central Mississippi bathroom remodeler, we handle complete bathroom demolition, subfloor water-damage repair, waterproof custom shower and tile installations, plumbing setups, and vanity fittings. Our craftsmen ensure your new bathroom is beautifully finished and structurally sound.",
     faqs: [
       { q: "How long does a bathroom remodeling project take?", a: "A standard bathroom remodel typically takes 1 to 2 weeks, depending on the layout modifications, tile work complexity, and plumbing additions." },
       { q: "Do you repair subfloor water damage during a bathroom remodel?", a: "Yes. Moldy or rotted subfloor repair is a key part of our structural remodeling service, ensuring your bathroom foundation remains completely solid before laying down new tile or flooring." }
     ]
   },
   "kitchen-remodeling": {
-    title: "Kitchen Remodeling in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Born Again Home Remodeling and Roofing LLC builds new cabinets and applies fresh paint in homes in Jackson, MS. Call (601) 573-6178 today.",
-    heading: "Kitchen Remodeling",
+    title: "Kitchen Remodeling in Jackson, MS | Born Again Remodeling",
+    description: "Custom kitchen remodeling across Jackson, Brandon, Madison & Florence, MS. Custom cabinets, granite & quartz countertops, tile & paint. Free estimates!",
+    heading: "Kitchen Remodeling in Jackson, MS",
     subheading: "Beautiful Cabinets, Countertops, and Complete Layout Upgrades",
     bodyText: "The kitchen is the heart of your home. We specialize in kitchen remodeling demolition, custom cabinets fabrication, granite and quartz countertops, backsplash tile work, plumbing hookups, and professional paint application. We design kitchens that blend practical cooking layouts with high-end aesthetic appeal.",
     faqs: [
@@ -39,8 +39,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "whole-house-remodeling": {
-    title: "Whole House Remodeling in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Transform Your Living Space with Whole House Remodeling in Jackson, MS. Your home should reflect your lifestyle and meet your needs. Call (601) 573-6178.",
+    title: "Whole House Remodeling in Jackson, MS | Born Again",
+    description: "Complete whole-house remodeling in Jackson, Brandon, Madison & Florence, MS. Open-concept framing, drywall, flooring, trim & painting. Free estimates!",
     heading: "Whole House Remodeling",
     subheading: "Complete Interior Transformations & Structural Modifications",
     bodyText: "Bring your dream home to life with our comprehensive whole-house remodeling services. From open-concept wall removals and framing to insulation, sheetrock, flooring, trim, and paint, we manage every phase of your home renovation with premium craftsmanship and clear, honest scheduling.",
@@ -50,8 +50,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "painting": {
-    title: "Painting in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Call Born Again Home Remodeling and Roofing LLC at 601-573-6178 for professional painting in Jackson, MS. Schedule your free estimate today.",
+    title: "Interior & Exterior Painting Jackson, MS | Born Again",
+    description: "Professional interior & exterior house painting in Jackson, Brandon, Madison & Florence, MS. Drywall prep, trim, siding & clean finishes. Call today!",
     heading: "Interior & Exterior Painting",
     subheading: "Flawless Finishes for Walls, Siding, and Trim",
     bodyText: "Fresh paint is one of the most effective ways to update your home. We provide professional interior and exterior painting services. Our process includes meticulous surface prep—drywall patching, sanding, pressure washing siding, and priming—to ensure a flawless, long-lasting finish using premium paints.",
@@ -61,8 +61,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "plumbing": {
-    title: "Plumbing in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Give Born Again Home Remodeling and Roofing a call at 601-573-6178 for plumbing in Jackson, MS. Schedule your plumbing service today.",
+    title: "Remodel Plumbing Services Jackson, MS | Born Again",
+    description: "Licensed remodel plumbing installation & fixture hookups in Jackson, Brandon & Central MS. Showers, vanities, sinks & leak checks: (601) 573-6178.",
     heading: "Plumbing Installation & Repair",
     subheading: "Reliable Plumbing Services for Remodels and Maintenance",
     bodyText: "Whether you are installing new sinks, showers, toilets, or need pipe adjustments during a remodel, we provide licensed plumbing services. We ensure all connections, valves, drains, and supply lines meet local building codes and resist leaks.",
@@ -72,8 +72,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "electrical": {
-    title: "Electrical Installation and Repair in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Call Born Again Home Remodeling and Roofing at 601-573-6178 for electrical installation and repair in Jackson, MS. Schedule your estimate.",
+    title: "Electrical Installation & Repair Jackson MS | Born Again",
+    description: "Safe remodel electrical wiring, recessed LED lighting, outlets & ceiling fan installation across Jackson, Brandon & Madison, MS. Free estimates!",
     heading: "Electrical Services",
     subheading: "Safe Wiring, Fixture Mounts, and Ceiling Fan Installations",
     bodyText: "Safe, up-to-code electrical work is crucial for any home. We handle electrical wiring relocations during remodeling, outlet additions, panel checks, light fixtures, and ceiling fan mounts (including LED controls). All work is performed by qualified technicians to ensure safety.",
@@ -83,8 +83,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "flooring": {
-    title: "Flooring Installation in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "From complete home renovations to precise flooring installation in Jackson, MS, and surrounding areas, our team ensures every detail meets your needs.",
+    title: "Flooring Installation in Jackson, MS | Born Again",
+    description: "Hardwood, waterproof luxury vinyl plank (LVP) & tile flooring installation in Jackson, Brandon, Madison & Florence, MS. Request your free estimate!",
     heading: "Flooring Installation",
     subheading: "Hardwood, Luxury Vinyl Plank, and Premium Laminate Options",
     bodyText: "Upgrade the comfort and value of your home with our professional flooring installation services. We install hardwood flooring, durable luxury vinyl plank (LVP), and high-quality laminates. We prepare the subfloor, ensure clean level transitions, and finish with matching baseboards and quarter rounds.",
@@ -94,8 +94,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "tile-service": {
-    title: "Tile Service in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Looking for tile service in Jackson, MS? Call Born Again Home Remodeling and Roofing at 601-573-6178 today for expert tile installation.",
+    title: "Custom Tile & Shower Installation Jackson MS | Born Again",
+    description: "Waterproof custom tile showers, kitchen backsplashes & ceramic tile flooring in Jackson, Brandon, Madison & Canton, MS. Free estimate: (601) 573-6178.",
     heading: "Professional Tile Service",
     subheading: "Custom Showers, Backsplashes, and Ceramic Tile Flooring",
     bodyText: "Tile work adds a premium look and water protection to kitchens and bathrooms. We specialize in custom tile installations—bathroom shower surrounds, kitchen backsplashes, and tile flooring. We use quality underlayments and waterproof grouts to ensure beauty and longevity.",
@@ -105,8 +105,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "sheetrock": {
-    title: "Sheetrock Installation in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Strong Walls, Smooth Finishes: Expert Sheetrock Services You Can Trust. At Born Again Home Remodeling and Roofing, we take pride in building quality walls.",
+    title: "Sheetrock & Drywall Repair in Jackson, MS | Born Again",
+    description: "Expert sheetrock hanging, ceiling water-damage repair, taping, mudding & texture matching across Jackson, Brandon & Central MS. Call (601) 573-6178.",
     heading: "Sheetrock & Drywall Services",
     subheading: "Hanging, Taping, Mudding, and Drywall Finishing",
     bodyText: "Smooth walls are the foundation of a beautiful room. We handle complete sheetrock hanging, joint taping, mudding, and custom texturing. Whether you need repairs for water-damaged ceiling drywall or complete sheetrocking for a newly framed room, we deliver flat, paint-ready walls.",
@@ -116,8 +116,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "insulation": {
-    title: "Attic Insulation in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "When you need insulation installation in Jackson, MS, call Born Again Home Remodeling and Roofing at 601-573-6178 today. Save on utility bills.",
+    title: "Attic Insulation Installation Jackson, MS | Born Again",
+    description: "Lower Mississippi cooling bills with blown-in & batt attic insulation in Jackson, Brandon, Madison & Florence, MS. Free estimate: (601) 573-6178.",
     heading: "Insulation Installation",
     subheading: "Improving Energy Efficiency and Attic Climate Control",
     bodyText: "Proper insulation is crucial for keeping your home comfortable and reducing energy bills during hot summers and cold winters. We install fiberglass batt insulation and blown-in cellulose in attics and crawlspaces, ensuring correct R-value coverage and draft protection.",
@@ -127,8 +127,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "framing": {
-    title: "Framing Services in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Born Again Home Remodeling and Roofing offers framing services in Jackson, MS. Call (601) 573-6178 for solid carpentry and framing solutions.",
+    title: "Structural Framing & Carpentry Jackson MS | Born Again",
+    description: "Wood stud framing, room additions, wall modifications & roof rafter repair in Jackson, Brandon, Madison & Florence, MS. Call (601) 573-6178 today.",
     heading: "Structural Framing Services",
     subheading: "Wood Stud Framing, Wall Additions, and Rafter Carpentry",
     bodyText: "Strong structural framing is the skeleton of any home modification. We offer wood stud framing for room additions, wall configurations, ceiling joists, and roof rafter repairs. We ensure all structural framing meets local load-bearing requirements.",
@@ -138,8 +138,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "trim": {
-    title: "Roof Trim in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Born Again Home Remodeling and Roofing provides help with roof trim in Jackson, MS. Call (601) 573-6178 to schedule your services.",
+    title: "Roof Fascia Trim & Crown Molding Jackson, MS | Born Again",
+    description: "Exterior fascia trim, soffit carpentry, baseboards & custom crown molding across Jackson, Brandon, Madison & Florence, MS. Free estimates today!",
     heading: "Roof Trim & Millwork",
     subheading: "Fascia Trim, Crown Molding, and Detailed Trim Finishes",
     bodyText: "Trim finishes add architectural character and complete your home's exterior and interior look. We handle fascia trim boards, baseboards, door frames, and crown moldings. We ensure tight miter cuts and smooth finishes for a premium, custom appearance.",
@@ -149,8 +149,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "skylight-repair-and-replacement": {
-    title: "Skylight Repair and Replacement in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Born Again Home Remodeling and Roofing offers skylight repair and replacement in Jackson, MS. Call (601) 573-6178 for expert service today.",
+    title: "Skylight Repair & Replacement Jackson, MS | Born Again",
+    description: "Stop skylight leaks fast! Curb-mounted skylight replacement & flashing repair in Jackson, Brandon, Flowood & Madison, MS. Call (601) 573-6178.",
     heading: "Skylight Repair & Replacement",
     subheading: "Leak Sealing and New Curb-Mounted Skylight Installations",
     bodyText: "Skylights are beautiful sources of natural light, but they are highly susceptible to leaking if the flashing or rubber seals decay. We repair flashing, replace old dome glass with energy-efficient glazed options, and build waterproof curbs to protect your home from water leaks.",
@@ -160,8 +160,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "synthetic-shingles": {
-    title: "Synthetic Shingles in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Born Again Home Remodeling and Roofing installs and repairs synthetic shingles in Jackson, MS. Call (601) 573-6178 for quality roofing.",
+    title: "Synthetic Shingle Roofing in Jackson, MS | Born Again",
+    description: "Class 4 impact-rated synthetic shingle roof installation & repair across Jackson, Brandon, Madison & Florence, MS. Free estimate: (601) 573-6178.",
     heading: "Synthetic Shingles Installation",
     subheading: "Premium Engineered Composites for High-End Design and Protection",
     bodyText: "Synthetic roofing shingles are engineered composite materials (made of polymers and rubbers) designed to replicate the look of natural slate or cedar shakes. They offer exceptional impact ratings (Class 4), high wind resistance, and a lifetime lifespan without the maintenance or weight concerns of natural materials.",
@@ -171,8 +171,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "synthetic-slate-roof-installation": {
-    title: "Synthetic Slate Roof Installation in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Born Again Home Remodeling and Roofing provides synthetic slate roof installation in Jackson, MS. Call (601) 573-6178 for expert service.",
+    title: "Synthetic Slate Roofing in Jackson, MS | Born Again",
+    description: "Lightweight, hail-resistant synthetic slate roof installation for homes in Madison, Ridgeland, Brandon & Jackson, MS. Free roofing estimate today!",
     heading: "Synthetic Slate Roof Installation",
     subheading: "The Elegance of Natural Slate Without the Structural Weight Concerns",
     bodyText: "Natural slate is stunning but incredibly heavy and brittle. Synthetic slate shingles replicate the authentic chiseled edges of slate using lightweight, impact-resistant polymers. This allows you to achieve a luxury estate look without reinforcing your home's wood framing.",
@@ -182,8 +182,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "synthetic-tile-roofing": {
-    title: "Synthetic Tile Roofing in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Born Again Home Remodeling and Roofing installs and repairs synthetic tile roofing in Jackson, MS. Call (601) 573-6178 for expert service.",
+    title: "Synthetic Tile Roofing in Jackson, MS | Born Again",
+    description: "Durable Class 4 synthetic clay & Spanish tile roofing for homes in Jackson, Madison, Brandon & Pearl, MS. Schedule your free roof estimate today!",
     heading: "Synthetic Tile Roofing",
     subheading: "Mediterranean Aesthetics with Modern Durability",
     bodyText: "Enjoy the beautiful, classic look of Spanish clay tile roofing with the benefits of lightweight polymer materials. Synthetic tile roofing resists cracking, moss growth, and wind lifting, making it a durable choice for high-end properties.",
@@ -193,8 +193,8 @@ const services: Record<string, ServiceDetail> = {
     ]
   },
   "synthetic-wood-roofing": {
-    title: "Synthetic Wood Roofing in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Born Again Home Remodeling and Roofing offers synthetic wood roofing in Jackson, MS. Call (601) 573-6178 for expert installation today.",
+    title: "Synthetic Cedar Shake Roofing Jackson, MS | Born Again",
+    description: "Rot-proof, Class A fire-rated synthetic cedar shake roofing installed across Jackson, Ridgeland, Madison & Brandon, MS. Call (601) 573-6178 today.",
     heading: "Synthetic Wood Shake Roofing",
     subheading: "The Rustic Charm of Cedar Shakes Without the Fire or Rot Risks",
     bodyText: "Natural cedar shakes look beautiful but are susceptible to mold, rot, insect damage, and fire. Synthetic wood shakes replicate the textured wood grain and warm tones of cedar while offering Class A fire ratings and polymer resistance to rot and weathering.",

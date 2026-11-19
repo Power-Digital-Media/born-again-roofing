@@ -26,12 +26,12 @@ const geist = Geist({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Born Again Home Remodeling & Roofing",
+    template: "%s | Born Again Roofing",
     default:
-      "Roofing Contractors & Home Remodeling in Jackson, MS | Born Again Home Remodeling & Roofing",
+      "Roofing & Home Remodeling in Jackson, MS | Born Again",
   },
   description:
-    "GAF-certified roof repair, roof replacement, storm & hail damage restoration, metal roofing, and custom home remodeling in Florence, Brandon, Madison & Jackson, MS. Call (601) 573-6178 for free estimates.",
+    "5.0★ GAF-certified roof repair, roof replacement, storm restoration & home remodeling in Florence, Brandon, Madison & Jackson, MS. Free estimates!",
   metadataBase: new URL("https://www.bornagainroofing.com"),
   alternates: {
     canonical: "/"
@@ -101,7 +101,7 @@ export default function RootLayout({
               strategy="afterInteractive"
             />
             <Script id="google-analytics" strategy="afterInteractive">
-              {`window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}window.gtag = gtag;gtag('js', new Date());gtag('config', '${GA_ID}', { send_page_view: false });`}
+              {`window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}window.gtag = gtag;gtag('js', new Date());if(!window.location.pathname.startsWith('/admin')){gtag('config', '${GA_ID}', { send_page_view: false });}`}
             </Script>
           </>
         )}

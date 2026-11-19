@@ -43,7 +43,8 @@ export default function AnalyticsTracker({ gaId }: AnalyticsTrackerProps) {
       if (typeof window.gtag === "function") {
         const rawHref = anchor.getAttribute("href") || "";
         window.gtag("event", "generate_lead", {
-          event_category: "Lead",
+          event_category: "lead_phone",
+          form_source: "click_to_call",
           event_label: "Phone Call Click",
           lead_origin: "Phone Call",
           page_path: window.location.pathname,
@@ -51,6 +52,7 @@ export default function AnalyticsTracker({ gaId }: AnalyticsTrackerProps) {
           currency: "USD",
         });
         window.gtag("event", "click_to_call", {
+          event_category: "lead_phone",
           phone_number: rawHref.replace(/^tel:/i, ""),
           page_path: window.location.pathname,
         });

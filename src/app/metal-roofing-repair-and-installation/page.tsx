@@ -13,7 +13,7 @@ import RoofingHeroActions from "@/components/RoofingHeroActions";
 
 export const metadata: Metadata = {
   title: "Metal Roofing in Jackson, MS",
-  description: "Standing seam metal roof installation and metal roof repair for homes in Florence, Brandon, Madison & Jackson, MS. Request a free estimate or call (601) 573-6178.",
+  description: "Standing seam metal roof installation & metal roof leak repair for homes in Florence, Brandon, Madison & Jackson, MS. Free estimates: (601) 573-6178.",
   alternates: {
     canonical: "/metal-roofing-repair-and-installation/"
   }

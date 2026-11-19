@@ -2,24 +2,9 @@ interface FAQSchemaProps {
   faqs: Array<{ question: string; answer: string }>;
 }
 
-export default function FAQSchema({ faqs }: FAQSchemaProps) {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer,
-      },
-    })),
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
-  );
+// Restricted FAQPage JSON-LD intentionally omitted on commercial sites per Google Search guidelines;
+// visible FAQ accordions and Q&A blocks remain rendered in semantic HTML for users and AI engines.
+export default function FAQSchema(_props: FAQSchemaProps) {
+  void _props;
+  return null;
 }

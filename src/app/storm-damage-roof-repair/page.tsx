@@ -13,7 +13,7 @@ import RoofingHeroActions from "@/components/RoofingHeroActions";
 
 export const metadata: Metadata = {
   title: "Storm Damage Roof Repair in Jackson, MS",
-  description: "Wind, hail, and storm damage roof repair, emergency tarping, and insurance inspection help across Florence, Brandon, Madison & Jackson, MS. Call (601) 573-6178.",
+  description: "24/7 emergency tarping, hail & wind damage roof repair, and insurance claim inspections in Florence, Brandon, Madison & Jackson, MS: (601) 573-6178.",
   alternates: {
     canonical: "/storm-damage-roof-repair/"
   }

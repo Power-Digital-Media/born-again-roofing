@@ -144,26 +144,35 @@ export default function ContactForm({
         return;
       }
 
-      if (typeof window !== "undefined") {
+      const formSource =
+        type === "emergency"
+          ? "storm-damage-emergency"
+          : type === "callback"
+          ? "quick-callback"
+          : compact
+          ? "hero-inline-estimate"
+          : "estimate-request";
+
+      if (typeof window !== "undefined" && payload?.success !== false && !payload?.filtered) {
         const win = window as Window & {
           gtag?: (event: string, action: string, params: Record<string, string | number>) => void;
         };
-        if (win.gtag) {
-          win.gtag("event", "generate_lead", {
-            value: type === "emergency" ? 2.0 : 1.0,
-            currency: "USD",
-            lead_origin:
-              type === "emergency"
-                ? "Emergency Form"
-                : type === "callback"
-                ? "Callback Form"
-                : compact
-                ? "Hero Inline Form"
-                : "Estimate Form",
-            service_selected: service || type,
-            property_zip: trimmedZip.slice(0, 5),
-          });
-        }
+        win.gtag?.("event", "generate_lead", {
+          event_category: "lead_form",
+          form_source: formSource,
+          value: type === "emergency" ? 2.0 : 1.0,
+          currency: "USD",
+          lead_origin:
+            type === "emergency"
+              ? "Emergency Form"
+              : type === "callback"
+              ? "Callback Form"
+              : compact
+              ? "Hero Inline Form"
+              : "Estimate Form",
+          service_selected: service || type,
+          property_zip: trimmedZip.slice(0, 5),
+        });
       }
 
       setSuccess(true);
