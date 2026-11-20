@@ -13,16 +13,16 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: {
     absolute:
-      "Roofing & Home Remodeling in Jackson, MS | Born Again",
+      "Home Remodeling & GAF Roofing in Jackson, MS | Born Again",
   },
   description:
-    "5.0★ GAF-certified roof repair, roof replacement, storm restoration & home remodeling in Florence, Brandon, Madison & Jackson, MS. Free estimates!",
+    "5.0★ GAF-certified roof replacement, storm repair & custom kitchen/bath home remodeling in Jackson, Brandon, Madison & Florence, MS. Free estimates!",
   alternates: { canonical: "/" },
   openGraph: {
     title:
-      "Roofing & Home Remodeling in Jackson, MS | Born Again",
+      "Home Remodeling & GAF Roofing in Jackson, MS | Born Again",
     description:
-      "5.0★ GAF-certified roof repair, roof replacement, storm restoration & home remodeling in Florence, Brandon, Madison & Jackson, MS. Free estimates!",
+      "5.0★ GAF-certified roof replacement, storm repair & custom kitchen/bath home remodeling in Jackson, Brandon, Madison & Florence, MS. Free estimates!",
     url: "https://www.bornagainroofing.com/",
   },
 };
@@ -61,13 +61,14 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero-section">
         <Image
-          src="/images/wp_486049337_1404947030740628_1371524052289147842_n.jpg"
+          src="/images/hero-roofing-jackson.webp"
           alt="Born Again Home Remodeling & Roofing — GAF-certified roofing contractors in Jackson and Central Mississippi"
           fill
           priority
+          fetchPriority="high"
           sizes="100vw"
           style={{ objectFit: "cover", zIndex: 0 }}
-          quality={50}
+          quality={65}
         />
         <div className="hero-overlay" />
         <div className="container hero-grid">

@@ -6,3 +6,15 @@
   NODE_VERSION = "20"
   NPM_FLAGS = "--legacy-peer-deps"
   NEXT_PUBLIC_GA_MEASUREMENT_ID = "G-CY1Y3Y7YFR"
+
+[[redirects]]
+  from = "https://bornagainroofing.com/*"
+  to = "https://www.bornagainroofing.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://bornagainroofing.com/*"
+  to = "https://www.bornagainroofing.com/:splat"
+  status = 301
+  force = true

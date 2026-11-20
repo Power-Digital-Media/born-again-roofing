@@ -52,6 +52,11 @@ export default function ContactUsPage() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "3rem", maxWidth: "1000px", margin: "0 auto" }}>
+            {/* Estimate Form first on mobile for higher conversion engagement */}
+            <div>
+              <ContactForm />
+            </div>
+
             {/* Contact Details */}
             <div className="double-bezel-wrapper">
               <div className="double-bezel-inner" style={{ padding: "2.5rem", display: "flex", flexDirection: "column", gap: "2rem" }}>
@@ -73,11 +78,6 @@ export default function ContactUsPage() {
                   </p>
                 </div>
               </div>
-            </div>
-
-            {/* Estimate Form */}
-            <div>
-              <ContactForm />
             </div>
           </div>
         </div>

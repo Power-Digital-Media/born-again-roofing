@@ -95,15 +95,10 @@ export default function RootLayout({
     <html lang="en" className={`${plusJakartaSans.variable} ${geist.variable}`}>
       <head>
         {GA_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="google-analytics" strategy="afterInteractive">
-              {`window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}window.gtag = gtag;gtag('js', new Date());if(!window.location.pathname.startsWith('/admin')){gtag('config', '${GA_ID}', { send_page_view: false });}`}
-            </Script>
-          </>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+            strategy="lazyOnload"
+          />
         )}
       </head>
       <body style={{ fontFamily: "var(--font-geist), sans-serif", margin: 0, padding: 0 }}>
