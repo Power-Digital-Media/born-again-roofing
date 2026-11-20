@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
-import ProjectsCarousel from "@/components/ProjectsCarousel";
+import DeferredProjectsCarousel from "@/components/DeferredProjectsCarousel";
 import ReviewsCarousel from "@/components/ReviewsCarousel";
 import FAQSection from "@/components/FAQSection";
 import HeroCTAs from "@/components/HeroCTAs";
@@ -58,6 +58,20 @@ export default function Home() {
         path="/"
       />
 
+      <link
+        rel="preload"
+        as="image"
+        href="/images/hero-roofing-mobile.webp"
+        media="(max-width: 768px)"
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        href="/images/hero-roofing-jackson.webp"
+        media="(min-width: 769px)"
+        fetchPriority="high"
+      />
       {/* Hero Section */}
       <section className="hero-section">
         <picture>
@@ -290,7 +304,7 @@ export default function Home() {
       </section>
 
       {/* Featured Projects Carousel (Loaded dynamically below the fold for LCP optimization) */}
-      <ProjectsCarousel />
+      <DeferredProjectsCarousel />
 
       {/* Home Remodeling Services */}
       <section className="section services-section">
