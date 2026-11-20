@@ -60,16 +60,17 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="hero-section">
-        <Image
-          src="/images/hero-roofing-jackson.webp"
-          alt="Born Again Home Remodeling & Roofing — GAF-certified roofing contractors in Jackson and Central Mississippi"
-          fill
-          priority
-          fetchPriority="high"
-          sizes="100vw"
-          style={{ objectFit: "cover", zIndex: 0 }}
-          quality={65}
-        />
+        <picture>
+          <source media="(max-width: 768px)" srcSet="/images/hero-roofing-mobile.webp" type="image/webp" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/hero-roofing-jackson.webp"
+            alt="Born Again Home Remodeling & Roofing — GAF-certified roofing contractors in Jackson and Central Mississippi"
+            fetchPriority="high"
+            decoding="sync"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
+          />
+        </picture>
         <div className="hero-overlay" />
         <div className="container hero-grid">
           
@@ -226,7 +227,7 @@ export default function Home() {
 
             {/* Service 2 - Standard 1/3 card (Storm Damage) */}
             <div className="double-bezel-wrapper bento-col-4 reveal-on-scroll">
-              <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/wp_storm-damage-home-roof-1.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
+              <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/card-storm.webp')", backgroundSize: "cover", backgroundPosition: "center" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -245,7 +246,7 @@ export default function Home() {
 
             {/* Service 3 - Standard 1/3 card (Metal Roofing) */}
             <div className="double-bezel-wrapper bento-col-6 reveal-on-scroll">
-              <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/wp_metal-roof-standing-seam-1.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
+              <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/card-metal.webp')", backgroundSize: "cover", backgroundPosition: "center" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="6" y1="3" x2="6" y2="21" strokeDasharray="2 2" />
@@ -267,7 +268,7 @@ export default function Home() {
 
             {/* Service 4 - Commercial Roofing */}
             <div className="double-bezel-wrapper bento-col-6 reveal-on-scroll">
-              <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/job_295508.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
+              <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/card-commercial.webp')", backgroundSize: "cover", backgroundPosition: "center" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="4" y="3" width="16" height="18" rx="1" />
@@ -339,7 +340,7 @@ export default function Home() {
 
             {/* Service 5 - Standard 1/2 card (Painting) */}
             <div className="double-bezel-wrapper bento-col-6 reveal-on-scroll">
-              <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/wp_interiorpaint-1024x1024.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
+              <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/card-paint.webp')", backgroundSize: "cover", backgroundPosition: "center" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="4" y="3" width="16" height="6" rx="1.5" />
@@ -359,7 +360,7 @@ export default function Home() {
 
             {/* Service 6 - Standard 1/2 card (Whole House) */}
             <div className="double-bezel-wrapper bento-col-6 reveal-on-scroll">
-              <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/wp_synthetic-tile-roofing-home-1.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
+              <div className="double-bezel-inner service-card-bg" style={{ backgroundImage: "linear-gradient(rgba(10, 12, 16, 0.85), rgba(10, 12, 16, 0.95)), url('/images/card-wholehouse.webp')", backgroundSize: "cover", backgroundPosition: "center" }}>
                 <div className="specialty-icon-wrapper">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />

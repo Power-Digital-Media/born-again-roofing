@@ -33,9 +33,11 @@ interface PinType {
 
 export default function ProjectsCarousel() {
   const [activeMapPin, setActiveMapPin] = useState<PinType | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isNearViewport, setIsNearViewport] = useState(false);
 
   // Detect mobile to disable auto-play and infinite scroll
   useEffect(() => {
@@ -44,6 +46,23 @@ export default function ProjectsCarousel() {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
+
+  // Defer 3.2MB /api/pins/ fetch and 24 Leaflet satellite maps until scrolled near carousel
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || isNearViewport) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setIsNearViewport(true);
+          obs.disconnect();
+        }
+      },
+      { rootMargin: "600px 0px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [isNearViewport]);
 
   // Load the 8 specific showcase projects in order as a default/fallback
   const defaultFeatured = useMemo(() => {
@@ -56,6 +75,7 @@ export default function ProjectsCarousel() {
   const [featuredPins, setFeaturedPins] = useState<PinType[]>(defaultFeatured);
 
   useEffect(() => {
+    if (!isNearViewport) return;
     fetch(`/api/pins/?t=${Date.now()}`)
       .then((res) => {
         if (res.ok) return res.json();
@@ -88,7 +108,7 @@ export default function ProjectsCarousel() {
         }
       })
       .catch((err) => console.error("Error loading dynamic carousel pins:", err));
-  }, [defaultFeatured]);
+  }, [defaultFeatured, isNearViewport]);
 
   // Triple the list to allow infinite scrolling in both directions (desktop only)
   const tripledPins = useMemo(() => {
@@ -170,7 +190,7 @@ export default function ProjectsCarousel() {
   }
 
   return (
-    <section className="marquee-section" style={{ padding: "3rem 0" }}>
+    <section ref={sectionRef} className="marquee-section" style={{ padding: "3rem 0" }}>
       {/* Title Block */}
       <div className="container marquee-header" style={{ marginBottom: "2.5rem" }}>
         <span className="eyebrow" style={{ color: "var(--secondary)" }}>Our Work In Action</span>
@@ -203,7 +223,11 @@ export default function ProjectsCarousel() {
 
                 {/* Satellite Project Map */}
                 <div className="pin-card-img-container" style={{ position: "relative" }}>
-                  <IndividualProjectMap pin={pin} onEnlarge={() => setActiveMapPin(pin)} />
+                  {isNearViewport ? (
+                    <IndividualProjectMap pin={pin} onEnlarge={() => setActiveMapPin(pin)} />
+                  ) : (
+                    <div style={{ width: "100%", height: "100%", background: "#0f172a", borderRadius: "8px" }} />
+                  )}
                 </div>
 
                 {/* Description */}

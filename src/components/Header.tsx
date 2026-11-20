@@ -22,7 +22,7 @@ export default function Header() {
         {/* Logo / Brand */}
         <Link href="/" className="logo-link">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/wp_logo.png" alt="Born Again Home Remodeling and Roofing Logo" className="logo-img" />
+          <img src="/images/logo-header.webp" alt="Born Again Home Remodeling and Roofing Logo" className="logo-img" width={48} height={48} decoding="async" />
           <div className="logo-text-wrapper">
             <span className="logo-title">Born Again</span>
             <span className="logo-subtitle">Roofing &amp; Remodeling · Central MS</span>

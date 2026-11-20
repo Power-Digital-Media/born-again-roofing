@@ -13,7 +13,7 @@ export default function Footer() {
           <div className="footer-brand">
             <Link href="/" className="footer-logo">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/wp_logo.png" alt="Born Again Logo" className="footer-logo-img" />
+              <img src="/images/logo-header.webp" alt="Born Again Logo" className="footer-logo-img" width={48} height={48} loading="lazy" decoding="async" />
               <div className="logo-text-wrapper">
                 <span className="logo-title">Born Again</span>
                 <span className="logo-subtitle">Home Remodeling &amp; Roofing</span>
