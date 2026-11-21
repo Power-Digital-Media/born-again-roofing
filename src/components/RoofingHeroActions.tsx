@@ -48,6 +48,7 @@ export default function RoofingHeroActions({
       >
         <Link
           href="/contact-us/"
+          prefetch={false}
           onClick={handleOpenDrawer}
           className="btn btn-secondary btn-island"
         >

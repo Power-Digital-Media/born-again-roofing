@@ -37,6 +37,7 @@ export default function MobileBottomBar() {
       </a>
       <Link
         href="/contact-us/"
+        prefetch={false}
         className="mobile-bottom-btn mobile-bottom-btn--estimate"
         onClick={(e) => {
           e.preventDefault();

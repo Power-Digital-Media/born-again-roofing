@@ -51,7 +51,7 @@ export default function Header() {
           </div>
 
           <Link href="/areas-we-service" className="nav-link">Areas Served</Link>
-          <Link href="/pins" className="nav-link">Project Pins</Link>
+          <Link href="/pins" prefetch={false} className="nav-link">Project Pins</Link>
           <Link href="/reviews" className="nav-link">Reviews</Link>
           <a
             href="tel:6015736178"
@@ -62,6 +62,7 @@ export default function Header() {
           </a>
           <Link
             href="/contact-us/"
+            prefetch={false}
             className="btn btn-primary btn-island"
             onClick={(e) => {
               e.preventDefault();
@@ -128,10 +129,11 @@ export default function Header() {
           </div>
 
           <Link href="/areas-we-service" className="mobile-nav-link" onClick={closeMenu}>Areas Served</Link>
-          <Link href="/pins" className="mobile-nav-link" onClick={closeMenu}>Project Pins</Link>
+          <Link href="/pins" prefetch={false} className="mobile-nav-link" onClick={closeMenu}>Project Pins</Link>
           <Link href="/reviews" className="mobile-nav-link" onClick={closeMenu}>Reviews</Link>
           <Link
             href="/contact-us/"
+            prefetch={false}
             className="btn btn-primary btn-island mobile-nav-link mobile-cta"
             onClick={(e) => {
               e.preventDefault();

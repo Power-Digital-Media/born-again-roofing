@@ -5,6 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import pinsData from "@/data/pins.json";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
+import RoofingHeroActions from "@/components/RoofingHeroActions";
 
 const InteractiveMap = dynamic(() => import("@/components/InteractiveMap"), {
   ssr: false,
@@ -107,8 +108,12 @@ export default function PinsPage() {
           <span className="eyebrow" style={{ color: "var(--secondary)" }}>Live Job Feed</span>
           <h1>Local Project Pins</h1>
           <p className="hero-subtext">
-            Real jobs, real photos, real locations. See our quality craftsmanship at work near you.
+            Real jobs, real photos, real locations. See our quality craftsmanship at work near you across Brandon, Florence, Madison &amp; Jackson, MS.
           </p>
+          <RoofingHeroActions
+            defaultService="Roof Replacement"
+            ctaLabel="Get Free Estimate Near You"
+          />
         </div>
       </section>
 

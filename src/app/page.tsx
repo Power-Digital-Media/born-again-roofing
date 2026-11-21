@@ -13,16 +13,16 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: {
     absolute:
-      "Home Remodeling & GAF Roofing in Jackson, MS | Born Again",
+      "Born Again Roofing & Home Remodeling | Jackson & Brandon MS",
   },
   description:
-    "5.0★ GAF-certified roof replacement, storm repair & custom kitchen/bath home remodeling in Jackson, Brandon, Madison & Florence, MS. Free estimates!",
+    "5.0★ GAF-certified roof replacement, storm repair & kitchen/bath home remodeling in Brandon, Florence, Madison & Jackson, MS. Free inspection: (601) 573-6178.",
   alternates: { canonical: "/" },
   openGraph: {
     title:
-      "Home Remodeling & GAF Roofing in Jackson, MS | Born Again",
+      "Born Again Roofing & Home Remodeling | Jackson & Brandon MS",
     description:
-      "5.0★ GAF-certified roof replacement, storm repair & custom kitchen/bath home remodeling in Jackson, Brandon, Madison & Florence, MS. Free estimates!",
+      "5.0★ GAF-certified roof replacement, storm repair & kitchen/bath home remodeling in Brandon, Florence, Madison & Jackson, MS. Free inspection: (601) 573-6178.",
     url: "https://www.bornagainroofing.com/",
   },
 };
@@ -61,7 +61,7 @@ export default function Home() {
       <link
         rel="preload"
         as="image"
-        href="/images/hero-roofing-mobile.webp"
+        href="/images/hero-roofing-mobile-v2.webp"
         media="(max-width: 768px)"
         fetchPriority="high"
       />
@@ -75,13 +75,13 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero-section">
         <picture>
-          <source media="(max-width: 768px)" srcSet="/images/hero-roofing-mobile.webp" type="image/webp" />
+          <source media="(max-width: 768px)" srcSet="/images/hero-roofing-mobile-v2.webp" type="image/webp" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/hero-roofing-jackson.webp"
             alt="Born Again Home Remodeling & Roofing — GAF-certified roofing contractors in Jackson and Central Mississippi"
             fetchPriority="high"
-            decoding="sync"
+            decoding="async"
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
           />
         </picture>

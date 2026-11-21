@@ -68,7 +68,7 @@ export default function ServiceBentoGrid({ services, fallbackImages = ["/images/
             </div>
             <div className="bento-split-image" style={{ position: "relative" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={bentoData.img1.url} alt="Local project site" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src={bentoData.img1.url} alt="Local project site" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               <span className="bento-img-badge">{bentoData.img1.location}</span>
             </div>
           </div>
@@ -115,7 +115,7 @@ export default function ServiceBentoGrid({ services, fallbackImages = ["/images/
             </div>
             <div className="bento-split-image" style={{ position: "relative" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={bentoData.img2.url} alt="Local project site photo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src={bentoData.img2.url} alt="Local project site photo" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               <span className="bento-img-badge">{bentoData.img2.location}</span>
             </div>
           </div>

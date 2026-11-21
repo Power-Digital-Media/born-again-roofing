@@ -142,17 +142,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const page = locations[slug];
   if (!page) return {};
 
-  const fullBrandTitle = `Roofing & Remodeling in ${page.cityName} | Born Again Roofing`;
+  const starBrandTitle = `5.0★ Roofing & Remodeling in ${page.cityName} | Born Again`;
   const fitTitle =
-    fullBrandTitle.length <= 60
-      ? fullBrandTitle
+    starBrandTitle.length <= 60
+      ? starBrandTitle
       : `Roofing & Remodeling in ${page.cityName} | Born Again`;
 
-  const rawDesc = cityRoofing[slug]?.description ?? page.description;
-  const fitDesc =
-    rawDesc.length <= 155
-      ? rawDesc
-      : `GAF-certified roof repair, roof replacement, storm inspections, metal roofing & remodeling in ${page.cityName}. Free estimates: (601) 573-6178.`;
+  const fitDesc = `5.0★ GAF-certified roof repair, roof replacement, storm inspections & home remodeling in ${page.cityName}. Free on-site inspection: (601) 573-6178.`;
 
   return {
     title: { absolute: fitTitle },

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Geist } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -15,35 +14,36 @@ const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
+  weight: ["500", "700", "800"],
 });
 
 const geist = Geist({
   variable: "--font-geist",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   title: {
     template: "%s | Born Again Roofing",
-    default:
-      "Roofing & Home Remodeling in Jackson, MS | Born Again",
+    default: "Born Again Roofing & Home Remodeling | Jackson & Brandon MS",
   },
   description:
-    "5.0★ GAF-certified roof repair, roof replacement, storm restoration & home remodeling in Florence, Brandon, Madison & Jackson, MS. Free estimates!",
+    "5.0★ GAF-certified roof replacement, storm repair & kitchen/bath home remodeling in Brandon, Florence, Madison & Jackson, MS. Free inspection: (601) 573-6178.",
   metadataBase: new URL("https://www.bornagainroofing.com"),
   alternates: {
-    canonical: "/"
+    canonical: "/",
   },
   icons: {
     icon: [
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" }
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
     ],
     apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }
-    ]
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   manifest: "/site.webmanifest",
   verification: {
@@ -57,13 +57,14 @@ export const metadata: Metadata = {
       follow: true,
       "max-video-preview": -1,
       "max-image-preview": "large",
-      "max-snippet": -1
-    }
+      "max-snippet": -1,
+    },
   },
   openGraph: {
-    title: "Roofing Contractors & Home Remodeling in Jackson, MS | Born Again Home Remodeling & Roofing",
+    title:
+      "Born Again Roofing & Home Remodeling | Jackson, Brandon & Florence, MS",
     description:
-      "GAF-certified roof repair, roof replacement, storm damage restoration, metal roofing, and home remodeling across Florence, Brandon, Madison & Jackson, MS.",
+      "5.0★ GAF-certified roof repair, roof replacement, storm damage restoration, metal roofing & custom home remodeling across Central Mississippi.",
     url: "https://www.bornagainroofing.com/",
     siteName: "Born Again Home Remodeling and Roofing",
     locale: "en_US",
@@ -73,17 +74,17 @@ export const metadata: Metadata = {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Born Again Home Remodeling and Roofing — Central Mississippi"
-      }
-    ]
+        alt: "Born Again Home Remodeling and Roofing — Central Mississippi",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Born Again Home Remodeling and Roofing",
+    title: "Born Again Roofing & Home Remodeling | Central MS",
     description:
-      "GAF-certified roofing and custom home remodeling across Florence, Brandon, Madison & Jackson, MS. Free estimates: (601) 573-6178.",
-    images: ["/images/og-image.png"]
-  }
+      "5.0★ GAF-certified roofing and custom home remodeling across Florence, Brandon, Madison & Jackson, MS. Free inspection: (601) 573-6178.",
+    images: ["/images/og-image.png"],
+  },
 };
 
 export default function RootLayout({
@@ -95,18 +96,25 @@ export default function RootLayout({
     <html lang="en" className={`${plusJakartaSans.variable} ${geist.variable}`}>
       <head>
         {GA_ID && (
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-            strategy="lazyOnload"
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(id){try{if(location.pathname.indexOf('/admin')===0)return;window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments);};window.__barGaBootPath=location.pathname;window.gtag('js',new Date());window.gtag('config',id,{page_path:location.pathname,page_location:location.href});}catch(_){}})(${JSON.stringify(
+                GA_ID
+              )});`,
+            }}
           />
         )}
       </head>
-      <body style={{ fontFamily: "var(--font-geist), sans-serif", margin: 0, padding: 0 }}>
+      <body
+        style={{
+          fontFamily: "var(--font-geist), sans-serif",
+          margin: 0,
+          padding: 0,
+        }}
+      >
         {GA_ID && <AnalyticsTracker gaId={GA_ID} />}
         <Header />
-        <main style={{ flexGrow: 1 }}>
-          {children}
-        </main>
+        <main style={{ flexGrow: 1 }}>{children}</main>
         <Footer />
         <MobileBottomBar />
         <ScrollRevealInit />

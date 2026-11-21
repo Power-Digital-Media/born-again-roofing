@@ -18,6 +18,7 @@ export default function HeroCTAs() {
       {/* Desktop: opens slide-out drawer */}
       <Link
         href="/contact-us/"
+        prefetch={false}
         className="btn btn-secondary btn-island hero-cta-desktop"
         onClick={openDrawer}
       >
@@ -31,6 +32,7 @@ export default function HeroCTAs() {
       {/* Mobile: opens slide-out drawer */}
       <Link
         href="/contact-us/"
+        prefetch={false}
         className="btn btn-secondary btn-island hero-cta-mobile"
         onClick={openDrawer}
       >

@@ -41,11 +41,13 @@ export default function FormDrawer() {
           ✕
         </button>
         <div className="drawer-content">
-          <ContactForm
-            key={`${formType}-${defaultService}`}
-            type={formType}
-            defaultService={defaultService}
-          />
+          {isOpen && (
+            <ContactForm
+              key={`${formType}-${defaultService}`}
+              type={formType}
+              defaultService={defaultService}
+            />
+          )}
         </div>
       </div>
     </>

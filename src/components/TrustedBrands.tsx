@@ -2,10 +2,10 @@ import React from "react";
 
 export default function TrustedBrands() {
   const brands = [
-    { name: "GAF", src: "/images/mat-logos/gaf.png" },
-    { name: "CertainTeed", src: "/images/mat-logos/certainteed.png" },
-    { name: "Atlas", src: "/images/mat-logos/atlas.png" },
-    { name: "Owens Corning", src: "/images/mat-logos/owens-cornering.png" },
+    { name: "GAF", src: "/images/mat-logos/gaf.webp" },
+    { name: "CertainTeed", src: "/images/mat-logos/certainteed.webp" },
+    { name: "Atlas", src: "/images/mat-logos/atlas.webp" },
+    { name: "Owens Corning", src: "/images/mat-logos/owens-cornering.webp" },
   ];
 
   return (
@@ -18,6 +18,10 @@ export default function TrustedBrands() {
             key={brand.name}
             src={brand.src}
             alt={brand.name}
+            width={128}
+            height={48}
+            loading="lazy"
+            decoding="async"
             className="trusted-brand-logo"
           />
         ))}

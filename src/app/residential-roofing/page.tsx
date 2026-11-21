@@ -11,11 +11,14 @@ import ServiceCTA from "@/components/ServiceCTA";
 import RoofingHeroActions from "@/components/RoofingHeroActions";
 
 export const metadata: Metadata = {
-  title: "Residential Roofing in Jackson, MS",
-  description: "GAF-certified roof repair, roof replacement, inspections & architectural shingles in Florence, Brandon, Madison & Jackson, MS. Call (601) 573-6178.",
+  title: {
+    absolute: "Roof Repair & Replacement Jackson, MS | 5.0★ Free Inspection",
+  },
+  description:
+    "5.0★ GAF-certified roof repair, architectural shingle replacement & free roof inspections in Brandon, Florence, Madison & Jackson, MS. Call (601) 573-6178.",
   alternates: {
-    canonical: "/residential-roofing/"
-  }
+    canonical: "/residential-roofing/",
+  },
 };
 
 export default function ResidentialRoofingPage() {

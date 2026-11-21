@@ -8,11 +8,14 @@ import RoofingHeroActions from "@/components/RoofingHeroActions";
 import pinsData from "@/data/pins.json";
 
 export const metadata: Metadata = {
-  title: "Commercial Roofing in Jackson, MS",
-  description: "Commercial roof repair, flat roof systems, silicone roof restoration, and metal roofing for Central Mississippi buildings. Call (601) 573-6178.",
+  title: {
+    absolute: "Commercial & Flat Roofing Jackson, MS | TPO, Metal & Silicone",
+  },
+  description:
+    "5.0★ commercial roof repair, TPO flat roofs, GAF silicone roof coatings & metal roof replacement across Jackson, Brandon & Central MS. Call (601) 573-6178.",
   alternates: {
-    canonical: "/commercial-roofing/"
-  }
+    canonical: "/commercial-roofing/",
+  },
 };
 
 type Pin = { id: number | string; location: string; author: string; date: string; images?: string[] };
@@ -62,7 +65,7 @@ export default function CommercialRoofingPage() {
       />
 
       {/* Hero */}
-      <section className="service-hero" style={{ backgroundImage: "url('/images/job_295508.jpg')" }}>
+      <section className="service-hero" style={{ backgroundImage: "url('/images/job_295508.webp')" }}>
         <div className="container service-hero-inner scroll-reveal">
           <span className="eyebrow">Commercial &amp; Flat Roofing</span>
           <h1>Commercial Roofing in Jackson, MS</h1>

@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Central MS Roofing & Remodeling Project Map",
-  description: "Browse our portfolio of completed roofing, remodeling, and storm restoration projects across Jackson, MS and Central Mississippi. See real results from real homes.",
+  title: {
+    absolute: "Roofing & Remodeling Project Photos | Jackson & Brandon MS",
+  },
+  description:
+    "See real roof replacements, storm repairs & home remodels completed near you in Brandon, Florence, Madison & Jackson, MS. Free estimate: (601) 573-6178.",
   alternates: {
-    canonical: "/pins/"
-  }
+    canonical: "/pins/",
+  },
 };
 
 export default function PinsLayout({ children }: { children: React.ReactNode }) {
