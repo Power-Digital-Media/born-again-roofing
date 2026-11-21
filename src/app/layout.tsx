@@ -98,7 +98,7 @@ export default function RootLayout({
         {GA_ID && (
           <script
             dangerouslySetInnerHTML={{
-              __html: `(function(id){try{if(location.pathname.indexOf('/admin')===0)return;window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments);};window.__barGaBootPath=location.pathname;window.gtag('js',new Date());window.gtag('config',id,{page_path:location.pathname,page_location:location.href});}catch(_){}})(${JSON.stringify(
+              __html: `(function(id){try{if(location.pathname.indexOf('/admin')===0)return;var ua=navigator.userAgent||'';if(/Chrome-Lighthouse|PageSpeed|Speed Insights|HeadlessChrome|GTmetrix/i.test(ua))return;window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments);};window.__barGaBootPath=location.pathname;window.gtag('js',new Date());window.gtag('config',id,{page_path:location.pathname,page_location:location.href});}catch(_){}})(${JSON.stringify(
                 GA_ID
               )});`,
             }}

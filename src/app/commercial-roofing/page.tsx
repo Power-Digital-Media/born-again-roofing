@@ -120,7 +120,10 @@ export default function CommercialRoofingPage() {
                   <img
                     src={pin!.images![0]}
                     alt={`${label} in ${pin!.location}`}
+                    width={640}
+                    height={440}
                     loading="lazy"
+                    decoding="async"
                     style={{ width: "100%", height: "220px", objectFit: "cover", display: "block" }}
                   />
                   <div style={{ padding: "1.25rem 1.5rem 1.5rem" }}>

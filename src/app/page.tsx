@@ -80,6 +80,8 @@ export default function Home() {
           <img
             src="/images/hero-roofing-jackson.webp"
             alt="Born Again Home Remodeling & Roofing — GAF-certified roofing contractors in Jackson and Central Mississippi"
+            width={1600}
+            height={1067}
             fetchPriority="high"
             decoding="async"
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
