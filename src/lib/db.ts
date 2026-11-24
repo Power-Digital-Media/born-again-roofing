@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import pinsData from "@/data/pins.json";
-import { getFirestoreAccessToken } from "./firestore-admin";
+import { getFirestoreAccessToken, patchFirestoreDocumentFields } from "./firestore-admin";
 
 export type PhotoStage = "before" | "during" | "after" | "damage" | "material" | "general";
 
@@ -99,6 +99,7 @@ export interface PinType {
   longitude?: number;
   clientId?: string;
   updatedAt?: string;
+  gmbPostedAt?: string;
 }
 
 let inMemoryPins: PinType[] = [...(pinsData as PinType[])];
@@ -165,6 +166,7 @@ function parseFirestoreDocument(doc: any): PinType {
     aeoAnswers: parseFirestoreValue(fields.aeoAnswers) || [],
     clientId: parseFirestoreValue(fields.clientId) || "born-again-roofing",
     updatedAt: parseFirestoreValue(fields.updatedAt) || undefined,
+    gmbPostedAt: parseFirestoreValue(fields.gmbPostedAt) || undefined,
   };
 }
 
@@ -401,24 +403,32 @@ export async function addPin(pin: Omit<PinType, "id">): Promise<PinType | null> 
         console.log(`Successfully wrote new pin to Firebase Firestore under clientId: ${clientId}`);
         inMemoryPins = [newPin, ...inMemoryPins.filter((p) => p.id !== newPin.id)];
 
-        // Only trigger public Google & Transpond posts if published to public map
-        if (newPin.publishToPublicMap !== false && newPin.images.length > 0) {
-          try {
-            const { publishPinToGmb } = await import("./google-gmb");
-            publishPinToGmb(newPin).catch((err) =>
-              console.error("[GMB] Background publish error:", err)
-            );
-          } catch (gmbErr) {
-            console.error("[GMB] Trigger failed:", gmbErr);
-          }
+        // Await Google Business Profile & Transpond Social publishing BEFORE returning
+        // so serverless runtimes (Netlify / AWS Lambda) never freeze the event loop mid-publish.
+        if (
+          newPin.publishToPublicMap !== false &&
+          newPin.images.length > 0 &&
+          (newPin.projectStatus || "completed") === "completed"
+        ) {
+          const [{ publishPinToGmb }, { publishPinToTranspondSocial }] = await Promise.all([
+            import("./google-gmb"),
+            import("./transpond-social"),
+          ]);
 
-          try {
-            const { publishPinToTranspondSocial } = await import("./transpond-social");
-            publishPinToTranspondSocial(newPin).catch((err) =>
-              console.error("[Transpond Social] Background publish error:", err)
-            );
-          } catch (socialErr) {
-            console.error("[Transpond Social] Trigger failed:", socialErr);
+          const [gmbResult] = await Promise.allSettled([
+            publishPinToGmb(newPin),
+            publishPinToTranspondSocial(newPin),
+          ]);
+
+          if (gmbResult.status === "fulfilled" && gmbResult.value === true) {
+            const postedAt = new Date().toISOString();
+            newPin.gmbPostedAt = postedAt;
+            await patchFirestoreDocumentFields(
+              `projects/${firebaseProjectId}/databases/(default)/documents/pins/${encodeURIComponent(pinId)}`,
+              { gmbPostedAt: { stringValue: postedAt } }
+            ).catch((err) => console.error("[GMB] Failed to stamp gmbPostedAt:", err));
+          } else if (gmbResult.status === "rejected") {
+            console.error("[GMB] Publish rejected:", gmbResult.reason);
           }
         }
 
@@ -523,6 +533,32 @@ export async function updatePin(
       );
 
       if (res.ok) {
+        // When an existing inspection / in_progress pin transitions to "completed",
+        // publish it to Google Business Profile once if it hasn't been posted yet.
+        const transitionedToCompleted =
+          existing.projectStatus !== "completed" &&
+          mergedPin.projectStatus === "completed" &&
+          mergedPin.publishToPublicMap !== false &&
+          mergedPin.images.length > 0 &&
+          !existing.gmbPostedAt;
+
+        if (transitionedToCompleted) {
+          try {
+            const { publishPinToGmb } = await import("./google-gmb");
+            const posted = await publishPinToGmb(mergedPin);
+            if (posted) {
+              const postedAt = new Date().toISOString();
+              mergedPin.gmbPostedAt = postedAt;
+              await patchFirestoreDocumentFields(
+                `projects/${firebaseProjectId}/databases/(default)/documents/pins/${encodeURIComponent(pinId)}`,
+                { gmbPostedAt: { stringValue: postedAt } }
+              );
+            }
+          } catch (gmbErr) {
+            console.error("[GMB] Publish on completion failed:", gmbErr);
+          }
+        }
+
         inMemoryPins = [mergedPin, ...inMemoryPins.filter((p) => p.id !== pinId)];
         return mergedPin;
       } else {

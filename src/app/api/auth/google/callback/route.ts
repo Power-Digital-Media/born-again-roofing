@@ -71,6 +71,7 @@ export async function GET(request: NextRequest) {
 
     // 2. Update Google OAuth tokens in Firestore settings collection using authenticated partial patch
     const { patchClientSettings } = await import("@/lib/firestore-admin");
+    const { listGmbLocations } = await import("@/lib/google-gmb");
     type ImportType = import("@/lib/firestore-admin").FirestoreFields;
     const fieldsToUpdate: ImportType = {
       clientId: { stringValue: clientId },
@@ -79,6 +80,29 @@ export async function GET(request: NextRequest) {
     };
     if (refresh_token) {
       fieldsToUpdate.googleRefreshToken = { stringValue: refresh_token };
+    }
+
+    // Automatically discover and pin the matching Google Business Profile location when unambiguous
+    try {
+      const locations = await listGmbLocations(access_token);
+      if (locations.length === 1) {
+        fieldsToUpdate.googleLocationName = { stringValue: locations[0].name };
+        fieldsToUpdate.googleLocationTitle = { stringValue: locations[0].title };
+      } else if (locations.length > 1) {
+        const expectedBrandToken =
+          clientId === "born-again-roofing"
+            ? "born again"
+            : clientId.replace(/-/g, " ").toLowerCase();
+        const matches = locations.filter((l) =>
+          l.title.toLowerCase().includes(expectedBrandToken)
+        );
+        if (matches.length === 1) {
+          fieldsToUpdate.googleLocationName = { stringValue: matches[0].name };
+          fieldsToUpdate.googleLocationTitle = { stringValue: matches[0].title };
+        }
+      }
+    } catch (locErr) {
+      console.warn("[Google OAuth Callback] Auto-location discovery skipped:", locErr);
     }
 
     const patchRes = await patchClientSettings(clientId, fieldsToUpdate, firebaseProjectId);

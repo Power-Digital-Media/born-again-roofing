@@ -26,6 +26,9 @@ export async function GET(request: NextRequest) {
     let companyName = "";
     let googleReviewUrl = "";
     let googleConnected = false;
+    let googleTokenExpired = false;
+    let googleLocationName = "";
+    let googleLocationTitle = "";
 
     // A. Read from Firestore using authenticated service account
     const res = await getClientSettings(clientId, firebaseProjectId);
@@ -49,7 +52,15 @@ export async function GET(request: NextRequest) {
       companyName = parseVal(fields.companyName) || (clientId === "born-again-roofing" ? "Born Again Roofing" : clientId);
       rooferPasscodeConfigured = !!parseVal(fields.rooferPasscode);
       googleReviewUrl = parseVal(fields.googleReviewUrl);
-      googleConnected = !!parseVal(fields.googleRefreshToken);
+
+      if (parseVal(fields.googleRefreshToken) || parseVal(fields.refreshToken)) {
+        const { checkGmbConnectionHealth } = await import("@/lib/google-gmb");
+        const gmbHealth = await checkGmbConnectionHealth(clientId, firebaseProjectId);
+        googleConnected = gmbHealth.connected;
+        googleTokenExpired = gmbHealth.tokenExpired;
+        googleLocationName = gmbHealth.pinnedLocationName;
+        googleLocationTitle = gmbHealth.pinnedLocationTitle;
+      }
     }
 
     // B. Fallback to process.env for Transpond keys if blank
@@ -115,7 +126,10 @@ export async function GET(request: NextRequest) {
       rooferPasscodeConfigured,
       companyName,
       googleReviewUrl,
-      googleConnected
+      googleConnected,
+      googleTokenExpired,
+      googleLocationName,
+      googleLocationTitle,
     });
 
   } catch (error: unknown) {

@@ -49,6 +49,9 @@ export async function getFirestoreAccessToken(): Promise<string | null> {
     return null;
   }
 
+  clientEmail = clientEmail.trim().replace(/^["']|["']$/g, '');
+  privateKey = privateKey.trim().replace(/^["']|["']$/g, '');
+
   // Normalize escaped newlines from environment variable strings
   if (privateKey.includes('\\n')) {
     privateKey = privateKey.replace(/\\n/g, '\n');

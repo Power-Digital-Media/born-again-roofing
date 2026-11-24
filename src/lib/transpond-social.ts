@@ -79,7 +79,7 @@ export async function publishPinToTranspondSocial(pin: PinType): Promise<boolean
 
     // C. Format post content body
     const host = process.env.NEXT_PUBLIC_SITE_URL || "https://www.bornagainroofing.com";
-    const projectUrl = `${host}/pin-page?id=${pin.id}`;
+    const projectUrl = `${host}/pin-page/?id=${encodeURIComponent(pin.id)}`;
     
     const message = `🛠️ New Job Completed by ${clientId === "born-again-roofing" ? "Born Again Roofing" : "our crew"}!\n\n` +
       `👷 Technician: ${pin.author}\n` +

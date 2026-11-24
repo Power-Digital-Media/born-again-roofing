@@ -108,6 +108,11 @@ export default function DropPinPage() {
   const [transpondConfigured, setTranspondConfigured] = useState(false);
   const [socialConnected, setSocialConnected] = useState(false);
   const [googleConnected, setGoogleConnected] = useState(false);
+  const [googleTokenExpired, setGoogleTokenExpired] = useState(false);
+  const [googleLocationName, setGoogleLocationName] = useState("");
+  const [googleLocationTitle, setGoogleLocationTitle] = useState("");
+  const [gmbLocationsList, setGmbLocationsList] = useState<Array<{ name: string; title: string }>>([]);
+  const [loadingGmbLocations, setLoadingGmbLocations] = useState(false);
   const [transpondSaveStatus, setTranspondSaveStatus] = useState("idle"); // idle, saving, saved, error
   const [showSocialWarningModal, setShowSocialWarningModal] = useState(false);
   const [expandedTab, setExpandedTab] = useState<"google" | "crm" | "social" | "team" | null>(null);
@@ -202,6 +207,9 @@ export default function DropPinPage() {
         }
         setSocialConnected(data.socialConnected || false);
         setGoogleConnected(data.googleConnected || false);
+        setGoogleTokenExpired(Boolean(data.googleTokenExpired));
+        setGoogleLocationName(data.googleLocationName || "");
+        setGoogleLocationTitle(data.googleLocationTitle || "");
         if (data.technicians && Array.isArray(data.technicians) && data.technicians.length > 0) {
           const merged = Array.from(new Set([...data.technicians, ...DEFAULT_TECHNICIANS]));
           setAuthorList(merged);
@@ -334,6 +342,50 @@ export default function DropPinPage() {
     } catch (err) {
       console.error(err);
       alert("Error saving review link.");
+    }
+  };
+
+  const fetchGmbLocations = async () => {
+    setLoadingGmbLocations(true);
+    try {
+      const res = await fetch("/api/auth/google/locations", { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setGmbLocationsList(Array.isArray(data.locations) ? data.locations : []);
+        if (data.pinned) {
+          setGoogleLocationName(data.pinned);
+          const match = (data.locations || []).find((l: { name: string; title: string }) => l.name === data.pinned);
+          if (match) setGoogleLocationTitle(match.title);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch GMB locations:", err);
+    } finally {
+      setLoadingGmbLocations(false);
+    }
+  };
+
+  const handlePinGmbLocation = async (locName: string) => {
+    if (!locName) return;
+    try {
+      const res = await fetch("/api/auth/google/locations", {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ locationName: locName }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.pinned) {
+          setGoogleLocationName(data.pinned.name);
+          setGoogleLocationTitle(data.pinned.title);
+          alert(`Pinned Google Business Profile: ${data.pinned.title}`);
+        }
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err.error || "Failed to pin location.");
+      }
+    } catch (err) {
+      console.error("Error pinning GMB location:", err);
     }
   };
 
@@ -2139,22 +2191,58 @@ export default function DropPinPage() {
                   
                   <div style={{ border: tourStep === 2 ? "2px solid #e2b047" : "1px solid rgba(255, 255, 255, 0.05)", boxShadow: tourStep === 2 ? "0 0 10px rgba(226, 176, 71, 0.3)" : "none", transition: "all 0.3s", borderRadius: "8px", overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
                     <div 
-                      onClick={() => setExpandedTab(expandedTab === "google" ? null : "google")}
+                      onClick={() => {
+                        const next = expandedTab === "google" ? null : "google";
+                        setExpandedTab(next);
+                        if (next === "google" && googleConnected && gmbLocationsList.length === 0) {
+                          fetchGmbLocations();
+                        }
+                      }}
                       style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", background: "rgba(255, 255, 255, 0.02)", userSelect: "none" }}
                     >
                       <span style={{ fontSize: "0.85rem", fontWeight: "700", color: "#ffffff", display: "flex", alignItems: "center", gap: "8px" }}>
                         <span>🌐</span> Google Maps Sync
                       </span>
-                      <span style={{ color: googleConnected ? "#10b981" : "#e1b047", fontSize: "0.7rem", fontWeight: "700", display: "flex", alignItems: "center", gap: "4px" }}>
-                        {googleConnected ? "✓ Connected" : "⚠️ Pending"} {expandedTab === "google" ? "▲" : "▼"}
+                      <span style={{ color: googleConnected ? "#10b981" : (googleTokenExpired ? "#f87171" : "#e1b047"), fontSize: "0.7rem", fontWeight: "700", display: "flex", alignItems: "center", gap: "4px" }}>
+                        {googleConnected ? "✓ Connected" : (googleTokenExpired ? "⚠️ Re-connect Needed" : "⚠️ Pending")} {expandedTab === "google" ? "▲" : "▼"}
                       </span>
                     </div>
                     
                     {expandedTab === "google" && (
                       <div style={{ padding: "16px", borderTop: "1px solid rgba(255,255,255,0.05)", background: "rgba(0,0,0,0.15)" }}>
-                        <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", margin: "0 0 1rem 0", lineHeight: "1.4" }}>
-                          Push check-ins and project photos straight to Google Maps. (<span style={{ color: "#e2b047", cursor: "pointer", textDecoration: "underline" }} onClick={() => setShowGoogleModal(true)}>Guide</span>)
+                        <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", margin: "0 0 0.75rem 0", lineHeight: "1.4" }}>
+                          Push completed project check-ins, photos, and local service-area links straight to Google Business Profile. (<span style={{ color: "#e2b047", cursor: "pointer", textDecoration: "underline" }} onClick={() => setShowGoogleModal(true)}>Guide</span>)
                         </p>
+                        {googleTokenExpired && (
+                          <div style={{ marginBottom: "10px", padding: "8px 10px", borderRadius: "6px", background: "rgba(248, 113, 113, 0.12)", border: "1px solid rgba(248, 113, 113, 0.35)", color: "#fca5a5", fontSize: "0.73rem", lineHeight: "1.4" }}>
+                            Google authorization expired. Click <strong>Re-connect Maps Profile</strong> below to restore automatic Google Business Profile project updates.
+                          </div>
+                        )}
+                        {googleConnected && (googleLocationTitle || googleLocationName) && (
+                          <div style={{ marginBottom: "10px", padding: "8px 10px", borderRadius: "6px", background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.3)", color: "#a7f3d0", fontSize: "0.73rem" }}>
+                            📍 Posting to: <strong>{googleLocationTitle || googleLocationName}</strong>
+                          </div>
+                        )}
+                        {googleConnected && gmbLocationsList.length > 1 && (
+                          <div style={{ marginBottom: "10px" }}>
+                            <label style={{ display: "block", fontSize: "0.72rem", color: "#d1d5db", marginBottom: "4px" }}>
+                              Target Google Business Profile:
+                            </label>
+                            <select
+                              value={googleLocationName}
+                              onChange={(e) => handlePinGmbLocation(e.target.value)}
+                              disabled={loadingGmbLocations}
+                              style={{ width: "100%", padding: "6px 8px", fontSize: "0.75rem", background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "4px", color: "#fff" }}
+                            >
+                              <option value="">Select location...</option>
+                              {gmbLocationsList.map((loc) => (
+                                <option key={loc.name} value={loc.name}>
+                                  {loc.title}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        )}
                         <button
                           type="button"
                           onClick={handleConnectGoogle}
@@ -2162,7 +2250,7 @@ export default function DropPinPage() {
                           className="btn btn-outline"
                           style={{ width: "100%", fontSize: "0.75rem", height: "36px", display: "inline-flex", alignItems: "center", justifyContent: "center", background: "rgba(226, 176, 71, 0.08)", color: "#ffffff", border: "1px solid #e2b047", cursor: isConnectingGoogle ? "not-allowed" : "pointer" }}
                         >
-                          {isConnectingGoogle ? "Connecting to Google..." : (googleConnected ? "🔄 Re-connect Maps Profile" : "Connect Maps Profile")}
+                          {isConnectingGoogle ? "Connecting to Google..." : ((googleConnected || googleTokenExpired) ? "🔄 Re-connect Maps Profile" : "Connect Maps Profile")}
                         </button>
 
                         <div style={{ marginTop: "16px", paddingTop: "12px", borderTop: "1px dashed rgba(255,255,255,0.1)" }}>
