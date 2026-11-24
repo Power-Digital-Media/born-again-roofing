@@ -100,7 +100,7 @@ export default function ReviewsCarousel() {
 
         {/* Read All Reviews Button */}
         <div className="reviews-cta">
-          <Link href="/reviews" className="btn btn-outline btn-island">
+          <Link href="/reviews/" className="btn btn-outline btn-island">
             Read All Customer Reviews
             <span className="btn-icon-wrapper">
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">

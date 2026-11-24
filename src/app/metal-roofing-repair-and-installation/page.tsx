@@ -12,8 +12,10 @@ import ServiceCTA from "@/components/ServiceCTA";
 import RoofingHeroActions from "@/components/RoofingHeroActions";
 
 export const metadata: Metadata = {
-  title: "Metal Roofing in Jackson, MS",
-  description: "Standing seam metal roof installation & metal roof leak repair for homes in Florence, Brandon, Madison & Jackson, MS. Free estimates: (601) 573-6178.",
+  title: {
+    absolute: "Metal Roofing Repair & Systems Jackson, MS | Born Again",
+  },
+  description: "Metal roof leak repair, seam & fastener sealing, silicone coatings & standing seam metal roofs in Florence, Brandon, Madison & Jackson, MS: (601) 573-6178.",
   alternates: {
     canonical: "/metal-roofing-repair-and-installation/"
   }
@@ -22,13 +24,18 @@ export const metadata: Metadata = {
 export default function MetalRoofingPage() {
   return (
     <>
-      <LocalBusinessSchema pageTitle="Metal Roofing Repair and Installation in Jackson, MS" pageDescription="Strength and Style with Expert Metal Roofing. When it comes to long-lasting protection, metal roofing stands out." path="/metal-roofing-repair-and-installation/" />
+      <LocalBusinessSchema
+        pageTitle="Metal Roofing Repair and Installation in Jackson, MS"
+        pageDescription="Metal roof leak repair, fastener & seam sealing, silicone coatings, and standing seam metal roofing in Jackson and Central Mississippi."
+        path="/metal-roofing-repair-and-installation/"
+        serviceName="Metal Roofing Repair and Installation"
+      />
 
       {/* Hero */}
       <section className="service-hero" style={{ backgroundImage: "url('/images/wp_metal-roof-standing-seam-1.png')" }}>
         <div className="container service-hero-inner scroll-reveal">
           <span className="eyebrow">GAF Certified Quality</span>
-          <h1>Metal Roofing in Jackson, MS</h1>
+          <h1>Metal Roofing Repair &amp; Systems in Jackson, MS</h1>
           <p className="hero-subtext">
             Standing seam and metal shingle installations and repairs for homes in Central Mississippi.
           </p>
@@ -112,7 +119,7 @@ export default function MetalRoofingPage() {
                   Discover our premium standing seam panel installation services featuring concealed fasteners for ultimate water-tight security and modern clean lines.
                 </p>
               </div>
-              <Link href="/metal-roofing-repair-and-installation/standing-seam-metal-roof-installation" className="specialty-card-link" style={{ justifyContent: "center" }}>
+              <Link href="/metal-roofing-repair-and-installation/standing-seam-metal-roof-installation/" className="specialty-card-link" style={{ justifyContent: "center" }}>
                 <span>Explore Standing Seam</span>
                 <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -136,7 +143,8 @@ export default function MetalRoofingPage() {
             </h2>
           </div>
           <ServiceBentoGrid
-            services={["Metal Roofing"]}
+            services={["Metal Roofing", "Metal Roof Installation"]}
+            variant="metal"
             overrideImages={[
               { url: "/images/wp_metal-roof-standing-seam-1.png", location: "Jackson, MS" },
               { url: "/images/wp_roofing-c.jpg", location: "Madison, MS" }

@@ -22,7 +22,12 @@ export const metadata: Metadata = {
 export default function StormDamagePage() {
   return (
     <>
-      <LocalBusinessSchema pageTitle="Storm Damage Roof Repair in Jackson, MS" pageDescription="Born Again Home Remodeling and Roofing offers storm damage roof repair in Jackson, MS." path="/storm-damage-roof-repair/" />
+      <LocalBusinessSchema
+        pageTitle="Storm Damage Roof Repair in Jackson, MS"
+        pageDescription="24/7 emergency tarping, hail & wind damage roof repair, and insurance claim inspections across Florence, Brandon, Madison & Jackson, MS."
+        path="/storm-damage-roof-repair/"
+        serviceName="Storm Damage Roof Repair"
+      />
 
       {/* Hero */}
       <section className="service-hero" style={{ backgroundImage: "url('/images/wp_storm-damage-home-roof-1.png')" }}>
@@ -114,7 +119,7 @@ export default function StormDamagePage() {
                   Urgent roof tarping and structural checks to stop severe leaks during active storm conditions.
                 </p>
               </div>
-              <Link href="/storm-damage-roof-repair/emergency-roof-repair" className="specialty-card-link">
+              <Link href="/storm-damage-roof-repair/emergency-roof-repair/" className="specialty-card-link">
                 <span>Emergency Help</span>
                 <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -132,12 +137,12 @@ export default function StormDamagePage() {
                     <path d="M16 20v1" />
                   </svg>
                 </div>
-                <h3>Roof Patches & Leaks</h3>
+                <h3>Roof Patches &amp; Leaks</h3>
                 <p>
                   Precise leak tracking and shingles patches to restore water-tight integrity after high winds.
                 </p>
               </div>
-              <Link href="/storm-damage-roof-repair/roof-patches-and-leak-repair" className="specialty-card-link">
+              <Link href="/storm-damage-roof-repair/roof-patches-and-leak-repair/" className="specialty-card-link">
                 <span>Explore Patches</span>
                 <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -159,7 +164,7 @@ export default function StormDamagePage() {
                   Inspect and fix hidden cracks, shingle dents, and granule loss caused by hailstorms.
                 </p>
               </div>
-              <Link href="/storm-damage-roof-repair/hail-damage-roof-repair" className="specialty-card-link">
+              <Link href="/storm-damage-roof-repair/hail-damage-roof-repair/" className="specialty-card-link">
                 <span>Explore Hail Repair</span>
                 <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -179,7 +184,7 @@ export default function StormDamagePage() {
                   Replace shingle runs, flashing seals, and ridge caps blown off by strong thunderstorm winds.
                 </p>
               </div>
-              <Link href="/storm-damage-roof-repair/wind-damage-roof-repair" className="specialty-card-link">
+              <Link href="/storm-damage-roof-repair/wind-damage-roof-repair/" className="specialty-card-link">
                 <span>Explore Wind Repair</span>
                 <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -201,7 +206,7 @@ export default function StormDamagePage() {
                   Get certified photo inspection records and reports to help file and justify storm claims.
                 </p>
               </div>
-              <Link href="/storm-damage-roof-repair/roof-insurance-claims-help" className="specialty-card-link">
+              <Link href="/storm-damage-roof-repair/roof-insurance-claims-help/" className="specialty-card-link">
                 <span>Explore Claims Help</span>
                 <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -227,6 +232,7 @@ export default function StormDamagePage() {
           </div>
           <ServiceBentoGrid
             services={["Roof Repair", "Roof Inspection", "Emergency Roof Repair"]}
+            variant="storm"
             overrideImages={[
               { url: "/images/wp_storm-damage-home-roof-1.png", location: "Jackson, MS" },
               { url: "/images/wp_roofing-c.jpg", location: "Brandon, MS" }

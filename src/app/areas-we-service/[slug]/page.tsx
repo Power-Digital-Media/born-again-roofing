@@ -7,116 +7,11 @@ import { cityRoofing } from "@/data/cityRoofing";
 import ContactForm from "@/components/ContactForm";
 import RoofingHeroActions from "@/components/RoofingHeroActions";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
-import FAQSchema from "@/components/FAQSchema";
 
 export const revalidate = 300;
 
-interface LocationDetail {
-  title: string;
-  description: string;
-  cityName: string;
-}
-
-const locations: Record<string, LocationDetail> = {
-  "brandon-ms": {
-    cityName: "Brandon, MS",
-    title: "Roof Repair, Replacement & Remodeling in Brandon, MS",
-    description: "GAF-certified roof repair, architectural shingle replacement, metal roofing, storm inspections, and home remodeling in Brandon, MS. Call (601) 573-6178."
-  },
-  "byram-ms": {
-    cityName: "Byram, MS",
-    title: "Roof Repair, Replacement & Remodeling in Byram, MS",
-    description: "GAF-certified roof repair, shingle replacement, storm & wind damage inspections, and home remodeling in Byram, MS. Free estimates: (601) 573-6178."
-  },
-  "canton-ms": {
-    cityName: "Canton, MS",
-    title: "Roof Repair, Replacement & Remodeling in Canton, MS",
-    description: "Roof repair, architectural shingle replacement, metal roofing, storm damage inspections, and home remodeling in Canton, MS. Call (601) 573-6178."
-  },
-  "clinton-ms": {
-    cityName: "Clinton, MS",
-    title: "Roof Repair, Storm Damage & Remodeling in Clinton, MS",
-    description: "Shingle roof repair, standing seam metal roof service, storm tarping & inspections, and home remodeling in Clinton, MS. Call (601) 573-6178."
-  },
-  "crystal-springs-ms": {
-    cityName: "Crystal Springs, MS",
-    title: "Roof Repair, Replacement & Remodeling in Crystal Springs, MS",
-    description: "GAF shingle roof replacement, metal roofing, storm damage roof repair, and home remodeling in Crystal Springs, MS. Call (601) 573-6178."
-  },
-  "florence-ms": {
-    cityName: "Florence, MS",
-    title: "Roof Repair, Replacement & Remodeling in Florence, MS",
-    description: "Headquartered at 150 Highland Dr in Florence, MS: GAF-certified roof repair, roof replacement, storm damage inspections, metal roofing, and home remodeling. Call (601) 573-6178."
-  },
-  "flowood-ms": {
-    cityName: "Flowood, MS",
-    title: "Roof Replacement, Repair & Remodeling in Flowood, MS",
-    description: "Full roof replacement, storm damage roof inspections, leak repair, metal roofing, and home remodeling in Flowood, MS. Free estimates: (601) 573-6178."
-  },
-  "gluckstadt-ms": {
-    cityName: "Gluckstadt, MS",
-    title: "Roof Replacement, Repair & Remodeling in Gluckstadt, MS",
-    description: "GAF-certified roof replacement, hail & wind roof inspections, metal roofing, and interior home remodeling in Gluckstadt, MS. Call (601) 573-6178."
-  },
-  "hazlehurst-ms": {
-    cityName: "Hazlehurst, MS",
-    title: "Roof Repair, Replacement & Remodeling in Hazlehurst, MS",
-    description: "Trusted roof repair, roof replacement, metal roofing, storm damage inspections, and home remodeling in Hazlehurst, MS. Call (601) 573-6178."
-  },
-  "jackson-ms": {
-    cityName: "Jackson, MS",
-    title: "Roof Repair, Replacement & Remodeling in Jackson, MS",
-    description: "GAF-certified roof repair, roof replacement, storm & hail inspections, metal roofing, and home remodeling for Jackson, MS homes. Free estimates: (601) 573-6178."
-  },
-  "madison-ms": {
-    cityName: "Madison, MS",
-    title: "Roof Replacement, Repair & Remodeling in Madison, MS",
-    description: "GAF architectural shingle roof replacement, storm & hail roof repair, standing seam metal roofing, and custom remodeling in Madison, MS. Call (601) 573-6178."
-  },
-  "pearl-ms": {
-    cityName: "Pearl, MS",
-    title: "Roof Repair, Metal Roofing & Remodeling in Pearl, MS",
-    description: "Roof repair, shingle replacement, metal & silicone roof service, storm inspections, and home remodeling for Pearl, MS homes. Call (601) 573-6178."
-  },
-  "raymond-ms": {
-    cityName: "Raymond, MS",
-    title: "Roof Repair, Replacement & Remodeling in Raymond, MS",
-    description: "Roof leak repair, full shingle & metal roof replacement, storm inspections, and home remodeling for Raymond, MS homeowners. Call (601) 573-6178."
-  },
-  "richland-ms": {
-    cityName: "Richland, MS",
-    title: "Roof Repair, Replacement & Remodeling in Richland, MS",
-    description: "Local roof repair, GAF shingle replacement, storm damage restoration, metal roofing, and home remodeling in Richland, MS. Call (601) 573-6178."
-  },
-  "ridgeland-ms": {
-    cityName: "Ridgeland, MS",
-    title: "Roof Replacement, Repair & Remodeling in Ridgeland, MS",
-    description: "Architectural shingle roof replacement, storm & leak repair, metal roofing, and kitchen & bath remodeling for Ridgeland, MS homes. Call (601) 573-6178."
-  },
-  "terry-ms": {
-    cityName: "Terry, MS",
-    title: "Roof Repair, Replacement & Remodeling in Terry, MS",
-    description: "Residential roof repair, shingle & metal roof replacement, storm tarping, and home remodeling in Terry, MS. Free estimates: (601) 573-6178."
-  },
-  "utica-ms": {
-    cityName: "Utica, MS",
-    title: "Roof Repair, Replacement & Remodeling in Utica, MS",
-    description: "Residential roof repair, shingle & metal roof installation, storm inspections, and home remodeling in Utica, MS. Free estimates: (601) 573-6178."
-  },
-  "vicksburg-ms": {
-    cityName: "Vicksburg, MS",
-    title: "Roof Repair, Replacement & Remodeling in Vicksburg, MS",
-    description: "Roof repair, GAF architectural shingle replacement, standing seam metal roofing, storm inspections, and remodeling in Vicksburg, MS. Call (601) 573-6178."
-  },
-  "yazoo-city-ms": {
-    cityName: "Yazoo City, MS",
-    title: "Roof Repair, Replacement & Remodeling in Yazoo City, MS",
-    description: "Roof repair, roof replacement, storm & wind damage restoration, metal roofing, and home remodeling in Yazoo City, MS. Call (601) 573-6178."
-  }
-};
-
 export function generateStaticParams() {
-  return Object.keys(locations).map((slug) => ({ slug }));
+  return Object.keys(cityRoofing).map((slug) => ({ slug }));
 }
 
 interface PageProps {
@@ -139,36 +34,28 @@ function isRoofingPin(pin: PinType): boolean {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const page = locations[slug];
-  if (!page) return {};
-
-  const starBrandTitle = `5.0★ Roofing & Remodeling in ${page.cityName} | Born Again`;
-  const fitTitle =
-    starBrandTitle.length <= 60
-      ? starBrandTitle
-      : `Roofing & Remodeling in ${page.cityName} | Born Again`;
-
-  const fitDesc = `5.0★ GAF-certified roof repair, roof replacement, storm inspections & home remodeling in ${page.cityName}. Free on-site inspection: (601) 573-6178.`;
+  const city = cityRoofing[slug];
+  if (!city) return {};
 
   return {
-    title: { absolute: fitTitle },
-    description: fitDesc,
+    title: { absolute: city.metaTitle },
+    description: city.description,
     alternates: {
-      canonical: `/areas-we-service/${slug}/`
-    }
+      canonical: `/areas-we-service/${slug}/`,
+    },
   };
 }
 
 export default async function LocationSubpage({ params }: PageProps) {
   const { slug } = await params;
-  const page = locations[slug];
+  const city = cityRoofing[slug];
 
-  if (!page) {
+  if (!city) {
     notFound();
   }
 
-  const shortCity = page.cityName.replace(/,\s*MS$/i, "");
-  const cityInfo = cityRoofing[slug];
+  const shortCity = city.cityName.replace(/,\s*MS$/i, "");
+  const isJacksonHub = slug === "jackson-ms";
   const allPins = await getPins();
   const validPins = allPins.filter(
     (p) => Array.isArray(p.images) && p.images.length > 0 && p.location
@@ -176,7 +63,7 @@ export default async function LocationSubpage({ params }: PageProps) {
 
   // Match exact city pins first; sort Roofing projects to the top, newest IDs first
   const exactCityPins = validPins
-    .filter((p) => p.location.trim().toLowerCase() === page.cityName.toLowerCase())
+    .filter((p) => p.location.trim().toLowerCase() === city.cityName.toLowerCase())
     .sort((a, b) => {
       const aRoof = isRoofingPin(a) ? 1 : 0;
       const bRoof = isRoofingPin(b) ? 1 : 0;
@@ -191,36 +78,29 @@ export default async function LocationSubpage({ params }: PageProps) {
       : exactCityPins.slice(0, 6)
   );
 
-  const curatedSummaries = (cityInfo?.projects || []).filter((pr) =>
+  const curatedSummaries = city.projects.filter((pr) =>
     validPins.some((pn) => String(pn.id) === String(pr.id))
   );
 
-  const projectAnswer = !isNearbyFallback
-    ? `Born Again Home Remodeling & Roofing has documented ${exactCityPins.length} verified project${exactCityPins.length === 1 ? "" : "s"} in ${page.cityName}, including ${exactCityPins
-        .slice(0, 3)
-        .map((p) => `${p.service.toLowerCase()} (${p.date})`)
-        .join(", ")}.`
-    : `Our Florence-headquartered crews serve ${page.cityName} and neighboring Central Mississippi communities with GAF-certified roof repair, roof replacement, storm inspections, metal roofing, and home remodeling.`;
+  const neighborCities = city.nearbySlugs
+    .map((ns) => ({ slug: ns, info: cityRoofing[ns] }))
+    .filter((x) => Boolean(x.info));
 
   return (
     <>
       <LocalBusinessSchema
-        pageTitle={cityInfo?.title ?? page.title}
-        pageDescription={cityInfo?.description ?? page.description}
+        pageTitle={city.metaTitle}
+        pageDescription={city.description}
         path={`/areas-we-service/${slug}/`}
+        areaCityName={city.cityName}
       />
 
       {/* Hero */}
       <section className="service-hero">
         <div className="container service-hero-inner scroll-reveal">
-          <span className="eyebrow">
-            Born Again Roofing &amp; Remodeling · Central MS
-          </span>
-          <h1>{cityInfo?.h1 ?? `Roof Repair, Replacement & Home Remodeling in ${page.cityName}`}</h1>
-          <p className="hero-subtext">
-            {cityInfo?.area ?? `Serving homeowners across ${page.cityName} from our headquarters in Florence, MS.`}{" "}
-            Request a free on-site roof inspection or remodeling estimate today.
-          </p>
+          <span className="eyebrow">{city.eyebrow}</span>
+          <h1>{city.h1}</h1>
+          <p className="hero-subtext">{city.area}</p>
           <RoofingHeroActions
             defaultService="Roof Replacement"
             ctaLabel={`Get Free ${shortCity} Estimate`}
@@ -228,7 +108,7 @@ export default async function LocationSubpage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* Main Content + Inline Estimate Form */}
+      {/* Main City-Specific Content + Inline Estimate Form */}
       <section className="section">
         <div
           className="container"
@@ -241,35 +121,74 @@ export default async function LocationSubpage({ params }: PageProps) {
         >
           <div>
             <span className="eyebrow" style={{ color: "var(--secondary)" }}>
-              Local Central MS Craftsmanship
+              {city.county} · Local Field Coverage
             </span>
             <h2 style={{ color: "var(--primary)", fontSize: "1.85rem", margin: "0.4rem 0 1rem" }}>
-              GAF-Certified Roofing &amp; Remodeling in {page.cityName}
+              {isJacksonHub
+                ? "Jackson Roofing & Remodeling Coverage by Neighborhood"
+                : `Roofing & Storm Protection for ${city.cityName} Homes`}
             </h2>
-            <p style={{ marginBottom: "1.25rem", fontSize: "1.03rem", lineHeight: "1.7", color: "var(--text-muted)" }}>
-              At <strong>Born Again Home Remodeling &amp; Roofing</strong>, our local Central Mississippi crews serve homeowners in{" "}
-              <strong>{page.cityName}</strong> with honest assessments, clean job sites, and durable materials. Whether your home needs an urgent{" "}
-              <Link href="/residential-roofing/roof-repair/" className="service-link">roof leak repair</Link>, a full{" "}
-              <Link href="/residential-roofing/roof-installation/" className="service-link">GAF architectural shingle replacement</Link>,{" "}
-              <Link href="/storm-damage-roof-repair/" className="service-link">wind or hail storm restoration</Link>,{" "}
-              <Link href="/metal-roofing-repair-and-installation/" className="service-link">standing seam metal roofing</Link>, or custom{" "}
-              <Link href="/kitchen-remodeling/" className="service-link">kitchen</Link> and{" "}
-              <Link href="/bathroom-remodeling/" className="service-link">bathroom remodeling</Link>, every project begins with a thorough on-site inspection and written estimate.
+            <p style={{ marginBottom: "1.25rem", fontSize: "1.03rem", lineHeight: "1.75", color: "var(--text-muted)" }}>
+              {city.roofingFocus}
             </p>
 
+            {isJacksonHub ? (
+              <p style={{ marginBottom: "1.5rem", fontSize: "0.98rem", lineHeight: "1.7", color: "var(--text-muted)" }}>
+                Looking for full service specs and warranty details? Explore our main{" "}
+                <Link href="/" className="service-link">Jackson, MS Roofing &amp; Home Remodeling hub</Link>,{" "}
+                <Link href="/residential-roofing/roof-installation/" className="service-link">GAF roof replacement in Jackson</Link>,{" "}
+                <Link href="/residential-roofing/roof-repair/" className="service-link">Jackson roof leak repair</Link>,{" "}
+                <Link href="/storm-damage-roof-repair/hail-damage-roof-repair/" className="service-link">hail damage roof inspections</Link>, or{" "}
+                <Link href="/commercial-roofing/" className="service-link">commercial &amp; flat roofing</Link>.
+              </p>
+            ) : null}
+
+            <h2 style={{ color: "var(--primary)", fontSize: "1.55rem", margin: "1.75rem 0 0.85rem" }}>
+              Home Remodeling &amp; Exterior Carpentry in {shortCity}
+            </h2>
+            <p style={{ marginBottom: "1.5rem", fontSize: "1.02rem", lineHeight: "1.75", color: "var(--text-muted)" }}>
+              {city.remodelingFocus}
+            </p>
+
+            {/* Neighborhoods & Corridors Badges */}
+            <div style={{ marginBottom: "2rem" }}>
+              <h3 style={{ color: "#ffffff", fontSize: "1.08rem", marginBottom: "0.75rem" }}>
+                {shortCity} Neighborhoods &amp; Corridors We Serve:
+              </h3>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                {city.neighborhoods.map((nb) => (
+                  <span
+                    key={nb}
+                    style={{
+                      fontSize: "0.82rem",
+                      fontWeight: 600,
+                      padding: "0.35rem 0.75rem",
+                      borderRadius: "999px",
+                      background: "rgba(255, 255, 255, 0.04)",
+                      border: "1px solid var(--border)",
+                      color: "#e2e8f0",
+                    }}
+                  >
+                    {nb}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Highlighted Verified Projects */}
             {curatedSummaries.length > 0 && (
               <div style={{ marginBottom: "2rem" }}>
                 <h3 style={{ color: "var(--primary)", fontSize: "1.2rem", margin: "0 0 0.65rem" }}>
-                  Highlighted Roofing Work in {page.cityName}
+                  Highlighted Field Logs in {city.cityName}
                 </h3>
                 <ul style={{ paddingLeft: "1.25rem", marginBottom: "1rem", color: "var(--text-muted)" }}>
                   {curatedSummaries.map((project) => {
                     const pin = validPins.find((pn) => String(pn.id) === String(project.id));
                     if (!pin) return null;
                     return (
-                      <li key={project.id} style={{ marginBottom: "0.5rem", lineHeight: 1.6 }}>
-                        <strong style={{ color: "#ffffff" }}>{pin.date}:</strong> {project.summary}{" "}
-                        <Link href={`/pin-page/?id=${project.id}`} className="service-link">
+                      <li key={project.id} style={{ marginBottom: "0.55rem", lineHeight: 1.65 }}>
+                        <strong style={{ color: "#ffffff" }}>{pin.date} ({pin.service}):</strong> {project.summary}{" "}
+                        <Link href={`/pin-page/?id=${project.id}`} rel="nofollow" prefetch={false} className="service-link">
                           View photos
                         </Link>
                       </li>
@@ -279,14 +198,11 @@ export default async function LocationSubpage({ params }: PageProps) {
               </div>
             )}
 
-            {/* Services Available in City */}
-            <div
-              className="double-bezel-wrapper"
-              style={{ marginBottom: "2rem" }}
-            >
+            {/* Core Services Available in City */}
+            <div className="double-bezel-wrapper" style={{ marginBottom: "2rem" }}>
               <div className="double-bezel-inner" style={{ padding: "1.75rem" }}>
                 <h3 style={{ color: "#ffffff", fontSize: "1.15rem", marginBottom: "1rem" }}>
-                  Services Available in {page.cityName}
+                  Roofing &amp; Remodeling Services in {city.cityName}
                 </h3>
                 <div
                   style={{
@@ -295,45 +211,49 @@ export default async function LocationSubpage({ params }: PageProps) {
                     gap: "0.65rem 1.25rem",
                   }}
                 >
+                  <Link href="/residential-roofing/roof-installation/" className="service-link">Roof Replacement &amp; Install →</Link>
                   <Link href="/residential-roofing/roof-repair/" className="service-link">Roof Leak &amp; Shingle Repair →</Link>
-                  <Link href="/residential-roofing/roof-installation/" className="service-link">New Roof Replacement →</Link>
-                  <Link href="/storm-damage-roof-repair/hail-damage-roof-repair/" className="service-link">Hail &amp; Wind Damage Repair →</Link>
-                  <Link href="/storm-damage-roof-repair/emergency-roof-repair/" className="service-link">Emergency Roof Tarping →</Link>
-                  <Link href="/residential-roofing/roof-inspections/" className="service-link">Free Roof Inspections →</Link>
-                  <Link href="/metal-roofing-repair-and-installation/" className="service-link">Standing Seam Metal Roofs →</Link>
+                  <Link href="/storm-damage-roof-repair/hail-damage-roof-repair/" className="service-link">Hail &amp; Storm Inspections →</Link>
+                  <Link href="/storm-damage-roof-repair/emergency-roof-repair/" className="service-link">24/7 Emergency Tarping →</Link>
+                  <Link href="/metal-roofing-repair-and-installation/standing-seam-metal-roof-installation/" className="service-link">Standing Seam Metal Roofs →</Link>
                   <Link href="/commercial-roofing/" className="service-link">Commercial &amp; Flat Roofing →</Link>
                   <Link href="/kitchen-remodeling/" className="service-link">Kitchen Remodeling →</Link>
                   <Link href="/bathroom-remodeling/" className="service-link">Bathroom Remodeling →</Link>
                   <Link href="/whole-house-remodeling/" className="service-link">Whole House Remodeling →</Link>
+                  <Link href="/flooring/" className="service-link">LVP, Tile &amp; Subfloor Repair →</Link>
                 </div>
               </div>
             </div>
 
-            {/* AEO / GEO FAQ Blocks */}
+            {/* City-Specific FAQ Blocks */}
             <div style={{ marginTop: "2.5rem" }}>
-              <h3 style={{ color: "var(--primary)", fontSize: "1.4rem", marginBottom: "1.5rem", borderBottom: "1px solid var(--border)", paddingBottom: "8px" }}>
-                {shortCity}, MS Roofing &amp; Remodeling FAQ
-              </h3>
+              <h2 style={{ color: "var(--primary)", fontSize: "1.45rem", marginBottom: "1.5rem", borderBottom: "1px solid var(--border)", paddingBottom: "8px" }}>
+                {shortCity}, MS Roofing &amp; Remodeling Questions
+              </h2>
 
-              <div className="qa-block">
-                <h4 className="qa-question">Do you offer free roof inspections and estimates in {page.cityName}?</h4>
-                <p className="qa-answer">
-                  Yes. Born Again Home Remodeling &amp; Roofing provides free, no-obligation on-site roof inspections and written remodeling estimates across <strong>{page.cityName}</strong>. Call <a href="tel:6015736178" style={{ color: "var(--secondary)", fontWeight: 700 }}>(601) 573-6178</a> or submit the form on this page to schedule.
-                </p>
-              </div>
-
-              <div className="qa-block">
-                <h4 className="qa-question">What recent work has Born Again completed near {page.cityName}?</h4>
-                <p className="qa-answer">{projectAnswer}</p>
-              </div>
-
-              <div className="qa-block">
-                <h4 className="qa-question">How does Central Mississippi weather impact roofs in {page.cityName}?</h4>
-                <p className="qa-answer">
-                  Homes in <strong>{page.cityName}</strong> face high summer UV heat, heavy Gulf moisture, straight-line thunderstorm winds, and spring hail. We install GAF architectural shingle systems and concealed-fastener standing seam metal roofs engineered to handle Mississippi storms, with GAF system warranty options available on eligible installations.
-                </p>
-              </div>
+              {city.faqs.map((faq, idx) => (
+                <div key={idx} className="qa-block">
+                  <h3 className="qa-question">{faq.q}</h3>
+                  <p className="qa-answer">{faq.a}</p>
+                </div>
+              ))}
             </div>
+
+            {/* Geographic Hub-and-Spoke Neighbor Links */}
+            {neighborCities.length > 0 && (
+              <div style={{ marginTop: "2rem", paddingTop: "1.25rem", borderTop: "1px solid var(--border)" }}>
+                <span style={{ fontSize: "0.88rem", fontWeight: 700, color: "#ffffff", marginRight: "0.75rem" }}>
+                  Nearby Communities We Serve:
+                </span>
+                <span style={{ display: "inline-flex", flexWrap: "wrap", gap: "0.5rem 1.15rem", fontSize: "0.92rem" }}>
+                  {neighborCities.map(({ slug: nSlug, info }) => (
+                    <Link key={nSlug} href={`/areas-we-service/${nSlug}/`} className="service-link">
+                      {info.cityName} →
+                    </Link>
+                  ))}
+                </span>
+              </div>
+            )}
           </div>
 
           <div style={{ position: "sticky", top: "6.5rem" }}>
@@ -353,11 +273,11 @@ export default async function LocationSubpage({ params }: PageProps) {
                 </span>
                 <h2 style={{ color: "#ffffff", margin: "0.35rem 0 0" }}>
                   {isNearbyFallback
-                    ? `Recent Roofing Projects Near ${page.cityName}`
-                    : `Completed Projects in ${page.cityName} (${exactCityPins.length})`}
+                    ? `Recent Roofing Projects Near ${city.cityName}`
+                    : `Completed Projects in ${city.cityName} (${exactCityPins.length})`}
                 </h2>
               </div>
-              <Link href="/pins/" className="service-link">
+              <Link href="/pins/" prefetch={false} className="service-link">
                 Explore All Central MS Pins →
               </Link>
             </div>
@@ -373,6 +293,8 @@ export default async function LocationSubpage({ params }: PageProps) {
                 <Link
                   key={pin.id}
                   href={`/pin-page/?id=${pin.id}`}
+                  rel="nofollow"
+                  prefetch={false}
                   className="double-bezel-wrapper"
                   style={{ textDecoration: "none" }}
                 >
@@ -381,7 +303,10 @@ export default async function LocationSubpage({ params }: PageProps) {
                     <img
                       src={pin.images[0]}
                       alt={`${pin.service} in ${pin.location}`}
+                      width={640}
+                      height={420}
                       loading="lazy"
+                      decoding="async"
                       style={{ width: "100%", height: "210px", objectFit: "cover", display: "block" }}
                     />
                     <div style={{ padding: "1.25rem 1.4rem 1.4rem" }}>
@@ -413,23 +338,6 @@ export default async function LocationSubpage({ params }: PageProps) {
           </div>
         </section>
       )}
-
-      <FAQSchema
-        faqs={[
-          {
-            question: `Do you offer free roof inspections and estimates in ${page.cityName}?`,
-            answer: `Yes. Born Again Home Remodeling & Roofing provides free, no-obligation on-site roof inspections and written remodeling estimates across ${page.cityName}. Call (601) 573-6178 or submit our online form to schedule.`,
-          },
-          {
-            question: `What recent work has Born Again completed near ${page.cityName}?`,
-            answer: projectAnswer,
-          },
-          {
-            question: `How does Central Mississippi weather impact roofs in ${page.cityName}?`,
-            answer: `Homes in ${page.cityName} face high summer UV heat, heavy Gulf moisture, straight-line thunderstorm winds, and spring hail. We install GAF architectural shingle systems and concealed-fastener standing seam metal roofs engineered for Mississippi weather.`,
-          },
-        ]}
-      />
     </>
   );
 }

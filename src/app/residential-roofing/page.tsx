@@ -12,10 +12,10 @@ import RoofingHeroActions from "@/components/RoofingHeroActions";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Roof Repair & Replacement Jackson, MS | 5.0★ Free Inspection",
+    absolute: "Residential Roofing Contractors Jackson, MS | Born Again",
   },
   description:
-    "5.0★ GAF-certified roof repair, architectural shingle replacement & free roof inspections in Brandon, Florence, Madison & Jackson, MS. Call (601) 573-6178.",
+    "5.0★ GAF-certified residential roofing contractors serving Jackson, Brandon, Madison & Florence, MS. Architectural shingles, repairs & free roof inspections.",
   alternates: {
     canonical: "/residential-roofing/",
   },
@@ -24,13 +24,18 @@ export const metadata: Metadata = {
 export default function ResidentialRoofingPage() {
   return (
     <>
-      <LocalBusinessSchema pageTitle="Residential Roofing in Jackson, MS" pageDescription="Complete Residential Roofing Services. No matter your roofing needs, our skilled team is ready to help." path="/residential-roofing/" />
+      <LocalBusinessSchema
+        pageTitle="Residential Roofing Contractors in Jackson, MS"
+        pageDescription="GAF-certified residential roofing contractors serving Jackson, Brandon, Madison & Florence, MS with architectural shingles, leak repairs, and free inspections."
+        path="/residential-roofing/"
+        serviceName="Residential Roofing"
+      />
 
       {/* Hero */}
       <section className="service-hero" style={{ backgroundImage: "url('/images/wp_roofing-c.jpg')" }}>
         <div className="container service-hero-inner scroll-reveal">
           <span className="eyebrow">Our Services</span>
-          <h1>Residential Roofing in Jackson, MS</h1>
+          <h1>Residential Roofing Contractors in Jackson &amp; Central MS</h1>
           <p className="hero-subtext">
             {"No matter your roofing needs, our skilled team is ready to help. From small leak repairs to major custom architectural shingle installations, we protect your family's investment."}
           </p>
@@ -58,7 +63,7 @@ export default function ResidentialRoofingPage() {
       {/* Dynamic Local Case Studies Carousel */}
       <section className="section" style={{ padding: "4rem 0 0" }}>
         <div className="container">
-          <ServicePinsCarousel services={["Residential Roofing", "Roof Repair", "Roof Inspection", "Soffit & Fascia"]} />
+          <ServicePinsCarousel services={["Residential Roofing", "Roof Replacement", "Roof Repair", "Roof Inspection", "Soffit & Fascia"]} />
         </div>
       </section>
 
@@ -138,7 +143,7 @@ export default function ResidentialRoofingPage() {
                   Fast, reliable repair services to fix minor leaks, missing shingles, and pipe boot damage before it spreads inside your home.
                 </p>
               </div>
-              <Link href="/residential-roofing/roof-repair" className="specialty-card-link">
+              <Link href="/residential-roofing/roof-repair/" className="specialty-card-link">
                 <span>Explore Roof Repair</span>
                 <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -155,13 +160,13 @@ export default function ResidentialRoofingPage() {
                     <line x1="15" y1="22" x2="15" y2="16" />
                   </svg>
                 </div>
-                <h3>Roof Installation</h3>
+                <h3>Roof Replacement</h3>
                 <p>
                   Build with confidence using our top-rated GAF architectural shingle installation options with GAF warranty options (coverage depends on the products installed and the applicable warranty terms) and wind resistance.
                 </p>
               </div>
-              <Link href="/residential-roofing/roof-installation" className="specialty-card-link">
-                <span>Explore Installation</span>
+              <Link href="/residential-roofing/roof-installation/" className="specialty-card-link">
+                <span>Explore Replacement</span>
                 <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -183,7 +188,7 @@ export default function ResidentialRoofingPage() {
                   The most popular and cost-effective roofing choice. Professional shingle repairs and architectural replacements.
                 </p>
               </div>
-              <Link href="/residential-roofing/asphalt-shingle-roof-repair-and-replacement" className="specialty-card-link">
+              <Link href="/residential-roofing/asphalt-shingle-roof-repair-and-replacement/" className="specialty-card-link">
                 <span>Explore Shingles</span>
                 <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -205,7 +210,7 @@ export default function ResidentialRoofingPage() {
                   Thorough inspection checklists and report sheets to identify wear, tear, leaks, storm damage, or age related deterioration.
                 </p>
               </div>
-              <Link href="/residential-roofing/roof-inspections" className="specialty-card-link">
+              <Link href="/residential-roofing/roof-inspections/" className="specialty-card-link">
                 <span>Explore Inspections</span>
                 <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -222,12 +227,12 @@ export default function ResidentialRoofingPage() {
                     <line x1="6" y1="16" x2="18" y2="16" />
                   </svg>
                 </div>
-                <h3>Soffit & Fascia Repair</h3>
+                <h3>Soffit &amp; Fascia Repair</h3>
                 <p>
                   Protect the edges of your roof and ensure proper attic ventilation with professional soffit and wood fascia repairs.
                 </p>
               </div>
-              <Link href="/residential-roofing/soffit-and-fascia-repair" className="specialty-card-link">
+              <Link href="/residential-roofing/soffit-and-fascia-repair/" className="specialty-card-link">
                 <span>Explore Soffit/Fascia</span>
                 <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -252,7 +257,8 @@ export default function ResidentialRoofingPage() {
             </h2>
           </div>
           <ServiceBentoGrid
-            services={["Residential Roofing", "Roof Repair", "Roof Inspection", "Soffit & Fascia"]}
+            services={["Residential Roofing", "Roof Replacement", "Roof Repair", "Roof Inspection", "Soffit & Fascia"]}
+            variant="shingle"
             overrideImages={[
               { url: "/images/wp_roofing-c.jpg", location: "Jackson, MS" },
               { url: "/images/wp_synthetic-tile-roofing-home-1.png", location: "Brandon, MS" }

@@ -13,16 +13,16 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: {
     absolute:
-      "Born Again Roofing & Home Remodeling | Jackson & Brandon MS",
+      "Roofing & Home Remodeling Jackson, MS | Born Again Roofing",
   },
   description:
-    "5.0★ GAF-certified roof replacement, storm repair & kitchen/bath home remodeling in Brandon, Florence, Madison & Jackson, MS. Free inspection: (601) 573-6178.",
+    "5.0★ GAF-certified roof repair, roof replacement, storm restoration & custom home remodeling in Jackson, Brandon, Madison & Florence, MS: (601) 573-6178.",
   alternates: { canonical: "/" },
   openGraph: {
     title:
-      "Born Again Roofing & Home Remodeling | Jackson & Brandon MS",
+      "Roofing & Home Remodeling Jackson, MS | Born Again Roofing",
     description:
-      "5.0★ GAF-certified roof replacement, storm repair & kitchen/bath home remodeling in Brandon, Florence, Madison & Jackson, MS. Free inspection: (601) 573-6178.",
+      "5.0★ GAF-certified roof repair, roof replacement, storm restoration & custom home remodeling in Jackson, Brandon, Madison & Florence, MS: (601) 573-6178.",
     url: "https://www.bornagainroofing.com/",
   },
 };
@@ -207,9 +207,10 @@ export default function Home() {
                 <li><Link href="/residential-roofing/roof-installation/" className="service-link">Roof Replacement &amp; Installation</Link></li>
                 <li><Link href="/storm-damage-roof-repair/" className="service-link">Storm Damage Repair</Link></li>
                 <li><Link href="/storm-damage-roof-repair/hail-damage-roof-repair/" className="service-link">Hail Damage Roof Repair</Link></li>
-                <li><Link href="/residential-roofing/roof-inspections/" className="service-link">Roof Inspections</Link></li>
-                <li><Link href="/metal-roofing-repair-and-installation/" className="service-link">Metal Roofing</Link></li>
-                <li><Link href="/commercial-roofing/" className="service-link">Commercial Roofing</Link></li>
+                <li><Link href="/storm-damage-roof-repair/emergency-roof-repair/" className="service-link">Emergency Roof Tarping</Link></li>
+                <li><Link href="/metal-roofing-repair-and-installation/standing-seam-metal-roof-installation/" className="service-link">Standing Seam Metal Roofs</Link></li>
+                <li><Link href="/commercial-roofing/" className="service-link">Commercial &amp; Flat Roofing</Link></li>
+                <li><Link href="/synthetic-slate-roof-installation/" className="service-link">Synthetic Slate Roofing</Link></li>
               </ul>
             </nav>
           </div>
@@ -318,6 +319,18 @@ export default function Home() {
             <p>
               Alongside GAF-certified roofing, our full-time craftsmen handle kitchen and bathroom remodels, interior/exterior painting, flooring, and whole-house renovations across Central Mississippi.
             </p>
+            <nav aria-label="Home remodeling service pages">
+              <ul style={{ listStyle: "none", padding: 0, margin: "1.25rem 0 0", display: "flex", flexWrap: "wrap", gap: "0.65rem 1.35rem", justifyContent: "center" }}>
+                <li><Link href="/kitchen-remodeling/" className="service-link">Kitchen Remodeling</Link></li>
+                <li><Link href="/bathroom-remodeling/" className="service-link">Bathroom Remodeling</Link></li>
+                <li><Link href="/whole-house-remodeling/" className="service-link">Whole House Remodeling</Link></li>
+                <li><Link href="/flooring/" className="service-link">Flooring &amp; LVP</Link></li>
+                <li><Link href="/tile-service/" className="service-link">Custom Tile Showers</Link></li>
+                <li><Link href="/painting/" className="service-link">Painting &amp; Drywall</Link></li>
+                <li><Link href="/plumbing/" className="service-link">Remodel Plumbing</Link></li>
+                <li><Link href="/electrical/" className="service-link">Remodel Electrical</Link></li>
+              </ul>
+            </nav>
           </div>
 
           <div className="bento-grid">
@@ -468,7 +481,7 @@ export default function Home() {
             <span className="eyebrow">Local Service Area</span>
             <h2>Central Mississippi Cities We Serve</h2>
             <p>
-              Dispatched daily from our headquarters at 150 Highland Dr in Florence, MS across Rankin, Hinds, Madison, Copiah, Warren, and Yazoo counties.
+              Dispatched daily from our Florence, MS headquarters across Rankin, Hinds, Madison, Copiah, Warren, and Yazoo counties.
             </p>
           </div>
 

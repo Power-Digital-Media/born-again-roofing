@@ -134,9 +134,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 const slugToPinMapping: Record<string, string[]> = {
   "roof-repair": ["Roof Repair"],
   "roof-inspections": ["Roof Inspection"],
-  "roof-installation": ["Residential Roofing"],
-  "asphalt-shingle-roof-repair-and-replacement": ["Residential Roofing", "Roof Repair"],
-  "soffit-and-fascia-repair": ["Soffit & Fascia"]
+  "roof-installation": ["Roof Replacement", "Residential Roofing"],
+  "asphalt-shingle-roof-repair-and-replacement": ["Residential Roofing", "Roof Replacement", "Roof Repair"],
+  "soffit-and-fascia-repair": ["Soffit & Fascia", "Exterior wood repair"]
 };
 
 const slugToDefaultService: Record<string, { service: string; label: string }> = {
@@ -184,7 +184,12 @@ export default async function ResidentialSubpage({ params }: PageProps) {
 
   return (
     <>
-      <LocalBusinessSchema pageTitle={roofingGuides[slug]?.title ?? page.title} pageDescription={roofingGuides[slug]?.description ?? page.description} path={`/residential-roofing/${slug}/`} />
+      <LocalBusinessSchema
+        pageTitle={roofingGuides[slug]?.title ?? page.title}
+        pageDescription={roofingGuides[slug]?.description ?? page.description}
+        path={`/residential-roofing/${slug}/`}
+        serviceName={roofingGuides[slug]?.heading ?? page.heading}
+      />
 
       {/* Hero */}
       <section className="service-hero">
@@ -227,7 +232,7 @@ export default async function ResidentialSubpage({ params }: PageProps) {
             {roofingGuides[slug] && <RoofingGuideSection guide={roofingGuides[slug]} />}
 
             {/* Dynamic Local Case Studies Bento Grid */}
-            <ServiceBentoGrid services={mappedCategories} overrideImages={overrideBentoImages} />
+            <ServiceBentoGrid services={mappedCategories} variant="shingle" overrideImages={overrideBentoImages} />
 
             {/* Dynamic Local Case Studies Carousel */}
             <ServicePinsCarousel services={mappedCategories} />

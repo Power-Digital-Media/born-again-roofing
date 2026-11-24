@@ -53,7 +53,7 @@ export default function AreasWeServicePage() {
           </span>
           <h1>Central Mississippi Areas We Service</h1>
           <p className="hero-subtext">
-            Headquartered at 150 Highland Dr in Florence, MS, our GAF-certified roofing and home remodeling crews serve homeowners across Rankin, Hinds, Madison, Copiah, Warren, and Yazoo counties.
+            Headquartered in Florence, MS, our GAF-certified roofing and home remodeling crews serve homeowners across Rankin, Hinds, Madison, Copiah, Warren, and Yazoo counties.
           </p>
 
           <RoofingHeroActions

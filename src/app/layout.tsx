@@ -28,10 +28,10 @@ const geist = Geist({
 export const metadata: Metadata = {
   title: {
     template: "%s | Born Again Roofing",
-    default: "Born Again Roofing & Home Remodeling | Jackson & Brandon MS",
+    default: "Roofing & Home Remodeling Jackson, MS | Born Again Roofing",
   },
   description:
-    "5.0★ GAF-certified roof replacement, storm repair & kitchen/bath home remodeling in Brandon, Florence, Madison & Jackson, MS. Free inspection: (601) 573-6178.",
+    "5.0★ GAF-certified roof repair, roof replacement, storm restoration & custom home remodeling in Jackson, Brandon, Madison & Florence, MS: (601) 573-6178.",
   metadataBase: new URL("https://www.bornagainroofing.com"),
   alternates: {
     canonical: "/",

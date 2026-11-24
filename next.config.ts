@@ -11,6 +11,14 @@ const nextConfig: NextConfig = {
         has: [{ type: 'host', value: '(?<deploy>.+--.+\\.netlify\\.app)' }],
         headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }],
       },
+      {
+        source: '/pin-page',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, follow' }],
+      },
+      {
+        source: '/pin-page/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, follow' }],
+      },
     ];
   },
   images: {

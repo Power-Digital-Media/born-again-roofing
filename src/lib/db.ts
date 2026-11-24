@@ -282,7 +282,7 @@ export async function getPins(options?: { includeInternal?: boolean }): Promise<
           },
           body: JSON.stringify(queryBody),
           cache: includeInternal ? "no-store" : undefined,
-          next: includeInternal ? undefined : { revalidate: 30 },
+          next: includeInternal ? undefined : { revalidate: 300 },
         }
       );
 

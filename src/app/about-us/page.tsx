@@ -272,7 +272,7 @@ export default function AboutUsPage() {
                   </svg>
                   <span>Call (601) 573-6178</span>
                 </a>
-                <Link href="/contact-us" style={{ color: "var(--secondary)", fontWeight: 700, fontSize: "0.95rem", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", width: "fit-content", marginTop: "5px" }}>
+                <Link href="/contact-us/" style={{ color: "var(--secondary)", fontWeight: 700, fontSize: "0.95rem", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", width: "fit-content", marginTop: "5px" }}>
                   <span>Or book a free estimate online</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>

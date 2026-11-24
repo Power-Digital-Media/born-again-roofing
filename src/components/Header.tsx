@@ -31,7 +31,7 @@ export default function Header() {
 
         {/* Desktop Nav Links */}
         <nav className="desktop-nav">
-          <Link href="/about-us" className="nav-link">About Us</Link>
+          <Link href="/about-us/" className="nav-link">About Us</Link>
           
           {/* Services Dropdown */}
           <div className="dropdown">
@@ -39,20 +39,22 @@ export default function Header() {
               Services ▾
             </span>
             <div className="dropdown-menu">
-              <Link href="/residential-roofing">Residential Roofing</Link>
-              <Link href="/metal-roofing-repair-and-installation">Metal Roofing</Link>
-              <Link href="/commercial-roofing">Commercial Roofing</Link>
-              <Link href="/storm-damage-roof-repair">Storm Damage Repair</Link>
+              <Link href="/residential-roofing/">Residential Roofing</Link>
+              <Link href="/residential-roofing/roof-installation/">Roof Replacement</Link>
+              <Link href="/residential-roofing/roof-repair/">Roof Repair</Link>
+              <Link href="/storm-damage-roof-repair/">Storm &amp; Hail Damage</Link>
+              <Link href="/metal-roofing-repair-and-installation/">Metal Roofing</Link>
+              <Link href="/commercial-roofing/">Commercial Roofing</Link>
               <div className="dropdown-divider" />
-              <Link href="/bathroom-remodeling">Bathroom Remodeling</Link>
-              <Link href="/kitchen-remodeling">Kitchen Remodeling</Link>
-              <Link href="/whole-house-remodeling">Whole House Remodeling</Link>
+              <Link href="/kitchen-remodeling/">Kitchen Remodeling</Link>
+              <Link href="/bathroom-remodeling/">Bathroom Remodeling</Link>
+              <Link href="/whole-house-remodeling/">Whole House Remodeling</Link>
             </div>
           </div>
 
-          <Link href="/areas-we-service" className="nav-link">Areas Served</Link>
-          <Link href="/pins" prefetch={false} className="nav-link">Project Pins</Link>
-          <Link href="/reviews" className="nav-link">Reviews</Link>
+          <Link href="/areas-we-service/" className="nav-link">Areas Served</Link>
+          <Link href="/pins/" prefetch={false} className="nav-link">Project Pins</Link>
+          <Link href="/reviews/" className="nav-link">Reviews</Link>
           <a
             href="tel:6015736178"
             className="nav-link"
@@ -105,7 +107,7 @@ export default function Header() {
       {/* Mobile nav drawer */}
       <div className={`mobile-nav-drawer ${mobileMenuOpen ? "open" : ""}`}>
         <div className="mobile-nav-links">
-          <Link href="/about-us" className="mobile-nav-link" onClick={closeMenu}>About Us</Link>
+          <Link href="/about-us/" className="mobile-nav-link" onClick={closeMenu}>About Us</Link>
           
           {/* Services accordion */}
           <button
@@ -119,18 +121,20 @@ export default function Header() {
             </svg>
           </button>
           <div className={`mobile-nav-accordion-panel ${servicesOpen ? "expanded" : ""}`}>
-            <Link href="/residential-roofing" className="mobile-nav-sublink" onClick={closeMenu}>Residential Roofing</Link>
-            <Link href="/metal-roofing-repair-and-installation" className="mobile-nav-sublink" onClick={closeMenu}>Metal Roofing</Link>
-            <Link href="/commercial-roofing" className="mobile-nav-sublink" onClick={closeMenu}>Commercial Roofing</Link>
-            <Link href="/storm-damage-roof-repair" className="mobile-nav-sublink" onClick={closeMenu}>Storm Damage Repair</Link>
-            <Link href="/bathroom-remodeling" className="mobile-nav-sublink" onClick={closeMenu}>Bathroom Remodeling</Link>
-            <Link href="/kitchen-remodeling" className="mobile-nav-sublink" onClick={closeMenu}>Kitchen Remodeling</Link>
-            <Link href="/whole-house-remodeling" className="mobile-nav-sublink" onClick={closeMenu}>Whole House Remodeling</Link>
+            <Link href="/residential-roofing/" className="mobile-nav-sublink" onClick={closeMenu}>Residential Roofing</Link>
+            <Link href="/residential-roofing/roof-installation/" className="mobile-nav-sublink" onClick={closeMenu}>Roof Replacement</Link>
+            <Link href="/residential-roofing/roof-repair/" className="mobile-nav-sublink" onClick={closeMenu}>Roof Repair</Link>
+            <Link href="/storm-damage-roof-repair/" className="mobile-nav-sublink" onClick={closeMenu}>Storm &amp; Hail Damage</Link>
+            <Link href="/metal-roofing-repair-and-installation/" className="mobile-nav-sublink" onClick={closeMenu}>Metal Roofing</Link>
+            <Link href="/commercial-roofing/" className="mobile-nav-sublink" onClick={closeMenu}>Commercial Roofing</Link>
+            <Link href="/kitchen-remodeling/" className="mobile-nav-sublink" onClick={closeMenu}>Kitchen Remodeling</Link>
+            <Link href="/bathroom-remodeling/" className="mobile-nav-sublink" onClick={closeMenu}>Bathroom Remodeling</Link>
+            <Link href="/whole-house-remodeling/" className="mobile-nav-sublink" onClick={closeMenu}>Whole House Remodeling</Link>
           </div>
 
-          <Link href="/areas-we-service" className="mobile-nav-link" onClick={closeMenu}>Areas Served</Link>
-          <Link href="/pins" prefetch={false} className="mobile-nav-link" onClick={closeMenu}>Project Pins</Link>
-          <Link href="/reviews" className="mobile-nav-link" onClick={closeMenu}>Reviews</Link>
+          <Link href="/areas-we-service/" className="mobile-nav-link" onClick={closeMenu}>Areas Served</Link>
+          <Link href="/pins/" prefetch={false} className="mobile-nav-link" onClick={closeMenu}>Project Pins</Link>
+          <Link href="/reviews/" className="mobile-nav-link" onClick={closeMenu}>Reviews</Link>
           <Link
             href="/contact-us/"
             prefetch={false}

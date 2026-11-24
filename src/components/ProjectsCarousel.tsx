@@ -236,7 +236,7 @@ export default function ProjectsCarousel() {
                   <p className="pin-card-desc">
                     {"\""}{pin.description.length > 95 ? pin.description.substring(0, 95) + "…" : pin.description}{"\""}
                   </p>
-                  <Link href={`/pin-page/?id=${pin.id}`} className="btn btn-outline pin-card-btn">
+                  <Link href={`/pin-page/?id=${pin.id}`} rel="nofollow" prefetch={false} className="btn btn-outline pin-card-btn">
                     View Case Study
                   </Link>
                 </div>

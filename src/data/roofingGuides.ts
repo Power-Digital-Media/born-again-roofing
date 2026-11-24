@@ -42,9 +42,9 @@ const estimate = { href: "/contact-us/", label: "Request a Roofing Estimate" };
 
 export const roofingGuides: Record<string, RoofingGuide> = {
   "roof-repair": {
-    title: "Roof Repair in Jackson, MS",
+    title: "Roof Repair & Leak Specialist Jackson, MS",
     description:
-      "Leaks, missing shingles, and damaged flashing repaired for Jackson-area homes. See what a repair visit involves, then call (601) 573-6178.",
+      "Fast roof leak detection, missing shingle replacement & flashing repair across Jackson, Brandon, Madison & Florence, MS. Free estimate: (601) 573-6178.",
     signsHeading: "Signs your roof may need repair",
     signs: [
       "Water stains or discoloration on ceilings or along attic rafters",
@@ -72,9 +72,9 @@ export const roofingGuides: Record<string, RoofingGuide> = {
   "roof-installation": {
     eyebrow: "GAF Certified Roofing Contractor",
     gaf: true,
-    title: "Roof Replacement in Jackson, MS",
+    title: "Roof Replacement & Installation Jackson, MS",
     description:
-      "New roof installation and full replacement for Jackson-area homes, from tear-off to cleanup. Request an estimate or call (601) 573-6178.",
+      "Full GAF architectural shingle roof replacement & new roof installation in Jackson, Brandon, Madison & Florence, MS. Free inspection: (601) 573-6178.",
     heading: "Roof Replacement & Installation in Jackson, MS",
     signsHeading: "When a roof replacement is worth considering",
     signs: [
@@ -245,9 +245,9 @@ export const roofingGuides: Record<string, RoofingGuide> = {
     ],
   },
   "hail-damage-roof-repair": {
-    title: "Hail Damage Roof Repair in Jackson, MS",
+    title: "Hail Damage Roof Repair Jackson, MS",
     description:
-      "Hail damage can be hard to spot from the ground. Learn what to look for, how we inspect, and how to document damage for Jackson-area homes.",
+      "Free hail damage roof inspections, bruised shingle repair & insurance claim photo documentation in Jackson, Brandon, Madison & Florence, MS: (601) 573-6178.",
     heading: "Hail Damage Roof Repair in Jackson, MS",
     signsHeading: "What hail damage can look like",
     signs: [

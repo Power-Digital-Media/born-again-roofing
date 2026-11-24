@@ -57,18 +57,22 @@ const subpages: Record<string, SubpageDetail> = {
   },
   "hail-damage-roof-repair": {
     title: "Hail Damage Roof Repair in Jackson, MS | Born Again Home Remodeling and Roofing",
-    description: "Restore Your Roof with Expert Hail Damage Repair in Jackson, MS. Hailstorms can strike without warning. Call (601) 573-6178 today.",
-    heading: "Hail Damage Roof Repair",
-    subheading: "Identifying and Restoring Soft Spots and Cracks Caused by Hail",
-    bodyText: "Hailstorms leave hidden damage across your roof by bruising asphalt shingles, fracturing fiberglass mats, and washing away protective stone granules. This accelerates shingle decay and leads to leaks over time. We provide expert inspection reports to document hail strikes and complete necessary repairs to restore your roof's protection.",
+    description: "Free hail damage roof inspections, bruised shingle replacement & adjuster documentation across Jackson, Brandon, Madison & Florence, MS: (601) 573-6178.",
+    heading: "Hail Damage Roof Repair in Jackson, MS",
+    subheading: "Slope-by-Slope Hail Bruise Inspections, Shingle Restoration & Insurance Documentation",
+    bodyText: "Spring and early-summer hailstorms across Rankin, Hinds, and Madison counties routinely leave invisible damage from the driveway—bruising fiberglass shingle mats, knocking away UV-protective stone granules, and denting soft aluminum box vents, ridge caps, and gutter aprons. Left undocumented, bruised shingles dry out under Mississippi summer heat and split into active attic leaks months later. Our Florence-based inspectors document every slope, soft-metal hit, and flashing impact with clear dated photos and meet your insurance adjuster on site when needed.",
     faqs: [
       {
-        q: "How does hail damage affect my shingles?",
-        a: "Hail bruises the backing mat of shingles, fracturing the seal and causing protective granules to shed. Without granules, UV rays quickly decay the underlying asphalt, causing leaks."
+        q: "How does hail damage affect asphalt shingles on Mississippi roofs?",
+        a: "Hailstones fracture the fiberglass mat beneath the shingle surface and dislodge the protective ceramic granules. Once bare asphalt is exposed to 95°F+ Mississippi UV sunlight, the shingle becomes brittle, cracks along the impact bruise, and allows rainwater to reach the underlayment and wood decking."
       },
       {
-        q: "My roof isn't leaking. Do I still need to check for hail damage?",
-        a: "Yes. Hail damage is usually progressive and does not cause immediate leaks. However, failing to document it within your policy's claim window can leave you responsible for replacement costs later."
+        q: "My roof isn't leaking yet after a hailstorm—should I still schedule an inspection?",
+        a: "Yes. Hail damage is almost always progressive rather than an instant waterfall leak, and most homeowner insurance policies enforce a strict 12-month claim window from the storm date. A free on-site inspection gives you dated photo proof of whether your roof is clean, needs a minor repair, or warrants an insurance claim."
+      },
+      {
+        q: "Do you install Class 4 impact-resistant shingles to protect against future hail?",
+        a: "Yes. When replacing a hail-damaged roof in Jackson, Brandon, Madison, Flowood, Pearl, or Florence, we can quote standard GAF Timberline HDZ architectural shingles alongside UL 2218 Class 4 impact-rated shingles or standing seam metal panels."
       }
     ]
   },
@@ -132,10 +136,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 const slugToPinMapping: Record<string, string[]> = {
-  "emergency-roof-repair": ["Emergency Roof Repair", "Roof Repair"],
+  "emergency-roof-repair": ["Roof inspection and tarp install", "Roof Repair", "Roof Inspection"],
   "roof-patches-and-leak-repair": ["Roof Repair"],
-  "hail-damage-roof-repair": ["Roof Repair", "Residential Roofing"],
-  "wind-damage-roof-repair": ["Roof Repair", "Residential Roofing"],
+  "hail-damage-roof-repair": ["Roof Inspection", "Roof Replacement", "Roof Repair"],
+  "wind-damage-roof-repair": ["Roof Repair", "Roof Replacement", "Residential Roofing"],
   "roof-insurance-claims-help": ["Roof Inspection", "Roof Repair"]
 };
 
@@ -185,7 +189,12 @@ export default async function StormDamageSubpage({ params }: PageProps) {
 
   return (
     <>
-      <LocalBusinessSchema pageTitle={roofingGuides[slug]?.title ?? page.title} pageDescription={roofingGuides[slug]?.description ?? page.description} path={`/storm-damage-roof-repair/${slug}/`} />
+      <LocalBusinessSchema
+        pageTitle={roofingGuides[slug]?.title ?? page.title}
+        pageDescription={roofingGuides[slug]?.description ?? page.description}
+        path={`/storm-damage-roof-repair/${slug}/`}
+        serviceName={roofingGuides[slug]?.heading ?? page.heading}
+      />
 
       {/* Hero */}
       <section className="service-hero">
@@ -229,7 +238,7 @@ export default async function StormDamageSubpage({ params }: PageProps) {
             {roofingGuides[slug] && <RoofingGuideSection guide={roofingGuides[slug]} />}
 
             {/* Dynamic Local Case Studies Bento Grid */}
-            <ServiceBentoGrid services={mappedCategories} overrideImages={overrideBentoImages} />
+            <ServiceBentoGrid services={mappedCategories} variant="storm" overrideImages={overrideBentoImages} />
 
             {/* Dynamic Local Case Studies Carousel */}
             <ServicePinsCarousel services={mappedCategories} />

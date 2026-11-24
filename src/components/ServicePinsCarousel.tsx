@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo, useRef, useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import pinsData from "@/data/pins.json";
@@ -34,10 +34,13 @@ interface ServicePinsCarouselProps {
   limit?: number;
 }
 
+const subscribeNoop = () => () => {};
+
 export default function ServicePinsCarousel({ services, limit = 8 }: ServicePinsCarouselProps) {
   const [activeMapPin, setActiveMapPin] = useState<PinType | null>(null);
   const deckRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const isMounted = useSyncExternalStore(subscribeNoop, () => true, () => false);
 
   const defaultFiltered = useMemo(() => {
     return pinsData
@@ -68,7 +71,6 @@ export default function ServicePinsCarousel({ services, limit = 8 }: ServicePins
               services.some((svc) => pin.service.toLowerCase().includes(svc.toLowerCase()))
           );
           
-          // Sort matched pins so that large ID numbers (recent timestamps) appear first
           const sorted = matched.sort((a, b) => {
             const numA = Number(a.id) || 0;
             const numB = Number(b.id) || 0;
@@ -86,25 +88,23 @@ export default function ServicePinsCarousel({ services, limit = 8 }: ServicePins
       .catch((err) => console.error("Error loading dynamic service pins:", err));
   }, [services, limit, defaultFiltered]);
 
-  // Triple the list to allow infinite scrolling in both directions
-  const tripledPins = useMemo(() => {
-    if (filteredPins.length <= 1) return filteredPins;
+  // Only clone infinite-scroll track sets client-side so SSR HTML never emits 3x duplicate cards to Googlebot
+  const renderedPins = useMemo(() => {
+    if (!isMounted || filteredPins.length <= 1) return filteredPins;
     return [...filteredPins, ...filteredPins, ...filteredPins];
-  }, [filteredPins]);
+  }, [filteredPins, isMounted]);
 
-  // Initialize scroll position to the start of the middle set (Set 2)
   useEffect(() => {
     const deck = deckRef.current;
-    if (!deck || filteredPins.length <= 1) return;
+    if (!isMounted || !deck || filteredPins.length <= 1) return;
 
-    const cardWidth = 334; // 310px card width + 24px gap (1.5rem)
+    const cardWidth = 334;
     const totalSetWidth = filteredPins.length * cardWidth;
     deck.scrollLeft = totalSetWidth;
-  }, [filteredPins.length]);
+  }, [filteredPins.length, isMounted]);
 
-  // Auto-play timer that scrolls forward smoothly
   useEffect(() => {
-    if (!deckRef.current || filteredPins.length <= 1) return;
+    if (!isMounted || !deckRef.current || filteredPins.length <= 1) return;
 
     const interval = setInterval(() => {
       if (isHovered) return;
@@ -112,12 +112,11 @@ export default function ServicePinsCarousel({ services, limit = 8 }: ServicePins
       const deck = deckRef.current;
       if (!deck) return;
 
-      const cardWidth = 334; // 310px card width + 24px gap (1.5rem)
+      const cardWidth = 334;
       const totalSetWidth = filteredPins.length * cardWidth;
       const currentScroll = deck.scrollLeft;
       
       let nextScroll = currentScroll + cardWidth;
-      // If next slide would cross beyond Set 2, snap back to Set 1 equivalent first
       if (nextScroll >= totalSetWidth * 2) {
         deck.scrollLeft = currentScroll - totalSetWidth;
         nextScroll = currentScroll - totalSetWidth + cardWidth;
@@ -127,31 +126,27 @@ export default function ServicePinsCarousel({ services, limit = 8 }: ServicePins
         left: nextScroll,
         behavior: "smooth"
       });
-    }, 4500); // Auto-slide every 4.5 seconds
+    }, 4500);
 
     return () => clearInterval(interval);
-  }, [filteredPins.length, isHovered]);
+  }, [filteredPins.length, isHovered, isMounted]);
 
-  // Infinite scroll snap-back handlers for manual user dragging
   const handleScroll = () => {
     const deck = deckRef.current;
-    if (!deck || filteredPins.length <= 1) return;
+    if (!isMounted || !deck || filteredPins.length <= 1) return;
 
     const cardWidth = 334;
     const totalSetWidth = filteredPins.length * cardWidth;
 
-    // If they drag too far right, subtract one full set width
     if (deck.scrollLeft >= totalSetWidth * 2.2) {
       deck.scrollLeft = deck.scrollLeft - totalSetWidth;
-    }
-    // If they drag too far left, add one full set width
-    else if (deck.scrollLeft <= totalSetWidth * 0.8) {
+    } else if (deck.scrollLeft <= totalSetWidth * 0.8) {
       deck.scrollLeft = deck.scrollLeft + totalSetWidth;
     }
   };
 
   if (filteredPins.length === 0) {
-    return null; // Don't render anything if there are no pins for this service
+    return null;
   }
 
   return (
@@ -165,7 +160,7 @@ export default function ServicePinsCarousel({ services, limit = 8 }: ServicePins
             Recent Local Projects
           </h3>
         </div>
-        <Link href="/pins/" style={{ color: "var(--secondary)", fontSize: "0.85rem", fontWeight: 700, textDecoration: "none" }}>
+        <Link href="/pins/" prefetch={false} style={{ color: "var(--secondary)", fontSize: "0.85rem", fontWeight: 700, textDecoration: "none" }}>
           View All Projects →
         </Link>
       </div>
@@ -179,7 +174,7 @@ export default function ServicePinsCarousel({ services, limit = 8 }: ServicePins
         onTouchStart={() => setIsHovered(true)}
         onScroll={handleScroll}
       >
-        {tripledPins.map((pin, idx) => (
+        {renderedPins.map((pin, idx) => (
           <div key={`${pin.id}-${idx}`} className="double-bezel-wrapper pin-scroll-card-wrapper">
             <div className="double-bezel-inner pin-scroll-card">
               
@@ -200,7 +195,7 @@ export default function ServicePinsCarousel({ services, limit = 8 }: ServicePins
                 <p className="pin-card-desc">
                   {"\""}{pin.description.length > 95 ? pin.description.substring(0, 95) + "..." : pin.description}{"\""}
                 </p>
-                <Link href={`/pin-page/?id=${pin.id}`} className="btn btn-outline pin-card-btn">
+                <Link href={`/pin-page/?id=${pin.id}`} rel="nofollow" prefetch={false} className="btn btn-outline pin-card-btn">
                   View Case Study
                 </Link>
               </div>
@@ -210,7 +205,6 @@ export default function ServicePinsCarousel({ services, limit = 8 }: ServicePins
         ))}
       </div>
 
-      {/* Fullscreen Interactive Map Modal for dynamic carousel card enlargement */}
       {activeMapPin && (
         <MapModal pin={activeMapPin} onClose={() => setActiveMapPin(null)} />
       )}
