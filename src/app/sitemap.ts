@@ -94,44 +94,55 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Note: Individual /pin-page/?id=* query-string views are intentionally excluded
   // from sitemap.xml and marked noindex,follow so 100% of crawl budget and project
   // content equity concentrates onto the canonical service and Central MS city pages.
+  // Accurate content-overhaul date (Googlebot uses <lastmod>—not <priority>—to trigger re-crawls of updated pages)
+  const CONTENT_OVERHAUL_DATE = '2026-11-24';
+
   return [
     {
       url: `${BASE_URL}/`,
+      lastModified: CONTENT_OVERHAUL_DATE,
       priority: 1.0,
     },
 
     ...serviceIndexPages.map((page) => ({
       url: `${BASE_URL}/${page}/`,
+      lastModified: CONTENT_OVERHAUL_DATE,
       priority: 0.95,
     })),
 
     ...residentialSubServices.map((sub) => ({
       url: `${BASE_URL}/residential-roofing/${sub}/`,
+      lastModified: CONTENT_OVERHAUL_DATE,
       priority: 0.85,
     })),
 
     ...stormDamageSubServices.map((sub) => ({
       url: `${BASE_URL}/storm-damage-roof-repair/${sub}/`,
+      lastModified: CONTENT_OVERHAUL_DATE,
       priority: 0.85,
     })),
 
     ...metalRoofingSubServices.map((sub) => ({
       url: `${BASE_URL}/metal-roofing-repair-and-installation/${sub}/`,
+      lastModified: CONTENT_OVERHAUL_DATE,
       priority: 0.85,
     })),
 
     ...areaPages.map((area) => ({
       url: `${BASE_URL}/areas-we-service/${area}/`,
+      lastModified: CONTENT_OVERHAUL_DATE,
       priority: 0.85,
     })),
 
     ...servicePages.map((service) => ({
       url: `${BASE_URL}/${service}/`,
+      lastModified: CONTENT_OVERHAUL_DATE,
       priority: 0.8,
     })),
 
     ...staticPages.map((page) => ({
       url: `${BASE_URL}/${page}/`,
+      lastModified: CONTENT_OVERHAUL_DATE,
       priority: 0.5,
     })),
   ];
