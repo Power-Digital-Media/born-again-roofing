@@ -25,7 +25,8 @@ export async function GET(request: NextRequest) {
     oauthUrl.searchParams.append("client_id", googleClientId);
     oauthUrl.searchParams.append("redirect_uri", redirectUri);
     oauthUrl.searchParams.append("response_type", "code");
-    oauthUrl.searchParams.append("scope", "https://www.googleapis.com/auth/business.manage openid email profile");
+    // Request ONLY business.manage so Google does not split permissions into an unchecked secondary checkbox
+    oauthUrl.searchParams.append("scope", "https://www.googleapis.com/auth/business.manage");
     oauthUrl.searchParams.append("access_type", "offline");
     oauthUrl.searchParams.append("prompt", "consent");
     oauthUrl.searchParams.append("state", nonce);

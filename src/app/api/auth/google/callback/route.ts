@@ -61,10 +61,17 @@ export async function GET(request: NextRequest) {
     }
 
     const tokenData = await tokenRes.json();
-    const { access_token, refresh_token, expires_in } = tokenData;
+    const { access_token, refresh_token, expires_in, scope } = tokenData;
 
     if (!access_token) {
       return errorRedirect("Failed to retrieve access token from Google.");
+    }
+
+    const grantedScope = String(scope || "");
+    if (!grantedScope.includes("business.manage")) {
+      return errorRedirect(
+        "Google Business Profile permission box was not checked. Please click Re-connect Maps Profile and check the box for 'See, edit, create, and delete your Google business listings'."
+      );
     }
 
     const expiryTime = (Date.now() + expires_in * 1000).toString();

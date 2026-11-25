@@ -167,7 +167,10 @@ async function saveAccessToken(clientId: string, firebaseProjectId: string, acce
 // 3. Helper to refresh the Google access token using the refresh_token
 async function refreshAccessToken(
   refreshToken: string
-): Promise<{ ok: true; accessToken: string; expires_in: number } | { ok: false; invalidGrant: boolean; error: string }> {
+): Promise<
+  | { ok: true; accessToken: string; expires_in: number; scope: string }
+  | { ok: false; invalidGrant: boolean; missingScope?: boolean; error: string }
+> {
   try {
     const googleClientId = process.env.GOOGLE_CLIENT_ID;
     const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -196,10 +199,17 @@ async function refreshAccessToken(
     }
 
     const data = await response.json();
+    const scope = String(data.scope || "");
+    if (scope && !scope.includes("business.manage")) {
+      console.error("[GMB] Refresh token lacks business.manage scope:", scope);
+      return { ok: false, invalidGrant: true, missingScope: true, error: "missing_business_manage_scope" };
+    }
+
     return {
       ok: true,
       accessToken: data.access_token,
       expires_in: data.expires_in || 3600,
+      scope,
     };
   } catch (error) {
     console.error("[GMB] Exception refreshing Google access token:", error);
@@ -257,7 +267,7 @@ export async function checkGmbConnectionHealth(
     };
   }
 
-  if (credentials.accessToken && Date.now() + 300 * 1000 < credentials.expiryTime) {
+  if (credentials.accessToken && credentials.locationName && Date.now() + 300 * 1000 < credentials.expiryTime) {
     return {
       hasStoredRefreshToken: true,
       connected: true,
